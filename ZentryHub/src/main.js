@@ -227,7 +227,7 @@ function buildDocTree() {
 const renderers = {
   // 1. Kanban Backlog View
   backlog: () => {
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1f305e 0%, #0f1013 100%)';
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1c142e 0%, #0c0d10 100%)';
     document.getElementById('page-icon').textContent = '📋';
     document.getElementById('page-title').textContent = 'Tablero Backlog';
     document.getElementById('properties-block').style.display = 'flex';
@@ -298,7 +298,7 @@ const renderers = {
 
   // 2. Google Keep Notes View
   ideas: () => {
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #4b3621 0%, #0f1013 100%)';
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1c142e 0%, #0c0d10 100%)';
     document.getElementById('page-icon').textContent = '💡';
     document.getElementById('page-title').textContent = 'Banco de Ideas (Keep)';
     document.getElementById('properties-block').style.display = 'none';
@@ -335,7 +335,7 @@ const renderers = {
 
   // 4. Branding and Colors (Mesa de Trabajo)
   branding: () => {
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #13141f 0%, #0f1013 100%)';
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1c142e 0%, #0c0d10 100%)';
     document.getElementById('page-icon').textContent = '🎨';
     document.getElementById('page-title').textContent = 'Mesa de Trabajo (Branding)';
     document.getElementById('properties-block').style.display = 'none';
@@ -344,12 +344,11 @@ const renderers = {
     
     // Core color variables matching style.css and colorimetria-y-diseno.md
     const colors = [
-      { name: 'Azul Principal Zentry', hex: '#4A90E2', desc: 'Acento principal, usado en logos y botones reactivos' },
-      { name: 'Fondo Oscuro', hex: '#0F1013', desc: 'Fondo de la aplicación móvil y launcher' },
-      { name: 'Fondo Sidebar / Navegación', hex: '#17181C', desc: 'Paneles y menús de control parental' },
-      { name: 'Card Element (Glassmorphic)', hex: '#1A1B21', desc: 'Cuerpo de las tarjetas lúdicas' },
-      { name: 'Luz Nocturna / Filtro Circadiano', hex: '#F59E0B', desc: 'Filtro ámbar de protección ocular' },
-      { name: 'Success / Aprobado', hex: '#10B981', desc: 'Cumplimiento de retos y estados positivos' }
+      { name: 'Púrpura Zentry', hex: '#533B87', desc: 'Color dominante. Utilizado en textos de botones activos, interruptores de selección y cabeceras destacadas.' },
+      { name: 'Lavanda Zentry', hex: '#D6C8FA', desc: 'Color de acento e interactividad. Usado en fondos de botones principales ("Get Started") e iconos.' },
+      { name: 'Verde Menta', hex: '#C2F4E7', desc: 'Color de éxito y progreso. Usado en barras de progreso y fondos de gradiente aurora.' },
+      { name: 'Blanco Glacial', hex: '#EBF1F5', desc: 'Color de texto principal y de superficies claras para legibilidad premium.' },
+      { name: 'Gris Neutro Oscuro', hex: '#4A5160', desc: 'Color secundario de contraste y legibilidad. Usado en bordes y textos secundarios.' }
     ];
 
     let html = `
@@ -410,7 +409,7 @@ const renderers = {
     }
 
     // Set custom page icon/banner
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #111 0%, #222 100%)';
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #C2F4E7 0%, #D6C8FA 50%, #533B87 100%)';
     
     let emoji = '📄';
     if (page.filename.includes('readme')) emoji = '📖';

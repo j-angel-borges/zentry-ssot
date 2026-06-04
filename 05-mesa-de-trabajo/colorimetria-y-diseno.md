@@ -7,51 +7,52 @@ deadline: 2026-08-30
 tags: ["diseno", "colores", "colorimetria", "ui-ux"]
 ---
 
-# 🎨 Colorimetría y Diseño del Sistema
+# 🎨 Colorimetría y Diseño del Sistema ZentryOS
 
-ZentryOS utiliza una paleta cromática basada en gradientes HSL y transparencias para transmitir modernidad, fluidez y tranquilidad cognitiva.
+ZentryOS utiliza una paleta cromática basada en gradientes esmerilados (glassmorphism) y tonos "Aurora" para transmitir modernidad, fluidez y una sensación de calma y tranquilidad cognitiva.
 
 ---
 
-## 🎨 Paleta de Colores Oficiales (HEX y HSL)
+## 🎨 Paleta de Colores Oficiales (HEX)
 
-### 1. Colores Primarios y de Acento
-*   **Azul Digital (Primary Blue)**: `#4A90E2` | `hsl(211, 74%, 59%)`
-    *   *Uso*: Color dominante en botones principales, avatares del tutor en estado activo y marcos clave.
-*   **Celeste Líquido (Sky Accent)**: `#64C8FF` | `hsl(201, 100%, 70%)`
-    *   *Uso*: Color secundario para barras de progreso, iconos interactivos y destellos de recompensa.
+De acuerdo con las guías de interfaz oficiales de la marca, los colores autorizados para el sistema y recursos de diseño son los siguientes:
 
-### 2. Superficies y Fondos (Surfaces & Backgrounds)
-*   **Fondo Claro de Sistema (Light Canvas)**: `#F5F7FA` | `hsl(210, 38%, 97%)`
-    *   *Uso*: Fondo base de la aplicación de control de padres y del panel de leads.
-*   **Gris Neutro (Primary Dark Text)**: `#333333` | `hsl(0, 0%, 20%)`
-    *   *Uso*: Texto principal en títulos y cuerpo de texto para asegurar un contraste óptimo `4.5:1` según estándares WCAG.
+### 1. Púrpura Zentry (`#533B87`)
+*   **Uso**: Color dominante de identidad. Utilizado en el texto de los botones primarios (sobre fondo lavanda), interruptores de selección activos (toggles), cabeceras destacadas y como tono oscuro del gradiente aurora.
 
-### 3. Especificación Glassmorphism (Efecto Cristal)
-Para diálogos flotantes y menús interactivos del niño:
-*   *Color de Fondo*: `rgba(255, 255, 255, 0.35)`
-*   *Desenfoque (Blur)*: `backdrop-filter: blur(25px);`
-*   *Borde*: `1px solid rgba(255, 255, 255, 0.5);`
+### 2. Lavanda Zentry (`#D6C8FA`)
+*   **Uso**: Color de acento e interactividad. Utilizado como fondo de botones primarios ("Get Started"), elementos de fondo de listas seleccionadas y detalles luminosos en la interfaz.
+
+### 3. Verde Menta (`#C2F4E7`)
+*   **Uso**: Color secundario y de estados positivos. Utilizado para representar progreso completado, logros lúdicos, estados activos de éxito y en gradientes de fondo con efecto aurora.
+
+### 4. Blanco Glacial (`#EBF1F5`)
+*   **Uso**: Color de texto principal y superficies claras. Proporciona una legibilidad óptima sobre fondos oscuros o translúcidos de cristal.
+
+### 5. Gris Neutro Oscuro (`#4A5160`)
+*   **Uso**: Color de contraste y legibilidad secundaria. Utilizado para subtítulos, etiquetas secundarias ("Secondary Labels"), bordes finos de tarjetas y textos informativos discretos.
+
+---
+
+## 🔮 Especificación Glassmorphism (Efecto Cristal)
+
+La interfaz del Launcher y el Zentry Hub implementa paneles translúcidos que emulan cristal esmerilado para integrarse orgánicamente sobre el fondo aurora:
+
+*   **Fondo de Panel**: `rgba(235, 241, 245, 0.08)` (Blanco Glacial translúcido) o `rgba(74, 81, 96, 0.15)` (Gris Neutro Oscuro para jerarquía secundaria).
+*   **Filtro de Desenfoque (Blur)**: `backdrop-filter: blur(20px);`
+*   **Bordes del Cristal**: `1px solid rgba(255, 255, 255, 0.08);`
+*   **Sombra**: `box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);`
 
 ---
 
 ## 🌈 Fórmulas de Gradientes
 
-ZentryOS utiliza gradientes lineales para representar flujos dinámicos e incentivos:
+Los degradados de ZentryOS son orgánicos y dinámicos:
 
-*   **Gradiente de Progreso (Progress Bar)**:  
-    `linear-gradient(90deg, #4A90E2 0%, #64C8FF 100%)`
-*   **Gradiente de Fondo Interactivo**:  
-    `radial-gradient(circle at top left, rgba(74, 144, 226, 0.5) 0%, rgba(100, 200, 255, 0.4) 100%)`
-
----
-
-## 🌓 Temas y Cohortes
-
-### Tema 1: Light & Playful (2 a 12 Años)
-*   **Enfoque**: Colores de alto contraste, fondos claros y formas sumamente redondeadas.
-*   **Propósito**: Estimular el reconocimiento de botones y minimizar el estrés cognitivo del menor.
-
-### Tema 2: Cyberpunk Focus (13 a 20 Años)
-*   **Enfoque**: Fondo ultra-oscuro (`#0D1117`), acentos en cian neón (`#00F2FE`) e índigo profundo (`#1A1F38`).
-*   **Propósito**: Ajustarse a las expectativas estéticas de los adolescentes, convirtiendo el Kiosk en un panel de productividad estilizado.
+*   **Gradiente Aurora de Fondo (Tablet UI)**:  
+    `linear-gradient(135deg, #C2F4E7 0%, #D6C8FA 50%, #533B87 100%)`
+*   **Gradiente de Barra de Progreso**:  
+    `linear-gradient(90deg, #D6C8FA 0%, #533B87 100%)`
+*   **Glow Radial de Acento (Fondo Oscuro)**:
+    - *Esquina Superior Izquierda*: `radial-gradient(circle, rgba(194, 244, 231, 0.08) 0%, transparent 50%)`
+    - *Esquina Inferior Derecha*: `radial-gradient(circle, rgba(214, 200, 250, 0.08) 0%, transparent 50%)`

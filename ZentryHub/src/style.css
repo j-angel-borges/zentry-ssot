@@ -1,17 +1,18 @@
 /* Design System: ZentryOS Notion Style */
 
 :root {
-  --bg-dark: #0f1013;
-  --bg-sidebar: #17181c;
-  --bg-card: rgba(26, 27, 33, 0.7);
+  --bg-dark: #0c0d10;
+  --bg-sidebar: #121318;
+  --bg-card: rgba(74, 81, 96, 0.12); /* Gris Neutro Oscuro #4A5160 at 12% */
   --border-color: rgba(255, 255, 255, 0.08);
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --primary: #4a90e2;
-  --primary-glow: rgba(74, 144, 226, 0.15);
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
+  --text-main: #ebf1f5; /* Blanco Glacial */
+  --text-muted: #8a94a6;
+  --primary: #d6c8fa; /* Lavanda Zentry */
+  --primary-dark: #533b87; /* Púrpura Zentry */
+  --primary-glow: rgba(214, 200, 250, 0.15);
+  --success: #c2f4e7; /* Verde Menta */
+  --success-glow: rgba(194, 244, 231, 0.15);
+  --neutral-grey: #4a5160; /* Gris Neutro Oscuro */
   --font-family-title: 'Outfit', sans-serif;
   --font-family-body: 'Inter', sans-serif;
 }
@@ -24,6 +25,9 @@
 
 body {
   background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 0% 0%, rgba(194, 244, 231, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(214, 200, 250, 0.08) 0%, transparent 50%);
   color: var(--text-main);
   font-family: var(--font-family-body);
   font-size: 15px;
@@ -234,11 +238,10 @@ body {
   position: relative;
 }
 
-/* Banner */
 .workspace-banner {
   height: 160px;
   width: 100%;
-  background: linear-gradient(135deg, #1f305e 0%, #0f1013 100%);
+  background: linear-gradient(135deg, #1c142e 0%, #0c0d10 100%);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
@@ -250,7 +253,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 80% 20%, var(--primary-glow) 0%, transparent 50%);
+  background: radial-gradient(circle at 80% 20%, rgba(214, 200, 250, 0.08) 0%, transparent 50%);
 }
 
 /* Header Area */
@@ -326,7 +329,7 @@ body {
 
 .progress-bar {
   height: 8px;
-  background-color: var(--primary);
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-radius: 4px;
   box-shadow: 0 0 10px var(--primary-glow);
   transition: width 0.3s ease;
@@ -476,13 +479,13 @@ body {
   text-transform: capitalize;
 }
 
-.tag-blue { background-color: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-.tag-green { background-color: rgba(16, 185, 129, 0.15); color: #34d399; }
-.tag-orange { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.tag-blue { background-color: rgba(214, 200, 250, 0.15); color: #d6c8fa; }
+.tag-green { background-color: rgba(194, 244, 231, 0.15); color: #c2f4e7; }
+.tag-orange { background-color: rgba(83, 59, 135, 0.25); color: #d6c8fa; }
 .tag-red { background-color: rgba(239, 68, 68, 0.15); color: #f87171; }
 .tag-purple { background-color: rgba(139, 92, 246, 0.15); color: #a78bfa; }
 .tag-cyan { background-color: rgba(6, 182, 212, 0.15); color: #22d3ee; }
-.tag-grey { background-color: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+.tag-grey { background-color: rgba(74, 81, 96, 0.25); color: #ebf1f5; }
 
 /* Kanban Board View */
 .kanban-board {
