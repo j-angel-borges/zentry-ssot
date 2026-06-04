@@ -208,6 +208,84 @@ function run() {
   console.log(`Total Pages: ${db.pages.length}`);
   console.log(`Total Tasks: ${db.tasks.length}`);
   console.log(`Total Keep Notes: ${db.ideas.length}`);
+
+  // --- AUTOMATIC CONSOLIDATED MD COMPILATION ---
+  console.log('Compiling master Markdown SSOT document...');
+  const filesOrder = [
+    'README.md',
+    '01-vision-y-producto/README.md',
+    '01-vision-y-producto/problema-algoritmico.md',
+    '01-vision-y-producto/ludopatia-y-adiccion.md',
+    '01-vision-y-producto/solucion-bilateral.md',
+    '01-vision-y-producto/segmentacion-etaria.md',
+    '02-arquitectura-tecnica/README.md',
+    '02-arquitectura-tecnica/paradigma-web-first.md',
+    '02-arquitectura-tecnica/control-dispositivo-abm.md',
+    '02-arquitectura-tecnica/telemetria-gcp-ai.md',
+    '02-arquitectura-tecnica/interfaz-compose.md',
+    '02-arquitectura-tecnica/analisis-de-brechas.md',
+    '03-marketing-y-ventas/README.md',
+    '03-marketing-y-ventas/demobook.md',
+    '03-marketing-y-ventas/demo-venta-directa.md',
+    '03-marketing-y-ventas/precierres-y-embudos.md',
+    '03-marketing-y-ventas/manejo-de-objeciones.md',
+    '03-marketing-y-ventas/factor-wow.md',
+    '04-operaciones-y-roadmap/README.md',
+    '04-operaciones-y-roadmap/roadmap.md',
+    '04-operaciones-y-roadmap/progreso-y-metricas.md',
+    '04-operaciones-y-roadmap/banco-de-ideas.md',
+    '04-operaciones-y-roadmap/backlog-tareas.md',
+    '04-operaciones-y-roadmap/bitacora-actividades.md',
+    '05-mesa-de-trabajo/README.md',
+    '05-mesa-de-trabajo/colorimetria-y-diseno.md',
+    '05-mesa-de-trabajo/tipografia-y-fuentes.md',
+    '05-mesa-de-trabajo/logotipos-y-recursos.md'
+  ];
+
+  let masterContent = `# 🌌 ZentryOS - MANIFIESTO ÚNICO DE CONTEXTO (SSOT) COMPLETO
+
+Este documento contiene la recopilación íntegra y unificada de toda la documentación del repositorio Single Source of Truth (SSOT) de **ZentryOS**. Está estructurado especialmente para ser procesado y comprendido de manera óptima por modelos de Inteligencia Artificial (LLMs) como Gemini, Claude o ChatGPT.
+
+---
+
+## 📋 ÍNDICE GENERAL DEL MANIFIESTO
+${filesOrder.map((f, i) => `${i + 1}. [${f}](#-archivo-${f.replace(/[\/\.]/g, '-')})`).join('\n')}
+
+---
+`;
+
+  filesOrder.forEach((fileRelPath) => {
+    const filePath = path.join(repoRoot, fileRelPath.replace(/\//g, path.sep));
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const cleanAnchor = fileRelPath.replace(/[\/\.]/g, '-');
+      masterContent += `\n\n---\n\n<a name="-archivo-${cleanAnchor}"></a>\n# 📂 ARCHIVO: \`${fileRelPath}\`\n\n${content}\n`;
+    }
+  });
+
+  // Write to Repo Root (for GitHub)
+  const repoOutputPath = path.join(repoRoot, 'zentryos-ssot-completo.md');
+  fs.writeFileSync(repoOutputPath, masterContent, 'utf8');
+  console.log(`Master document written to repo root: ${repoOutputPath}`);
+
+  // Write to ZentryHub Public folder (for Vercel Download button)
+  const publicDir = path.join(repoRoot, 'ZentryHub', 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+  const publicOutputPath = path.join(publicDir, 'zentryos-ssot-completo.md');
+  fs.writeFileSync(publicOutputPath, masterContent, 'utf8');
+  console.log(`Master document written to public folder: ${publicOutputPath}`);
+
+  // Write to Google Drive (if directory exists on local computer)
+  const gDriveDir = 'G:\\Mi unidad\\aa. QUARZ\\A. ZentryOS';
+  if (fs.existsSync(gDriveDir)) {
+    const gDriveOutputPath = path.join(gDriveDir, 'ssot-actual.md');
+    fs.writeFileSync(gDriveOutputPath, masterContent, 'utf8');
+    console.log(`Master document updated in Google Drive: ${gDriveOutputPath}`);
+  } else {
+    console.log('Google Drive directory not found. Skipping Google Drive update.');
+  }
 }
 
 run();
