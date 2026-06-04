@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <title>Zentry Hub - SSOT Dashboard</title>
+  </head>
+  <body>
+    <div id="app" class="notion-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="workspace-selector">
+            <span class="workspace-icon">☄️</span>
+            <div class="workspace-info">
+              <span class="workspace-name">Zentry Hub</span>
+              <span class="workspace-role">SSOT Workspace</span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <div class="nav-section-title">General</div>
+            <a href="#backlog" class="nav-link active" data-view="backlog">
+              <span class="link-icon">📋</span>
+              <span class="link-text">Tablero Backlog</span>
+            </a>
+            <a href="#ideas" class="nav-link" data-view="ideas">
+              <span class="link-icon">💡</span>
+              <span class="link-text">Banco de Ideas (Keep)</span>
+            </a>
+            <a href="#metrics" class="nav-link" data-view="metrics">
+              <span class="link-icon">📊</span>
+              <span class="link-text">Métricas y KPIs</span>
+            </a>
+            <a href="#branding" class="nav-link" data-view="branding">
+              <span class="link-icon">🎨</span>
+              <span class="link-text">Mesa de Trabajo</span>
+            </a>
+          </div>
+
+          <div class="nav-section">
+            <div class="nav-section-title">Documentos SSOT</div>
+            <div id="ssot-tree" class="doc-tree">
+              <!-- Dynamically populated by main.js -->
+              <div class="loading-tree">Cargando base de conocimiento...</div>
+            </div>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span class="footer-status">⚡ Sincronizado</span>
+          <span class="footer-version" id="db-generated-date">v1.0.0</span>
+        </div>
+      </aside>
+
+      <!-- Main Workspace -->
+      <main class="workspace">
+        <!-- Banner and Icon Area -->
+        <div class="workspace-banner" id="page-banner">
+          <div class="banner-gradient"></div>
+        </div>
+        
+        <div class="workspace-header">
+          <div class="page-icon-wrapper" id="page-icon">📋</div>
+          <h1 class="page-title" id="page-title">Tablero Backlog</h1>
+        </div>
+
+        <!-- Notion Property Table -->
+        <div class="properties-container" id="properties-block">
+          <div class="property-row">
+            <span class="property-label">📈 Progreso Global</span>
+            <div class="property-value progress-bar-container">
+              <div class="progress-bar" id="global-progress" style="width: 25%"></div>
+              <span class="progress-text" id="global-progress-text">25%</span>
+            </div>
+          </div>
+          <div class="property-row">
+            <span class="property-label">🏷️ Etiquetas</span>
+            <span class="property-value" id="page-tags">
+              <span class="tag tag-blue">operaciones</span>
+              <span class="tag tag-green">gestion</span>
+            </span>
+          </div>
+          <div class="property-row">
+            <span class="property-label">📅 Deadline Principal</span>
+            <span class="property-value" id="page-deadline">2026-08-30</span>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="workspace-content" id="workspace-content">
+          <!-- Dynamically loaded views (Kanban, Markdown pages, etc.) -->
+        </div>
+      </main>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

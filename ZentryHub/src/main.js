@@ -1,0 +1,598 @@
+import './style.css';
+import db from './ssot-db.json';
+
+// App State
+const state = {
+  activeView: 'backlog', // 'backlog', 'ideas', 'metrics', 'branding', 'doc'
+  activeDocPath: '',
+  collapsedFolders: {
+    '01-vision-y-producto': false,
+    '02-arquitectura-tecnica': false,
+    '03-marketing-y-ventas': false,
+    '04-operaciones-y-roadmap': false,
+    '05-mesa-de-trabajo': false
+  },
+  filters: {
+    vertical: 'all',
+    priority: 'all',
+    status: 'all'
+  }
+};
+
+// Markdown Parser Utility
+function mdToHtml(md) {
+  if (!md) return '';
+  let html = md.trim().replace(/\r\n/g, '\n');
+
+  // Code blocks
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+    return `<pre><code class="language-${lang}">${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Headers
+  html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+  html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+  html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+
+  // Blockquotes
+  html = html.replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>');
+
+  // Emojis lists and checkboxes
+  html = html.replace(/-\s*\[\s*\]\s*(.*$)/gim, '<li><input type="checkbox" disabled> $1</li>');
+  html = html.replace(/-\s*\[x\]\s*(.*$)/gim, '<li><input type="checkbox" checked disabled> $1</li>');
+
+  // Unordered lists
+  html = html.replace(/^\s*[\*\-]\s+(.*$)/gim, '<ul><li>$1</li></ul>');
+  html = html.replace(/<\/ul>\n<ul>/g, '\n');
+
+  // Ordered lists
+  html = html.replace(/^\s*\d+\.\s+(.*$)/gim, '<ol><li>$1</li></ol>');
+  html = html.replace(/<\/ol>\n<ol>/g, '\n');
+
+  // Tables
+  const tableRegex = /((?:\|[^\n]*\|(?:\r?\n|$))+)/g;
+  html = html.replace(tableRegex, (match) => {
+    const lines = match.trim().split('\n');
+    if (lines.length < 2) return match;
+    if (!lines[1].includes('-')) return match;
+    
+    let tableHtml = '<table><thead>';
+    const headers = lines[0].split('|').map(s => s.trim()).filter((s, idx, arr) => idx > 0 && idx < arr.length - 1);
+    tableHtml += '<tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+    
+    for (let i = 2; i < lines.length; i++) {
+      const cols = lines[i].split('|').map(s => s.trim()).filter((s, idx, arr) => idx > 0 && idx < arr.length - 1);
+      tableHtml += '<tr>' + cols.map(c => `<td>${c}</td>`).join('') + '</tr>';
+    }
+    tableHtml += '</tbody></table>';
+    return tableHtml;
+  });
+
+  // Bold / Italic
+  html = html.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
+
+  // Links (convert file scheme or relative md files to hash routes)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, url) => {
+    if (url.startsWith('file:///') || url.includes('.md')) {
+      const cleanUrl = url.replace('file:///', '');
+      const parts = cleanUrl.split('/');
+      const lastPart = parts[parts.length - 1];
+      const folderName = parts[parts.length - 2];
+      if (folderName && lastPart) {
+        return `<a href="#doc/${folderName}/${lastPart}" class="doc-link">${text}</a>`;
+      }
+    }
+    return `<a href="${url}" target="_blank" rel="noopener">${text}</a>`;
+  });
+
+  // Paragraphs
+  const blocks = html.split('\n\n');
+  const parsedBlocks = blocks.map(block => {
+    const trimmed = block.trim();
+    if (!trimmed) return '';
+    if (trimmed.startsWith('<h') || trimmed.startsWith('<ul') || trimmed.startsWith('<ol') || trimmed.startsWith('<blockquote') || trimmed.startsWith('<pre') || trimmed.startsWith('<table') || trimmed.startsWith('---')) {
+      return trimmed;
+    }
+    return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
+  });
+  
+  return parsedBlocks.join('\n');
+}
+
+// Format Date Utility
+function formatDate(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Set global metadata in sidebar footer
+document.getElementById('db-generated-date').textContent = formatDate(db.metadata.generatedAt);
+
+// Calculate overall progress across pages
+function calculateGlobalProgress() {
+  let totalProgress = 0;
+  let count = 0;
+  db.pages.forEach(p => {
+    if (p.metadata && p.metadata.progress) {
+      const pVal = parseInt(p.metadata.progress);
+      if (!isNaN(pVal)) {
+        totalProgress += pVal;
+        count++;
+      }
+    }
+  });
+  return count > 0 ? Math.round(totalProgress / count) : 25;
+}
+
+const globalProgressValue = calculateGlobalProgress();
+document.getElementById('global-progress').style.width = `${globalProgressValue}%`;
+document.getElementById('global-progress-text').textContent = `${globalProgressValue}%`;
+
+// Build Document Tree in Sidebar
+function buildDocTree() {
+  const treeContainer = document.getElementById('ssot-tree');
+  treeContainer.innerHTML = '';
+
+  const folders = {};
+  // Group pages by directory
+  db.pages.forEach(page => {
+    if (!folders[page.directory]) {
+      folders[page.directory] = [];
+    }
+    folders[page.directory].push(page);
+  });
+
+  // Order directory list alphabetically or logically
+  const sortedFolders = Object.keys(folders).sort();
+
+  sortedFolders.forEach(dir => {
+    const folderNode = document.createElement('div');
+    folderNode.className = `folder-node ${state.collapsedFolders[dir] ? 'collapsed' : ''}`;
+    folderNode.dataset.dir = dir;
+
+    // Friendly Folder Title
+    let friendlyName = dir.replace(/^\d+-/, '').replace(/-/g, ' ');
+    friendlyName = friendlyName.charAt(0).toUpperCase() + friendlyName.slice(1);
+    if (dir === '05-mesa-de-trabajo') friendlyName = 'Mesa de Trabajo 🎨';
+
+    const folderHeader = document.createElement('div');
+    folderHeader.className = 'folder-header';
+    folderHeader.innerHTML = `
+      <span class="folder-toggle-icon">▼</span>
+      <span class="folder-icon">📁</span>
+      <span class="folder-title">${friendlyName}</span>
+    `;
+
+    // Toggle Collapse listener
+    folderHeader.addEventListener('click', (e) => {
+      state.collapsedFolders[dir] = !state.collapsedFolders[dir];
+      folderNode.classList.toggle('collapsed');
+    });
+
+    const folderPages = document.createElement('div');
+    folderPages.className = 'folder-pages';
+
+    // Sort pages: index/readme first, then alphabetical
+    const sortedPages = folders[dir].sort((a, b) => {
+      if (a.filename.toLowerCase().includes('readme')) return -1;
+      if (b.filename.toLowerCase().includes('readme')) return 1;
+      return a.title.localeCompare(b.title);
+    });
+
+    sortedPages.forEach(page => {
+      const pageNode = document.createElement('a');
+      pageNode.href = `#doc/${page.path}`;
+      pageNode.className = 'page-node';
+      if (state.activeView === 'doc' && state.activeDocPath === page.path) {
+        pageNode.classList.add('active');
+      }
+      
+      // Page Emoji Icon
+      let emoji = '📄';
+      if (page.filename.includes('readme')) emoji = '📖';
+      if (page.filename.includes('ludopatia') || page.filename.includes('adiccion')) emoji = '🎮';
+      if (page.filename.includes('problema')) emoji = '🧠';
+      if (page.filename.includes('control') || page.filename.includes('mdm')) emoji = '🔒';
+      if (page.filename.includes('telemetria')) emoji = '📡';
+      if (page.filename.includes('compose')) emoji = '🎨';
+      if (page.filename.includes('demo')) emoji = '🎭';
+      if (page.filename.includes('banco')) emoji = '💡';
+      if (page.filename.includes('backlog') || page.filename.includes('tareas')) emoji = '📋';
+      if (page.filename.includes('roadmap')) emoji = '📅';
+
+      pageNode.innerHTML = `
+        <span class="page-icon">${emoji}</span>
+        <span class="page-title-text">${page.title}</span>
+      `;
+      folderPages.appendChild(pageNode);
+    });
+
+    folderNode.appendChild(folderHeader);
+    folderNode.appendChild(folderPages);
+    treeContainer.appendChild(folderNode);
+  });
+}
+
+// Views Renderers
+const renderers = {
+  // 1. Kanban Backlog View
+  backlog: () => {
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1f305e 0%, #0f1013 100%)';
+    document.getElementById('page-icon').textContent = '📋';
+    document.getElementById('page-title').textContent = 'Tablero Backlog';
+    document.getElementById('properties-block').style.display = 'flex';
+    
+    const container = document.getElementById('workspace-content');
+    container.innerHTML = `
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">🏷️ Vertical:</label>
+          <select id="filter-vertical" class="filter-select">
+            <option value="all">Todas</option>
+            <option value="tec">Técnica (02-arquitectura)</option>
+            <option value="prod">Producto (01-vision)</option>
+            <option value="mkt">Ventas / Marketing (03-ventas)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">⚡ Prioridad:</label>
+          <select id="filter-priority" class="filter-select">
+            <option value="all">Todas</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="kanban-board">
+        <div class="kanban-column" id="col-pendiente">
+          <div class="column-header">
+            <span class="column-title">⏳ Por Hacer</span>
+            <span class="column-count" id="count-pendiente">0</span>
+          </div>
+          <div class="kanban-cards" id="cards-pendiente"></div>
+        </div>
+        <div class="kanban-column" id="col-progreso">
+          <div class="column-header">
+            <span class="column-title">⚡ En Curso</span>
+            <span class="column-count" id="count-progreso">0</span>
+          </div>
+          <div class="kanban-cards" id="cards-progreso"></div>
+        </div>
+        <div class="kanban-column" id="col-completado">
+          <div class="column-header">
+            <span class="column-title">✅ Completado</span>
+            <span class="column-count" id="count-completado">0</span>
+          </div>
+          <div class="kanban-cards" id="cards-completado"></div>
+        </div>
+      </div>
+    `;
+
+    // Render Cards with current filters
+    renderKanbanCards();
+
+    // Bind Filter Change events
+    document.getElementById('filter-vertical').value = state.filters.vertical;
+    document.getElementById('filter-priority').value = state.filters.priority;
+
+    document.getElementById('filter-vertical').addEventListener('change', (e) => {
+      state.filters.vertical = e.target.value;
+      renderKanbanCards();
+    });
+    document.getElementById('filter-priority').addEventListener('change', (e) => {
+      state.filters.priority = e.target.value;
+      renderKanbanCards();
+    });
+  },
+
+  // 2. Google Keep Notes View
+  ideas: () => {
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #4b3621 0%, #0f1013 100%)';
+    document.getElementById('page-icon').textContent = '💡';
+    document.getElementById('page-title').textContent = 'Banco de Ideas (Keep)';
+    document.getElementById('properties-block').style.display = 'none';
+
+    const container = document.getElementById('workspace-content');
+    
+    let html = `<div class="keep-notes-container">`;
+    db.ideas.forEach(note => {
+      const taskListItems = note.tasks.map(t => `<li>${t}</li>`).join('');
+      html += `
+        <div class="keep-card">
+          <div class="keep-header">
+            <h3 class="keep-title">${note.fullTitle}</h3>
+            <span class="keep-category">${note.category}</span>
+          </div>
+          <div class="keep-body">${note.body.replace(/\n/g, '<br>')}</div>
+          ${taskListItems ? `<div class="keep-tasks-title">⚙️ Pendientes Inferidos:</div><ul class="keep-tasks-list">${taskListItems}</ul>` : ''}
+        </div>
+      `;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  },
+
+  // 3. Metrics and KPIs View
+  metrics: () => {
+    const page = db.pages.find(p => p.filename === 'progreso-y-metricas.md');
+    if (page) {
+      renderers.doc(page.path);
+    } else {
+      document.getElementById('workspace-content').innerHTML = `<p>Documento de métricas no encontrado.</p>`;
+    }
+  },
+
+  // 4. Branding and Colors (Mesa de Trabajo)
+  branding: () => {
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #13141f 0%, #0f1013 100%)';
+    document.getElementById('page-icon').textContent = '🎨';
+    document.getElementById('page-title').textContent = 'Mesa de Trabajo (Branding)';
+    document.getElementById('properties-block').style.display = 'none';
+
+    const container = document.getElementById('workspace-content');
+    
+    // Core color variables matching style.css and colorimetria-y-diseno.md
+    const colors = [
+      { name: 'Azul Principal Zentry', hex: '#4A90E2', desc: 'Acento principal, usado en logos y botones reactivos' },
+      { name: 'Fondo Oscuro', hex: '#0F1013', desc: 'Fondo de la aplicación móvil y launcher' },
+      { name: 'Fondo Sidebar / Navegación', hex: '#17181C', desc: 'Paneles y menús de control parental' },
+      { name: 'Card Element (Glassmorphic)', hex: '#1A1B21', desc: 'Cuerpo de las tarjetas lúdicas' },
+      { name: 'Luz Nocturna / Filtro Circadiano', hex: '#F59E0B', desc: 'Filtro ámbar de protección ocular' },
+      { name: 'Success / Aprobado', hex: '#10B981', desc: 'Cumplimiento de retos y estados positivos' }
+    ];
+
+    let html = `
+      <div class="markdown-body">
+        <h2>🎨 Colorimetría Oficial de ZentryOS</h2>
+        <p>Haz clic en cualquier tarjeta para copiar el código de color HEX en tu portapapeles y aplicarlo en tus entornos de desarrollo.</p>
+        <div class="color-swatch-grid">
+    `;
+
+    colors.forEach(c => {
+      html += `
+        <div class="color-card" data-hex="${c.hex}">
+          <div class="color-preview" style="background-color: ${c.hex}"></div>
+          <div class="color-info">
+            <span class="color-name">${c.name}</span>
+            <span class="color-code">${c.hex}</span>
+            <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">${c.desc}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+        <h2 style="margin-top: 40px;">✏️ Tipografía y Fuentes</h2>
+        <p>ZentryOS utiliza una combinación tipográfica moderna y legible de Google Fonts:</p>
+        <ul>
+          <li><strong>Outfit</strong>: Para titulares de nivel superior, títulos de retos y logos. Da un estilo tecnológico premium.</li>
+          <li><strong>Inter</strong>: Para textos de lectura largos, cuadros de diálogo y respuestas del tutor de IA. Ofrece legibilidad óptima.</li>
+        </ul>
+      </div>
+      <div class="copy-toast" id="copy-toast">Código HEX copiado!</div>
+    `;
+
+    container.innerHTML = html;
+
+    // Clipboard Listener
+    container.querySelectorAll('.color-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const hex = card.dataset.hex;
+        navigator.clipboard.writeText(hex).then(() => {
+          const toast = document.getElementById('copy-toast');
+          toast.classList.add('show');
+          setTimeout(() => {
+            toast.classList.remove('show');
+          }, 2000);
+        });
+      });
+    });
+  },
+
+  // 5. Page Document renderer
+  doc: (docPath) => {
+    const page = db.pages.find(p => p.path === docPath);
+    if (!page) {
+      document.getElementById('workspace-content').innerHTML = `<h2>Página no encontrada</h2><p>El documento solicitado no existe en la base de datos.</p>`;
+      return;
+    }
+
+    // Set custom page icon/banner
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #111 0%, #222 100%)';
+    
+    let emoji = '📄';
+    if (page.filename.includes('readme')) emoji = '📖';
+    if (page.filename.includes('ludopatia') || page.filename.includes('adiccion')) emoji = '🎮';
+    if (page.filename.includes('problema')) emoji = '🧠';
+    if (page.filename.includes('control') || page.filename.includes('mdm')) emoji = '🔒';
+    if (page.filename.includes('telemetria')) emoji = '📡';
+    if (page.filename.includes('compose')) emoji = '🎨';
+    if (page.filename.includes('demo')) emoji = '🎭';
+    
+    document.getElementById('page-icon').textContent = emoji;
+    document.getElementById('page-title').textContent = page.title;
+    
+    // Properties Row
+    const propBlock = document.getElementById('properties-block');
+    propBlock.style.display = 'flex';
+    
+    let tagsHtml = '';
+    if (page.metadata.tags) {
+      const colors = ['blue', 'green', 'orange', 'red', 'purple', 'cyan', 'grey'];
+      page.metadata.tags.forEach((tag, idx) => {
+        const c = colors[idx % colors.length];
+        tagsHtml += `<span class="tag tag-${c}">${tag}</span>`;
+      });
+    }
+
+    propBlock.innerHTML = `
+      <div class="property-row">
+        <span class="property-label">📂 Módulo</span>
+        <span class="property-value" style="font-weight: 600; text-transform: uppercase;">${page.directory.replace(/^\d+-/, '')}</span>
+      </div>
+      <div class="property-row">
+        <span class="property-label">🏷️ Etiquetas</span>
+        <span class="property-value" id="page-tags">${tagsHtml || 'Ninguna'}</span>
+      </div>
+      <div class="property-row">
+        <span class="property-label">⏳ Progreso Módulo</span>
+        <div class="property-value progress-bar-container">
+          <div class="progress-bar" style="width: ${page.metadata.progress || '0%'}"></div>
+          <span class="progress-text">${page.metadata.progress || '0%'}</span>
+        </div>
+      </div>
+      <div class="property-row">
+        <span class="property-label">📅 Deadline Hito</span>
+        <span class="property-value">${page.metadata.deadline || 'Sin fecha'}</span>
+      </div>
+      <div class="property-row">
+        <span class="property-label">⚖️ Estado SSOT</span>
+        <span class="property-value"><span class="tag tag-green">${page.metadata.status || 'aprobado'}</span></span>
+      </div>
+    `;
+
+    const container = document.getElementById('workspace-content');
+    container.innerHTML = `
+      <div class="markdown-body">
+        ${mdToHtml(page.body)}
+      </div>
+    `;
+  }
+};
+
+// Render Kanban board lists based on active filters
+function renderKanbanCards() {
+  const cardsPendiente = document.getElementById('cards-pendiente');
+  const cardsProgreso = document.getElementById('cards-progreso');
+  const cardsCompletado = document.getElementById('cards-completado');
+
+  cardsPendiente.innerHTML = '';
+  cardsProgreso.innerHTML = '';
+  cardsCompletado.innerHTML = '';
+
+  let cPendiente = 0;
+  let cProgreso = 0;
+  let cCompletado = 0;
+
+  // Filter Tasks
+  db.tasks.forEach(task => {
+    // 1. Vertical filter
+    if (state.filters.vertical !== 'all') {
+      const v = state.filters.vertical; // 'tec', 'prod', 'mkt'
+      if (v === 'tec' && !task.id.startsWith('TEC')) return;
+      if (v === 'prod' && !task.id.startsWith('PROD')) return;
+      if (v === 'mkt' && !task.id.startsWith('MKT')) return;
+    }
+
+    // 2. Priority filter
+    if (state.filters.priority !== 'all') {
+      if (task.priority.toLowerCase() !== state.filters.priority.toLowerCase()) return;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'kanban-card';
+    
+    let pClass = 'priority-media';
+    if (task.priority.toLowerCase() === 'alta') pClass = 'priority-high';
+    if (task.priority.toLowerCase() === 'baja') pClass = 'priority-baja';
+
+    // Assignee initials
+    let initials = task.assignedTo.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="card-id">${task.id}</span>
+        <span class="card-priority ${pClass}">${task.priority}</span>
+      </div>
+      <div class="card-body">${task.description}</div>
+      <div class="card-footer">
+        <span class="card-origin">Ref: ${task.origin}</span>
+        <span class="card-assignee">
+          <div class="assignee-avatar">${initials}</div>
+          <span>${task.assignedTo}</span>
+        </span>
+      </div>
+    `;
+
+    // Click on Card opens the Keep note or relevant doc if referenced
+    card.addEventListener('click', () => {
+      // Find Keep note that contains original ID
+      if (task.origin && task.origin.includes('Keep')) {
+        window.location.hash = '#ideas';
+      } else {
+        // Fallback: search doc matching the vertical
+        if (task.id.startsWith('TEC')) {
+          window.location.hash = '#doc/02-arquitectura-tecnica/README.md';
+        } else if (task.id.startsWith('MKT')) {
+          window.location.hash = '#doc/03-marketing-y-ventas/README.md';
+        } else {
+          window.location.hash = '#doc/01-vision-y-producto/README.md';
+        }
+      }
+    });
+
+    const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
+    if (cleanStatus.includes('pendiente') || cleanStatus.includes('hacer') || cleanStatus.includes('todo')) {
+      cardsPendiente.appendChild(card);
+      cPendiente++;
+    } else if (cleanStatus.includes('progreso') || cleanStatus.includes('curso') || cleanStatus.includes('proceso')) {
+      cardsProgreso.appendChild(card);
+      cProgreso++;
+    } else {
+      cardsCompletado.appendChild(card);
+      cCompletado++;
+    }
+  });
+
+  document.getElementById('count-pendiente').textContent = cPendiente;
+  document.getElementById('count-progreso').textContent = cProgreso;
+  document.getElementById('count-completado').textContent = cCompletado;
+}
+
+// Router Logic
+function handleRouting() {
+  const hash = window.location.hash || '#backlog';
+  
+  // Highlight active Nav Link
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (hash.startsWith('#doc/')) {
+    state.activeView = 'doc';
+    state.activeDocPath = hash.replace('#doc/', '');
+    buildDocTree(); // Rebuild tree to show active state
+    renderers.doc(state.activeDocPath);
+  } else {
+    state.activeView = hash.replace('#', '');
+    const navLink = document.querySelector(`.nav-link[data-view="${state.activeView}"]`);
+    if (navLink) navLink.classList.add('active');
+    
+    buildDocTree(); // Clear tree highlights
+
+    if (renderers[state.activeView]) {
+      renderers[state.activeView]();
+    } else {
+      renderers.backlog();
+    }
+  }
+}
+
+// Listen to Hash Changes
+window.addEventListener('hashchange', handleRouting);
+
+// Initial Load
+buildDocTree();
+handleRouting();
