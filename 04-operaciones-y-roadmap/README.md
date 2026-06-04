@@ -15,11 +15,11 @@ Esta vertical detalla el marco operativo, la planificación temporal por fases, 
 
 ## 📂 Contenido del Módulo
 
-1.  **[Roadmap de Desarrollo](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/roadmap.md)**: Hitos temporales divididos por fases desde el MVP (5%) hasta la versión comercial global (100%).
-2.  **[Progreso y Métricas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/progreso-y-metricas.md)**: Indicadores clave de rendimiento (KPIs), estado de avance de cada módulo y velocidad del equipo de ingeniería.
-3.  **[Banco de Ideas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/banco-de-ideas.md)**: Repositorio consolidado de notas y propuestas extraídas literalmente de Google Keep, con clasificaciones y tareas inferidas.
-4.  **[Backlog de Tareas Semanales](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/backlog-tareas.md)**: Flujo de trabajo activo con los to-dos y pendientes semanales inferidos de las ideas y necesidades operativas.
-5.  **[Bitácora de Actividades Diarias](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/bitacora-actividades.md)**: Historial y diario de progresos consolidados desde las carpetas de Google Drive.
+1.  **[Roadmap de Desarrollo](./roadmap.md)**: Hitos temporales divididos por fases desde el MVP (5%) hasta la versión comercial global (100%).
+2.  **[Progreso y Métricas](./progreso-y-metricas.md)**: Indicadores clave de rendimiento (KPIs), estado de avance de cada módulo y velocidad del equipo de ingeniería.
+3.  **[Banco de Ideas](./banco-de-ideas.md)**: Repositorio consolidado de notas y propuestas extraídas literalmente de Google Keep, con clasificaciones y tareas inferidas.
+4.  **[Backlog de Tareas Semanales](./backlog-tareas.md)**: Flujo de trabajo activo con los to-dos y pendientes semanales inferidos de las ideas y necesidades operativas.
+5.  **[Bitácora de Actividades Diarias](./bitacora-actividades.md)**: Historial y diario de progresos consolidados desde las carpetas de Google Drive.
 
 ---
 

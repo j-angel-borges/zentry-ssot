@@ -15,9 +15,9 @@ Esta vertical consolida las directrices visuales, filosofía de marca, sistemas 
 
 ## 📂 Contenido del Módulo
 
-1.  **[Colorimetría y Diseño](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/colorimetria-y-diseno.md)**: Paleta cromática HSL/HEX, esquemas de contraste, gradientes e identidades para los temas de interfaz (Claro y Cyberpunk).
-2.  **[Tipografía y Fuentes](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/tipografia-y-fuentes.md)**: Jerarquía visual de textos, pesos tipográficos, interlineados y fuentes oficiales de Google Fonts.
-3.  **[Logotipos y Recursos](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/logotipos-y-recursos.md)**: Rutas y enlaces de descarga de imágenes corporativas, iconos y fondos premium del proyecto.
+1.  **[Colorimetría y Diseño](./colorimetria-y-diseno.md)**: Paleta cromática HSL/HEX, esquemas de contraste, gradientes e identidades para los temas de interfaz (Claro y Cyberpunk).
+2.  **[Tipografía y Fuentes](./tipografia-y-fuentes.md)**: Jerarquía visual de textos, pesos tipográficos, interlineados y fuentes oficiales de Google Fonts.
+3.  **[Logotipos y Recursos](./logotipos-y-recursos.md)**: Rutas y enlaces de descarga de imágenes corporativas, iconos y fondos premium del proyecto.
 
 ---
 

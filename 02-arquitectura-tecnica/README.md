@@ -15,11 +15,11 @@ Esta sección describe los cimientos tecnológicos, patrones de diseño de softw
 
 ## 📂 Contenido del Módulo
 
-1.  **[Paradigma Web-First](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/02-arquitectura-tecnica/paradigma-web-first.md)**: El uso estratégico de WebViews optimizadas y Progressive Web Apps (PWAs) para acelerar el desarrollo de módulos educativos e interfaces secundarias.
-2.  **[Control del Dispositivo & ABM](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/02-arquitectura-tecnica/control-dispositivo-abm.md)**: Implementación de privilegios de administrador de dispositivo (*Device Owner*), integración Android Enterprise y escalabilidad hacia iOS (Apple Business Manager).
-3.  **[Telemetría y GCP/Vertex AI](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/02-arquitectura-tecnica/telemetria-gcp-ai.md)**: Conectividad con la API de IA Generativa de Google, canalización de logs a Google Cloud Platform y persistencia del Kill-Switch en Firebase Firestore.
-4.  **[Interfaz Compose](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/02-arquitectura-tecnica/interfaz-compose.md)**: Estructuración visual en Android Nativo con Jetpack Compose, flujo MVI de estados y animaciones de nivel premium.
-5.  **[Análisis de Brechas (Gap Analysis)](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/02-arquitectura-tecnica/analisis-de-brechas.md)**: Detalle del plan para evolucionar del prototipo funcional actual (5%) hacia un sistema operativo de seguridad robusto a nivel de kernel e infraestructura (100%).
+1.  **[Paradigma Web-First](./paradigma-web-first.md)**: El uso estratégico de WebViews optimizadas y Progressive Web Apps (PWAs) para acelerar el desarrollo de módulos educativos e interfaces secundarias.
+2.  **[Control del Dispositivo & ABM](./control-dispositivo-abm.md)**: Implementación de privilegios de administrador de dispositivo (*Device Owner*), integración Android Enterprise y escalabilidad hacia iOS (Apple Business Manager).
+3.  **[Telemetría y GCP/Vertex AI](./telemetria-gcp-ai.md)**: Conectividad con la API de IA Generativa de Google, canalización de logs a Google Cloud Platform y persistencia del Kill-Switch en Firebase Firestore.
+4.  **[Interfaz Compose](./interfaz-compose.md)**: Estructuración visual en Android Nativo con Jetpack Compose, flujo MVI de estados y animaciones de nivel premium.
+5.  **[Análisis de Brechas (Gap Analysis)](./analisis-de-brechas.md)**: Detalle del plan para evolucionar del prototipo funcional actual (5%) hacia un sistema operativo de seguridad robusto a nivel de kernel e infraestructura (100%).
 
 ---
 
