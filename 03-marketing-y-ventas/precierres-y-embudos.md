@@ -56,3 +56,19 @@ El asesor de ventas debe asegurar micro-compromisos afirmativos (*precierres*) d
 ### Precierre 3: Filtro de Decisión
 *   *Asesor*: *"Nuestra plataforma requiere un compromiso mutuo. Si instalamos hoy la licencia anual en el teléfono de su hijo y configuramos su panel de control en su propio móvil, ¿se compromete a revisar el reporte de telemetría semanal para acompañarlo en su progreso?"*
 *   *Objetivo*: Colocar al padre en la posición de socio del desarrollo de su hijo, eliminando la objeción de "lo voy a pensar".
+
+---
+
+## 🗒️ Tácticas de Precierre Adicionales Inferred (Keep)
+
+Estas técnicas se han derivado de los registros diarios del banco de ideas para abordar la objeción de costo y justificar el valor premium:
+
+### Precierre 4: Analogía de Costo de Personalización de Software [MKT-02]
+*   *Asesor*: *"¿Cuánto cuesta adaptar algo a sus necesidades? Si una empresa usa Excel y Office básico, gasta $300 anuales. Si escala a un software administrativo avanzado, sube a $10,000. Pero si requiere una plataforma ultra-personalizada a sus necesidades exactas, el costo asciende a entre $50k y $100k dólares. Los sistemas operativos genéricos están diseñados para rentabilizar la atención de su hijo; adaptarlo o cambiarlo por uno que potencie su desarrollo es el equivalente a desarrollar software a medida para su mente."*
+*   *Objetivo*: Contextualizar el precio de ZentryOS frente al costo de desarrollo de software premium a medida.
+
+### Precierre 5: El Juego Matemático de Inversión en OS [MKT-03, MKT-04, MKT-05]
+*   *Asesor*: *"Hagamos un juego matemático muy simple. Del valor total del celular de 2000 soles que tiene en la mano, el 60% corresponde al hardware físico y el 40% (800 soles) corresponde al sistema operativo y su ecosistema cerrado (que es el verdadero motivo de compra, como pasa en iOS). ¿Usted usa el mismo celular de hace 10 años? No, ¿verdad? Va más lento y lo ha cambiado 4 o 5 veces. Si sumamos lo que ha gastado en el sistema operativo de cada celular suyo, de su pareja y de sus hijos en la última década, ¡estamos hablando de más de 10,000 o incluso 20,000 soles! Y ese sistema que costó tanto está diseñado algorítmicamente para retener a su hijo y dañar su capacidad cognitiva."*
+*   *Asesor (Continuación)*: *"Piense en esto como el cuerpo humano. El cuerpo es una máquina física (hardware), pero el cerebro es la inteligencia y el sistema operativo. Si por ese mismo valor usted pudiera invertir en un sistema operativo que actúe como cerebro inteligente y potencie el desarrollo cognitivo de su hijo, ¿sería una inversión o un gasto para el futuro de su hijo?"*
+*   *Objetivo*: Justificar el precio acumulado de ZentryOS demostrando matemáticamente que la familia ya destina miles de soles a sistemas dañinos y que reorientarlo a un OS educativo es una inversión lógica para la salud mental del menor.
+

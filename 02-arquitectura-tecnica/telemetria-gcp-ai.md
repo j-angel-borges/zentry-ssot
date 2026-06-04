@@ -70,3 +70,16 @@ Para medir el rendimiento cognitivo del menor y generar los reportes para padres
     *   `screen_time_distribution`: Minutos exactos por categoría de aplicación permitida.
 2.  **Procesamiento**: Pub/Sub envía los datos en streaming a **BigQuery**, donde modelos de datos agregados analizan las tendencias cognitivas del menor.
 3.  **Entrega**: Vertex AI procesa semanalmente los datos consolidados en BigQuery y redacta de manera automatizada el **Reporte Semanal para Padres**, que se envía vía email o app móvil complementaria.
+
+---
+
+## 📅 Roadmap de Infraestructura AI Inferred (Keep)
+
+De las propuestas capturadas en Google Keep, se derivan los siguientes componentes de arquitectura en la nube:
+
+1. **Inteligencia Matriz de Coordinación Multi-dispositivo [TEC-04]**:
+   - Una arquitectura en GCP que registra los estados y coordina dinámicamente las experiencias de juego creativo entre múltiples pantallas (TV conectada a Tablet y Móvil actuando como centro de control/mando).
+   - Control centralizado del ciclo de vida de la sesión de juego a través de WebSockets en GCP.
+2. **Motor de Reportes de Inteligencias Múltiples [TEC-06]**:
+   - Agente de IA entrenado pedagógicamente que analiza las creaciones de rol del menor (mensajes de voz, fotos de creaciones o interacciones lógicas) y genera perfiles de inteligencias múltiples (musical, creativa, lógica, emocional) para reportar de forma constructiva a los padres.
+

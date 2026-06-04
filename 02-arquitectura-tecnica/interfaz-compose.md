@@ -71,3 +71,16 @@ El avatar del tutor Zentry (renderizado mediante Compose Vector Animations o Lot
 
 ### 3. Glassmorphic Design (Efecto Cristal)
 Se implementa un estilo visual moderno de "vidrio esmerilado" en los diálogos de retos lógicos y recompensas, utilizando filtros de desenfoque nativos en Android 12+ (`RenderEffect.createBlurEffect`) y degradados de color HSL curados para dar una estética limpia y sofisticada.
+
+---
+
+## 📅 Roadmap de UI y Componentes Inferred (Keep)
+
+Para materializar las ideas y requerimientos operativos capturados en el banco de ideas, la interfaz Compose incorporará los siguientes elementos:
+
+1. **Barra de Tiempo Circadiana (Timer UI Overlay) [TEC-01]**:
+   - Una barra flotante o superpuesta persistente en la parte superior de la pantalla de entretenimiento que indica visualmente el tiempo restante de uso al menor.
+   - El diseño debe adaptarse al ciclo circadiano (límites dinámicos mañana/tarde/noche) mediante sutiles transiciones de color (ej. tonos cálidos y ámbar para la noche y fríos/brillantes para el día).
+2. **Formulario de Onboarding de Personalidad [TEC-05]**:
+   - Una interfaz secuencial autoguiada durante la instalación donde el menor responde preguntas dinámicas para configurar el Launcher con sus gustos e intereses iniciales, permitiendo una experiencia ultrapersonalizada desde el primer inicio.
+
