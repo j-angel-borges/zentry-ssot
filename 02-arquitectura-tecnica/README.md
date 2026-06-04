@@ -27,12 +27,12 @@ Esta sección describe los cimientos tecnológicos, patrones de diseño de softw
 
 ```mermaid
 graph TD
-    subgraph Cliente (Dispositivo Android)
+    subgraph "Cliente (Dispositivo Android)"
         A[Jetpack Compose UI] <-->|MVI State| B[Main Launcher Activity]
         B <-->|DevicePolicyManager| C[DeviceAdminReceiver]
         B <-->|Local WebView Client| D[Modulo Educativo Web-First]
     end
-    subgraph Cloud Infrastructure
+    subgraph "Cloud Infrastructure"
         E[Firebase Firestore] <-->|Kill-Switch / Sync Config| B
         F[Vertex AI / Google AI SDK] <-->|Gemini 2.5 Flash Lite API| B
         G[GCP Pub/Sub & BigQuery] <-->|Telemetria Log| B
