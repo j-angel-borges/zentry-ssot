@@ -43,8 +43,8 @@ Detalla la estrategia comercial, los recursos tecnológicos y el guion interacti
 Define la planificación temporal, los hitos clave y la asignación de recursos.
 *   [Roadmap de Producto](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/roadmap.md): Fases de desarrollo, fechas críticas y entregables.
 *   [Progreso y Métricas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/progreso-y-metricas.md): Estado del arte y KPIs operativos actuales.
-*   [Registro Diario](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/registro-diario.md): Timeline de avances operativos de la jornada.
-*   [Banco de Ideas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/banco-de-ideas.md): Repositorio central de ideas integradas desde Keep y NotebookLM.
+*   [Banco de Ideas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/banco-de-ideas.md): Registro centralizado de ideas clasificadas por fecha y prioridad.
+*   [Bitácora de Actividades](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/bitacora-actividades.md): Historial de actividades diarias procesadas por el agente.
 
 ### [5. Mesa de Trabajo](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/README.md)
 Consolida la identidad visual de marca, paletas de color, tipografía y recursos gráficos.

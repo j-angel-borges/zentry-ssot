@@ -17,8 +17,6 @@ Esta vertical detalla el marco operativo, la planificación temporal por fases, 
 
 1.  **[Roadmap de Desarrollo](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/roadmap.md)**: Hitos temporales divididos por fases desde el MVP (5%) hasta la versión comercial global (100%).
 2.  **[Progreso y Métricas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/progreso-y-metricas.md)**: Indicadores clave de rendimiento (KPIs), estado de avance de cada módulo y velocidad del equipo de ingeniería.
-3.  **[Registro Diario](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/registro-diario.md)**: Timeline consolidado de sucesos, avances diarios y bloqueos.
-4.  **[Banco de Ideas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/banco-de-ideas.md)**: Depósito de ideas y conceptos con fechas de registro, etiquetas y deadlines de ejecución.
 
 ---
 
