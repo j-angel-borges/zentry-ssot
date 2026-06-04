@@ -15,7 +15,7 @@ Esta vertical recopila la estrategia de go-to-market, los flujos del guion comer
 
 ## 📂 Contenido del Módulo
 
-1.  **[Recursos del DemoBook](./demobook.md)**: Infraestructura técnica de la Web App (Google Apps Script), campos del formulario de leads y panel de control del asesor.
+1.  **[Herramientas de Ventas: DemoBook y ZENTRYprospect](./demobook.md)**: El DemoBook como material de apoyo visual y científico (slides, videos, evidencia) y la Web App ZENTRYprospect para prospección de leads.
 2.  **[Guion de Venta Directa (La DEMO)](./demo-venta-directa.md)**: El guion comercial interactivo paso a paso (Romper el hielo, Autoridad, Prevención, Miedo, V&B, WOW y Cierre) idéntico a las directrices del Doc Matriz.
 3.  **[Precierres y Embudos](./precierres-y-embudos.md)**: Estrategia de go-to-market (Expo Maternidad) y embudos de adquisición híbridos.
 4.  **[Manejo de Objeciones](./manejo-de-objeciones.md)**: Respuestas a objeciones comunes (Calculadoras, analogía del Cuchillo, escuela tradicional).
