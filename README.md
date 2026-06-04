@@ -44,6 +44,12 @@ Define la planificación temporal, los hitos clave y la asignación de recursos.
 *   [Roadmap de Producto](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/roadmap.md): Fases de desarrollo, fechas críticas y entregables.
 *   [Progreso y Métricas](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/04-operaciones-y-roadmap/progreso-y-metricas.md): Estado del arte y KPIs operativos actuales.
 
+### [5. Mesa de Trabajo](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/README.md)
+Consolida la identidad visual de marca, paletas de color, tipografía y recursos gráficos.
+*   [Colorimetría y Diseño](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/colorimetria-y-diseno.md): Especificaciones de HSL/HEX, gradientes y temas.
+*   [Tipografía y Fuentes](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/tipografia-y-fuentes.md): Jerarquía de tipografías y fuentes.
+*   [Logotipos y Recursos](file:///C:/Users/jange/.gemini/antigravity/scratch/zentryos-ssot/05-mesa-de-trabajo/logotipos-y-recursos.md): Enlaces y directrices de logotipos y fondos.
+
 ---
 
 ## 🛠️ Contribución y Gobernanza del SSOT
