@@ -33,7 +33,8 @@ Detalla el diseño de software, la configuración de hardware (MDM) y la infraes
 
 ### [3. Marketing y Ventas](./03-marketing-y-ventas/README.md)
 Detalla la estrategia comercial, los recursos tecnológicos y el guion interactivo de venta consultiva en campo.
-*   [Recursos del DemoBook](./03-marketing-y-ventas/demobook.md): Herramientas y Web App de registro en eventos (clasp, sheets).
+*   [Recursos del DemoBook](./03-marketing-y-ventas/demobook.md): Material de apoyo visual (Slides), carpetas de videos, imágenes y biblioteca de validación científica que acompañan y apoyan el pitch de ventas del asesor comercial.
+*   [Zentry Prospect (Prospección)](./03-marketing-y-ventas/zentry-prospect.md): Infraestructura de la Web App en Google Apps Script, base de datos en Google Sheets y consola de administración para capturar leads en campo.
 *   [Guion de Venta Directa](./03-marketing-y-ventas/demo-venta-directa.md): Estructura oficial del guion interactivo (Romper el Hielo, Autoridad, Miedo, Cierre).
 *   [Precierres y Embudos](./03-marketing-y-ventas/precierres-y-embudos.md): Estrategia de go-to-market y embudos presenciales/digitales.
 *   [Manejo de Objeciones](./03-marketing-y-ventas/manejo-de-objeciones.md): Respuestas lógicas y analogías del Doc Matriz.

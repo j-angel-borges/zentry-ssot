@@ -15,11 +15,12 @@ Esta vertical recopila la estrategia de go-to-market, los flujos del guion comer
 
 ## 📂 Contenido del Módulo
 
-1.  **[Herramientas de Ventas: DemoBook y ZENTRYprospect](./demobook.md)**: El DemoBook como material de apoyo visual y científico (slides, videos, evidencia) y la Web App ZENTRYprospect para prospección de leads.
-2.  **[Guion de Venta Directa (La DEMO)](./demo-venta-directa.md)**: El guion comercial interactivo paso a paso (Romper el hielo, Autoridad, Prevención, Miedo, V&B, WOW y Cierre) idéntico a las directrices del Doc Matriz.
-3.  **[Precierres y Embudos](./precierres-y-embudos.md)**: Estrategia de go-to-market (Expo Maternidad) y embudos de adquisición híbridos.
-4.  **[Manejo de Objeciones](./manejo-de-objeciones.md)**: Respuestas a objeciones comunes (Calculadoras, analogía del Cuchillo, escuela tradicional).
-5.  **[Factor WOW](./factor-wow.md)**: Hitos sensoriales y dinámicas de deleite en tiempo real.
+1.  **[Recursos del DemoBook](./demobook.md)**: Material de apoyo visual (Slides), carpetas de videos para el Factor WOW, imágenes y biblioteca de validación científica que acompañan y apoyan el pitch de ventas del asesor comercial.
+2.  **[Zentry Prospect (Prospección)](./zentry-prospect.md)**: Infraestructura técnica de la Web App en Google Apps Script, base de datos en Google Sheets y consola de administración para capturar y calificar leads en campo.
+3.  **[Guion de Venta Directa (La DEMO)](./demo-venta-directa.md)**: El guion comercial interactivo paso a paso (Romper el hielo, Autoridad, Prevención, Miedo, V&B, WOW y Cierre) idéntico a las directrices del Doc Matriz.
+4.  **[Precierres y Embudos](./precierres-y-embudos.md)**: Estrategia de go-to-market (Expo Maternidad) y embudos de adquisición híbridos.
+5.  **[Manejo de Objeciones](./manejo-de-objeciones.md)**: Respuestas a objeciones comunes (Calculadoras, analogía del Cuchillo, escuela tradicional).
+6.  **[Factor WOW](./factor-wow.md)**: Hitos sensoriales y dinámicas de deleite en tiempo real.
 
 ---
 

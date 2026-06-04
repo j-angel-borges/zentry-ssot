@@ -8,10 +8,11 @@ Diseñado para alimentar a agentes y asistentes de IA especializados en esta ár
 ## 📋 ÍNDICE DE LA VERTICAL
 1. [03-marketing-y-ventas/README.md](#-archivo-03-marketing-y-ventas-README-md)
 2. [03-marketing-y-ventas/demobook.md](#-archivo-03-marketing-y-ventas-demobook-md)
-3. [03-marketing-y-ventas/demo-venta-directa.md](#-archivo-03-marketing-y-ventas-demo-venta-directa-md)
-4. [03-marketing-y-ventas/precierres-y-embudos.md](#-archivo-03-marketing-y-ventas-precierres-y-embudos-md)
-5. [03-marketing-y-ventas/manejo-de-objeciones.md](#-archivo-03-marketing-y-ventas-manejo-de-objeciones-md)
-6. [03-marketing-y-ventas/factor-wow.md](#-archivo-03-marketing-y-ventas-factor-wow-md)
+3. [03-marketing-y-ventas/zentry-prospect.md](#-archivo-03-marketing-y-ventas-zentry-prospect-md)
+4. [03-marketing-y-ventas/demo-venta-directa.md](#-archivo-03-marketing-y-ventas-demo-venta-directa-md)
+5. [03-marketing-y-ventas/precierres-y-embudos.md](#-archivo-03-marketing-y-ventas-precierres-y-embudos-md)
+6. [03-marketing-y-ventas/manejo-de-objeciones.md](#-archivo-03-marketing-y-ventas-manejo-de-objeciones-md)
+7. [03-marketing-y-ventas/factor-wow.md](#-archivo-03-marketing-y-ventas-factor-wow-md)
 
 ---
 
@@ -38,11 +39,12 @@ Esta vertical recopila la estrategia de go-to-market, los flujos del guion comer
 
 ## 📂 Contenido del Módulo
 
-1.  **[Herramientas de Ventas: DemoBook y ZENTRYprospect](./demobook.md)**: El DemoBook como material de apoyo visual y científico (slides, videos, evidencia) y la Web App ZENTRYprospect para prospección de leads.
-2.  **[Guion de Venta Directa (La DEMO)](./demo-venta-directa.md)**: El guion comercial interactivo paso a paso (Romper el hielo, Autoridad, Prevención, Miedo, V&B, WOW y Cierre) idéntico a las directrices del Doc Matriz.
-3.  **[Precierres y Embudos](./precierres-y-embudos.md)**: Estrategia de go-to-market (Expo Maternidad) y embudos de adquisición híbridos.
-4.  **[Manejo de Objeciones](./manejo-de-objeciones.md)**: Respuestas a objeciones comunes (Calculadoras, analogía del Cuchillo, escuela tradicional).
-5.  **[Factor WOW](./factor-wow.md)**: Hitos sensoriales y dinámicas de deleite en tiempo real.
+1.  **[Recursos del DemoBook](./demobook.md)**: Material de apoyo visual (Slides), carpetas de videos para el Factor WOW, imágenes y biblioteca de validación científica que acompañan y apoyan el pitch de ventas del asesor comercial.
+2.  **[Zentry Prospect (Prospección)](./zentry-prospect.md)**: Infraestructura técnica de la Web App en Google Apps Script, base de datos en Google Sheets y consola de administración para capturar y calificar leads en campo.
+3.  **[Guion de Venta Directa (La DEMO)](./demo-venta-directa.md)**: El guion comercial interactivo paso a paso (Romper el hielo, Autoridad, Prevención, Miedo, V&B, WOW y Cierre) idéntico a las directrices del Doc Matriz.
+4.  **[Precierres y Embudos](./precierres-y-embudos.md)**: Estrategia de go-to-market (Expo Maternidad) y embudos de adquisición híbridos.
+5.  **[Manejo de Objeciones](./manejo-de-objeciones.md)**: Respuestas a objeciones comunes (Calculadoras, analogía del Cuchillo, escuela tradicional).
+6.  **[Factor WOW](./factor-wow.md)**: Hitos sensoriales y dinámicas de deleite en tiempo real.
 
 ---
 
@@ -63,91 +65,178 @@ ZentryOS no se promociona como una app de espionaje o castigo parental. La retó
 # 📂 ARCHIVO: `03-marketing-y-ventas/demobook.md`
 
 ---
-title: "Herramientas de Ventas: DemoBook y ZENTRYprospect"
+title: "DemoBook: Kit de Ventas y Material de Apoyo"
 date: 2026-06-04
 status: "approved"
 progress: 100%
 deadline: 2026-08-30
-tags: ["marketing", "ventas", "demobook", "zentryprospect", "herramientas"]
+tags: ["marketing", "ventas", "demobook", "kit-de-ventas", "evidencia-cientifica"]
 ---
 
-# 🛠️ Herramientas de Ventas: DemoBook y ZENTRYprospect
+# 📖 DemoBook: Material de Apoyo para la Venta Directa
 
-Este documento aclara y define conceptualmente las dos herramientas fundamentales utilizadas por el equipo de Marketing y Ventas de ZentryOS para expandir el ecosistema comercial:
-
-1. **El DemoBook**: El material de apoyo visual y científico que utiliza el asesor comercial durante la **Venta Directa** para acompañar su presentación y facilitar el flujo de "La DEMO".
-2. **ZENTRYprospect**: La aplicación web independiente desarrollada en **Google Apps Script** y conectada a **Google Sheets** que se utiliza específicamente en eventos masivos (como la *Expo Maternidad*) para calificar prospectos y capturar leads de forma digital.
+El **DemoBook** es el conjunto de recursos visuales, multimedia e investigativos que el asesor comercial utiliza cara a cara con el cliente para respaldar el pitch de ventas y guiar la presentación. No debe confundirse con la herramienta de captación *Zentry Prospect*, ya que el DemoBook es el material que ilustra y valida científicamente cada fase del guion de ventas (**La DEMO**).
 
 ---
 
-## 📘 1. El DemoBook: Material de Apoyo para Venta Directa
+## 🏗️ Estructura Estratégica de Diapositivas (Slides)
 
-El **DemoBook** es el maletín de herramientas físicas y digitales que el asesor de ventas utiliza de forma interactiva frente al cliente para guiarlo a través del guion comercial. Su estructura sigue y representa estratégicamente cada una de las fases de **La DEMO**:
+El DemoBook está diseñado para acompañar visualmente las etapas críticas de la venta presencial:
 
-### 🗂️ Componentes del DemoBook:
+### 1. Diapositiva de Apertura (Romper el Hielo)
+*   **Visual**: Imagen de una cena familiar donde todos miran el teléfono en silencio o un niño haciendo una rabieta por una tablet.
+*   **Mensaje**: *"¿Quién tiene el control en tu hogar: tú o un algoritmo?"*
+*   **Propósito**: Generar empatía y hacer que el padre reconozca el problema cotidiano de inmediato.
 
-#### A. Slides (Presentación Comercial Estructurada)
-Un set de diapositivas interactivas diseñadas con la identidad visual premium de ZentryOS que guían la conversación paso a paso:
-*   **Fase de Romper el Hielo**: Diapositivas para mostrar la radiografía de consumo digital y calcular el gasto tecnológico familiar de los últimos 5 años.
-*   **Fase de Autoridad**: Slides corporativos que validan a *QUARZ GROUP EIRL* como un holding tecnológico de confianza.
-*   **Fases de Prevención y Miedo**: Diapositivas que visualizan el circuito neurológico del consumo digital compulsivo y exponen las consecuencias reales de la falta de acción.
-*   **Fase de Valor y Plan**: Presentación visual de las dos vistas (Vista para Padres y Vista para Niños) y la arquitectura de ZentryOS.
+### 2. Diapositiva de Autoridad (Quiénes Somos)
+*   **Visual**: Logotipos de ZentryOS, el equipo de ingeniería y las tecnologías que lo respaldan (Google Cloud, Vertex AI, Apple Enterprise).
+*   **Mensaje**: *"Tecnología de nivel industrial diseñada por expertos en desarrollo infantil e inteligencia artificial."*
+*   **Propósito**: Posicionar al asesor y a la empresa como figuras de alta autoridad.
 
-#### B. Carpeta de Experiencias WOW (Videos y Recursos Multimedia)
-Vídeos y demostraciones preparadas para asombrar al prospecto en tiempo real:
-*   **Vídeo del Tutor IA Vocal**: Muestra del avatar interactivo con síntesis de voz Gemini TTS y animaciones reactivas en Compose.
-*   **Vídeo del Desafío Lógico**: Animaciones que muestran al niño ganando energía tras resolver retos matemáticos o lógicos (apertura de portales tridimensionales).
-*   **Demostración de Telemetría**: Pantallas que ilustran cómo se apaga el dispositivo de forma remota a través del *Kill-Switch* de Firestore.
+### 3. Diapositiva del Problema (Miedo & Prevención)
+*   **Visual**: Diagrama del cerebro de un niño ilustrando el lóbulo frontal y la liberación masiva de dopamina por notificaciones push y videos cortos (scroll infinito).
+*   **Mensaje**: *"El scroll infinito está reconfigurando la capacidad de atención de tu hijo, generando dependencia digital y fatiga mental."*
+*   **Propósito**: Ilustrar el daño neurológico real causado por las aplicaciones diseñadas para enganchar.
 
-#### C. Banco de Validación Científica y Enlaces de Investigación
-El DemoBook contiene artículos científicos, investigaciones neurológicas y estadísticas reales que sirven para respaldar con evidencia científica la propuesta de ZentryOS:
-*   **Impacto Cognitivo de la Estimulación Temprana**: Estudios sobre la atrofia del lóbulo frontal debido a la exposición a pantallas antes de los 5 años.
-*   **Mecanismos de Adicción Digital**: Documentos de la OMS y del DSM-5 sobre el Trastorno por Videojuegos (Loot Boxes como puerta a la ludopatía).
-*   **Estadísticas de Exposición a Riesgos**: Informes de ciberseguridad sobre el tiempo promedio en que un menor sin protección accede a contenido no apto en la red.
-
-#### D. La Encuesta de Diagnóstico Familiar
-Cuestionario inicial estructurado (aplicado de forma oral o en papel) para medir las horas de pantalla, el uso de control parental y la irritabilidad del menor cuando se le retira el celular.
+### 4. Diapositiva de Solución (Valor y Beneficios)
+*   **Visual**: Capturas de pantalla animadas de la interfaz de ZentryOS (Launcher Kiosk con su estética de Notion y Aurora) y del panel de control de los padres.
+*   **Mensaje**: *"La única solución bilateral: Bloqueo impenetrable para tu tranquilidad, y educación gamificada con IA para su diversión."*
+*   **Propósito**: Demostrar cómo se equilibra el control de los padres con el engagement lúdico de los hijos.
 
 ---
 
-## 📱 2. ZENTRYprospect: Web App de Prospección y Captura de Leads
+## 📁 Carpeta de Recursos y Experiencias del Factor WOW
 
-**ZENTRYprospect** es el recurso tecnológico desarrollado específicamente para capturar leads fríos y pre-calificarlos en puntos de prospección directa de alto tráfico.
+Para lograr el cierre emocional de la venta, el DemoBook contiene una subcarpeta de videos optimizados para mostrar en tablet o smartphone en el momento cúspide del pitch:
 
-### 🏗️ Arquitectura de la Aplicación (Google Apps Script)
-Implementado como una Web App SPA (*Single Page Application*) que se ejecuta en los dispositivos de los asesores en campo:
+*   **Video A (Tutor con Voz Humana - Gemini TTS)**:
+    Muestra la experiencia del niño conversando con la IA de ZentryOS en tiempo real. La IA le habla con una voz natural y empática, retándolo a resolver un acertijo lógico antes de desbloquear acceso adicional.
+*   **Video B (Kiosk Mode en Acción)**:
+    Demuestra la fortaleza técnica del launcher. Se muestra un intento simulado de elusión (reiniciar el teléfono, presionar botones de navegación o volumen), y cómo ZentryOS retiene el bloqueo total inmediatamente.
+*   **Video C (Experiencia del Portal de Recompensas)**:
+    Un recorrido por la tienda de recompensas donde el niño canjea sus monedas educativas (ganadas resolviendo problemas matemáticos) por actividades de la vida real aprobadas por los padres.
+
+---
+
+## 📚 Biblioteca de Validación Científica y Enlaces
+
+El asesor utiliza esta sección para disolver objeciones intelectuales ("Mi hijo necesita el teléfono para la escuela" o "Todos los niños usan tablets"):
+
+*   **Impacto Frontal en el Desarrollo de Mielina**:
+    *   *Estudio*: *Association between Screen-Based Media Use and Brain White Matter Integrity in Preschool-aged Children* (Pediatrics Journal).
+    *   *Enlace/Referencia*: [Estudio Pediatrics White Matter](https://publications.aap.org/pediatrics)
+    *   *Uso en la Demo*: Muestra que los niños con alto uso de pantallas tienen menor integridad en la materia blanca cerebral que conecta el lenguaje y la alfabetización.
+*   **El Círculo de Dopamina Artificial**:
+    *   *Estudio*: *The Neurobiology of Reward and Digital Addiction* (Stanford Medicine).
+    *   *Uso en la Demo*: Explica por qué el niño no puede soltar el dispositivo por sí mismo; se encuentra en un bucle químico forzado similar a los casinos.
+*   **Desempeño Cognitivo e IA Activa vs. Pasiva**:
+    *   *Estudio*: *Active AI Interaction in Childhood Education* (UNESCO Research).
+    *   *Uso en la Demo*: Valida que interactuar activamente con un tutor de IA genera conexiones neuronales constructivas, a diferencia del consumo pasivo de videos de 15 segundos.
+
+---
+
+## 📋 Encuesta de Diagnóstico Integrada
+
+El DemoBook incluye una versión digital de la **Encuesta de Diagnóstico Familiar** para que el padre califique cuantitativamente la salud digital de su hogar:
+1.  *¿Tu hijo prefiere quedarse con la pantalla antes que salir a jugar al aire libre?*
+2.  *¿Has notado cambios de humor bruscos cuando le pides apagar el dispositivo?*
+3.  *¿Usa el teléfono a escondidas durante la noche o en horas de comida?*
+
+*Nota: Esta encuesta sirve como puente de conversión inmediata al calificar la temperatura de compra del cliente.*
+
+
+
+---
+
+<a name="-archivo-03-marketing-y-ventas-zentry-prospect-md"></a>
+# 📂 ARCHIVO: `03-marketing-y-ventas/zentry-prospect.md`
+
+---
+title: "Zentry Prospect - Herramienta de Prospección de Clientes"
+date: 2026-06-04
+status: "approved"
+progress: 100%
+deadline: 2026-08-30
+tags: ["marketing", "ventas", "prospeccion", "apps-script", "sheets"]
+---
+
+# 📊 Zentry Prospect (Zentry Prospecc)
+
+Este documento detalla la infraestructura tecnológica y las especificaciones de la aplicación web de prospección **Zentry Prospect** (diseñada bajo Google Apps Script y Google Sheets). Su propósito es capturar, calificar y centralizar leads en campo de forma rápida y automatizada (e.g. en eventos presenciales como la *Expo Maternidad*).
+
+---
+
+## 🏗️ Arquitectura de la Aplicación Web (Google Apps Script)
+
+La herramienta de prospección está construida sobre una **Web App de Google Apps Script (GAS)**, lo que permite un despliegue gratuito, escalable y con base de datos nativa en Google Sheets.
 
 ```text
-[Dispositivo del Prospectador (Index.html)]
-                    │
-                    ▼ (google.script.run)
+[Dispositivo del Asesor (Interface HTML/JS)]
+                  │
+                  ▼ (Javascript: google.script.run)
       [Google Apps Script (Code.gs)]
-                    │
-                    ├─► [Google Spreadsheet (Leads_ZentryOS_ExpoMaternidad_V3)]
-                    └─► [Odoo CRM (Sincronización automática de leads)]
+                  │
+                  ├─► [Google Spreadsheet (Leads_ZentryOS_ExpoMaternidad_V3)]
+                  └─► [Sincronización con CRM / Odoo (Opcional)]
 ```
 
-### 📋 Estructura de Pantallas de la Encuesta Digital SPA:
-1.  **Slide 0 (Portada)**: Título comercial gancho: *"Protege la mente de tu hijo en la era digital"*. Botón *"Evaluar Riesgo"*.
-2.  **Slide 1 (Calificación de Preocupación)**: Escala del 1 al 10 sobre qué tan preocupante considera el uso de pantallas.
-3.  **Slide 2 (Conocimiento del Daño)**: Pregunta abierta sobre si el tutor conoce las consecuencias cognitivas de la sobreexposición digital.
-4.  **Slide 3 (Segmentación por Cohortes)**: Clasificación de edad de los hijos:
-    *   *Mayores (+)* ➔ Redirige a **Slide 4a** (Preguntas sobre aislamiento familiar).
-    *   *Menores (-)* ➔ Redirige a **Slide 4b** (Preguntas sobre adopción tecnológica futura).
-    *   *Ambas edades* ➔ Redirige a **Slide 4c** (Pregunta abierta sobre el sistema educativo convencional).
-5.  **Slide 5 (Intencionalidad de Solución)**: Pregunta de filtro de cierre: *"¿Les interesaría conocer más?"* (Sí/No).
-6.  **Slide 6 (Formulario de Captura)**: Campos para recolectar el Nombre de la Madre/Tutor, Distrito de Residencia y Celular (con validador estricto de números).
-7.  **Slide 7 (vCard y Cierre)**: Genera dinámicamente un código QR (`qr-vcard`) para que el usuario guarde el contacto del asesor. Permite al prospectador ingresar observaciones internas antes de subir la información a la base de datos.
+---
 
-### 🗄️ Estructura de Columnas en Google Sheets:
-Las respuestas se guardan estructuradas en la hoja de cálculo sincronizada:
-`ID | Timestamp | Nivel_Preocupacion | Conocimiento_Dano | Edad_Hijos | Pregunta_Condicional | Respuesta_Condicional | Interes_Solucion | Nombre_Madre | Celular | Distrito | Observaciones`
+## 📋 Flujo de Pantallas de Captación (Slides HTML)
 
-### 🔒 Panel de Administración del Evento:
-Acceso restringido para coordinadores comerciales:
-*   **KPIs en Tiempo Real**: Barra que calcula la captación diaria contra la meta establecida (Meta base: **120 leads**).
-*   **Buscador**: Filtrado instantáneo por distrito o nombre de los leads.
-*   **Acciones**: Eliminación de datos inválidos y exportación en formato `.csv`.
+La interfaz es una Single Page Application (SPA) responsiva que guía al asesor y al padre durante la conversación rápida en eventos:
+
+*   **Slide 0 (Portada)**: Título comercial llamativo: *"Protege la mente de tu hijo en la era digital"*. Botón de acción principal: *"Iniciar Evaluación"*.
+*   **Slide 1 (Calificación 1-10)**: El padre califica su *Nivel de Preocupación* sobre el abuso de pantallas de sus hijos en un selector del 1 al 10.
+*   **Slide 2 (Conocimiento del Daño)**: Pregunta abierta sobre si ha oído hablar del impacto cognitivo y la ludopatía digital temprana.
+*   **Slide 3 (Cohorte Etario)**: Clasificación de edad de los hijos:
+    *   `Mayores (+)` ➔ Redirige a **Slide 4a** (Preguntas sobre desconexión familiar/conversación).
+    *   `Menores (-)` ➔ Redirige a **Slide 4b** (Preguntas sobre el dominio de tecnologías futuras).
+    *   `Ambas` ➔ Redirige a **Slide 4c** (Pregunta sobre rigidez del sistema educativo tradicional).
+*   **Slide 5 (Intencionalidad de Solución)**: Filtro de interés: *"¿Les interesaría conocer una solución de supervisión inteligente?"* (Sí/No).
+*   **Slide 6 (Formulario de Contacto)**: Captura de datos básicos:
+    *   *Nombre del Padre/Madre* (`Nombre_Madre`)
+    *   *Número de Celular* (`Celular`)
+    *   *Distrito de residencia* (`Distrito`)
+*   **Slide 7 (Cierre y vCard)**: Muestra un código QR interactivo (`qr-vcard`) para guardar el contacto del asesor comercial en el teléfono del cliente. Incluye el campo de *Observaciones* del asesor para calificar manualmente la temperatura del lead.
+
+---
+
+## 🗄️ Esquema de Base de Datos (Google Sheets)
+
+Los registros del formulario se escriben en tiempo real en la hoja `Leads` del libro de trabajo `Leads_ZentryOS_ExpoMaternidad_V3.gsheet`.
+
+### Mapeo de Columnas:
+1.  **ID**: Identificador único generado por el frontend (UUID de 8 dígitos).
+2.  **Timestamp**: Fecha y hora exacta de la captura.
+3.  **Nivel_Preocupacion**: Calificación numérica 1-10.
+4.  **Conocimiento_Dano**: Comentario cualitativo del daño.
+5.  **Edad_Hijos**: Segmentación etaria seleccionada.
+6.  **Pregunta_Condicional**: Título de la pregunta de control mostrada.
+7.  **Respuesta_Condicional**: Respuesta del padre.
+8.  **Interes_Solucion**: Nivel de aceptación del pitch (Sí/No).
+9.  **Nombre_Madre**: Nombre del lead capturado.
+10. **Celular**: Teléfono (con validaciones de longitud).
+11. **Distrito**: Ubicación para la segmentación física de ventas.
+12. **Observaciones**: Comentarios del cerrador sobre el interés del lead.
+
+---
+
+## 🔒 Panel de Administración y Métricas
+
+El script de Google Apps Script sirve una ruta protegida (`openAdmin()`) para el coordinador del evento:
+*   **Barra de Progreso de Leads**: Visualizador dinámico que compara las capturas del día frente a la meta (Meta diaria: **120 leads**).
+*   **Buscador**: Filtro de registros por nombre o distrito en tiempo real.
+*   **Exportación**: Descarga directa de los leads consolidados en formato `.csv` estructurado.
+
+---
+
+## 🔗 Assets de Prospección en Github
+Los recursos de branding para la web app se sirven desde el repositorio público de assets:
+`https://raw.githubusercontent.com/j-angel-borges/zentry-assets/main/`
+*   Fondo de pantalla Aurora: `zentry-bg.png`
+*   Logotipo de prospección: `zentry-icon-liquid.png`
+*   QR dinámico: `qr-vcard`
 
 
 

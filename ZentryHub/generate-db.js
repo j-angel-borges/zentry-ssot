@@ -226,6 +226,7 @@ function run() {
     '02-arquitectura-tecnica/analisis-de-brechas.md',
     '03-marketing-y-ventas/README.md',
     '03-marketing-y-ventas/demobook.md',
+    '03-marketing-y-ventas/zentry-prospect.md',
     '03-marketing-y-ventas/demo-venta-directa.md',
     '03-marketing-y-ventas/precierres-y-embudos.md',
     '03-marketing-y-ventas/manejo-de-objeciones.md',
@@ -327,6 +328,7 @@ ${filesOrder.map((f, i) => `${i + 1}. [${f}](#-archivo-${f.replace(/[\/\.]/g, '-
       files: [
         '03-marketing-y-ventas/README.md',
         '03-marketing-y-ventas/demobook.md',
+        '03-marketing-y-ventas/zentry-prospect.md',
         '03-marketing-y-ventas/demo-venta-directa.md',
         '03-marketing-y-ventas/precierres-y-embudos.md',
         '03-marketing-y-ventas/manejo-de-objeciones.md',

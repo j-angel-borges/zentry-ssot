@@ -437,7 +437,7 @@ const renderers = {
       {
         id: '03',
         title: '03. Marketing y Ventas',
-        desc: 'Estructura el guion oficial de ventas paso a paso, DemoBook en GAS, hojas de leads y objeciones.',
+        desc: 'Estructura el guion de ventas, el DemoBook (slides, videos, evidencias) y Zentry Prospect (GAS/Sheets para captación de leads).',
         file: 'ssot-03-marketing-y-ventas.md',
         emoji: '🎭',
         color: '#C2F4E7'
