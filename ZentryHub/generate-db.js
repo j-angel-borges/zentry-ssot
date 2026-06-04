@@ -263,16 +263,18 @@ ${filesOrder.map((f, i) => `${i + 1}. [${f}](#-archivo-${f.replace(/[\/\.]/g, '-
     }
   });
 
+  // Ensure ZentryHub public directory exists
+  const publicDir = path.join(repoRoot, 'ZentryHub', 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+
   // Write to Repo Root (for GitHub)
   const repoOutputPath = path.join(repoRoot, 'zentryos-ssot-completo.md');
   fs.writeFileSync(repoOutputPath, masterContent, 'utf8');
   console.log(`Master document written to repo root: ${repoOutputPath}`);
 
   // Write to ZentryHub Public folder (for Vercel Download button)
-  const publicDir = path.join(repoRoot, 'ZentryHub', 'public');
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
-  }
   const publicOutputPath = path.join(publicDir, 'zentryos-ssot-completo.md');
   fs.writeFileSync(publicOutputPath, masterContent, 'utf8');
   console.log(`Master document written to public folder: ${publicOutputPath}`);
@@ -286,6 +288,123 @@ ${filesOrder.map((f, i) => `${i + 1}. [${f}](#-archivo-${f.replace(/[\/\.]/g, '-
   } else {
     console.log('Google Drive directory not found. Skipping Google Drive update.');
   }
+
+  // --- AUTOMATIC SEGMENTED COMPILATION BY VERTICAL ---
+  console.log('Compiling vertical-specific SSOT documents...');
+  
+  const driveFolders = {
+    '01-vision-y-producto': '01-vision-y-producto',
+    '02-arquitectura-tecnica': '02-arquitectura-tecnica',
+    '03-marketing-y-ventas': '03-marketing-y-ventas',
+    '04-operaciones-y-roadmap': '04-operaciones-y-roadmap',
+    '05-mesa-de-trabajo': 'Mesa de Trabajo'
+  };
+
+  const verticalsConfig = {
+    '01-vision-y-producto': {
+      title: '01. Visión y Producto',
+      files: [
+        '01-vision-y-producto/README.md',
+        '01-vision-y-producto/problema-algoritmico.md',
+        '01-vision-y-producto/ludopatia-y-adiccion.md',
+        '01-vision-y-producto/solucion-bilateral.md',
+        '01-vision-y-producto/segmentacion-etaria.md'
+      ]
+    },
+    '02-arquitectura-tecnica': {
+      title: '02. Arquitectura Técnica MVP',
+      files: [
+        '02-arquitectura-tecnica/README.md',
+        '02-arquitectura-tecnica/paradigma-web-first.md',
+        '02-arquitectura-tecnica/control-dispositivo-abm.md',
+        '02-arquitectura-tecnica/telemetria-gcp-ai.md',
+        '02-arquitectura-tecnica/interfaz-compose.md',
+        '02-arquitectura-tecnica/analisis-de-brechas.md'
+      ]
+    },
+    '03-marketing-y-ventas': {
+      title: '03. Marketing y Ventas',
+      files: [
+        '03-marketing-y-ventas/README.md',
+        '03-marketing-y-ventas/demobook.md',
+        '03-marketing-y-ventas/demo-venta-directa.md',
+        '03-marketing-y-ventas/precierres-y-embudos.md',
+        '03-marketing-y-ventas/manejo-de-objeciones.md',
+        '03-marketing-y-ventas/factor-wow.md'
+      ]
+    },
+    '04-operaciones-y-roadmap': {
+      title: '04. Operaciones y Roadmap',
+      files: [
+        '04-operaciones-y-roadmap/README.md',
+        '04-operaciones-y-roadmap/roadmap.md',
+        '04-operaciones-y-roadmap/progreso-y-metricas.md',
+        '04-operaciones-y-roadmap/banco-de-ideas.md',
+        '04-operaciones-y-roadmap/backlog-tareas.md',
+        '04-operaciones-y-roadmap/bitacora-actividades.md'
+      ]
+    },
+    '05-mesa-de-trabajo': {
+      title: '05. Mesa de Trabajo (Branding)',
+      files: [
+        '05-mesa-de-trabajo/README.md',
+        '05-mesa-de-trabajo/colorimetria-y-diseno.md',
+        '05-mesa-de-trabajo/tipografia-y-fuentes.md',
+        '05-mesa-de-trabajo/logotipos-y-recursos.md'
+      ]
+    }
+  };
+
+  Object.keys(verticalsConfig).forEach((dir) => {
+    const config = verticalsConfig[dir];
+    
+    let verticalContent = `# 🌌 ZentryOS - MANIFIESTO DE CONTEXTO: ${config.title.toUpperCase()}
+
+Este documento contiene la recopilación unificada y específica para la vertical **${config.title}** de ZentryOS.
+Diseñado para alimentar a agentes y asistentes de IA especializados en esta área.
+
+---
+
+## 📋 ÍNDICE DE LA VERTICAL
+${config.files.map((f, i) => `${i + 1}. [${f}](#-archivo-${f.replace(/[\/\.]/g, '-')})`).join('\n')}
+
+---
+`;
+
+    config.files.forEach((f) => {
+      const filePath = path.join(repoRoot, f.replace(/\//g, path.sep));
+      if (fs.existsSync(filePath)) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const cleanAnchor = f.replace(/[\/\.]/g, '-');
+        verticalContent += `\n\n---\n\n<a name="-archivo-${cleanAnchor}"></a>\n# 📂 ARCHIVO: \`${f}\`\n\n${content}\n`;
+      }
+    });
+
+    // 1. Save in local repository: V/ssot-actualizado.md
+    const localOutputPath = path.join(repoRoot, dir, 'ssot-actualizado.md');
+    fs.writeFileSync(localOutputPath, verticalContent, 'utf8');
+    console.log(`Vertical document compiled locally: ${localOutputPath}`);
+
+    // 2. Save in ZentryHub Public folder: ssot-V.md
+    const hubPublicOutputPath = path.join(publicDir, `ssot-${dir}.md`);
+    fs.writeFileSync(hubPublicOutputPath, verticalContent, 'utf8');
+    console.log(`Vertical document written to public folder: ${hubPublicOutputPath}`);
+
+    // 3. Save in Google Drive: V/registro-diario/ssot-actualizado.md
+    if (fs.existsSync(gDriveDir)) {
+      const driveFolderName = driveFolders[dir];
+      const dailyFolder = path.join(gDriveDir, driveFolderName, 'registro-diario');
+      
+      // Ensure daily folder exists in Drive
+      if (!fs.existsSync(dailyFolder)) {
+        fs.mkdirSync(dailyFolder, { recursive: true });
+      }
+      
+      const driveOutputPath = path.join(dailyFolder, 'ssot-actualizado.md');
+      fs.writeFileSync(driveOutputPath, verticalContent, 'utf8');
+      console.log(`Vertical document synced to Google Drive: ${driveOutputPath}`);
+    }
+  });
 }
 
 run();

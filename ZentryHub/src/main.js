@@ -400,6 +400,111 @@ const renderers = {
     });
   },
 
+  // 5. IA Context View
+  iacontext: () => {
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1c142e 0%, #0c0d10 100%)';
+    document.getElementById('page-icon').textContent = '🤖';
+    document.getElementById('page-title').textContent = 'Contextos de Inteligencia Artificial';
+    document.getElementById('properties-block').style.display = 'none';
+
+    const container = document.getElementById('workspace-content');
+    
+    const contexts = [
+      {
+        id: 'global',
+        title: 'Manifiesto Global Completo',
+        desc: 'Recopila toda la base de conocimientos unificada. Recomendado para agentes de IA de rol general (PMs o arquitectos de negocio).',
+        file: 'zentryos-ssot-completo.md',
+        emoji: '🌌',
+        color: '#D6C8FA'
+      },
+      {
+        id: '01',
+        title: '01. Visión y Producto',
+        desc: 'Contiene los pilares éticos y neurológicos, análisis de la adicción a pantallas y segmentación etaria.',
+        file: 'ssot-01-vision-y-producto.md',
+        emoji: '🧠',
+        color: '#C2F4E7'
+      },
+      {
+        id: '02',
+        title: '02. Arquitectura Técnica MVP',
+        desc: 'Detalla el Kiosk Mode en Android/iOS, bridges JS, telemetría Firestore, Gemini TTS y analítica.',
+        file: 'ssot-02-arquitectura-tecnica.md',
+        emoji: '💻',
+        color: '#D6C8FA'
+      },
+      {
+        id: '03',
+        title: '03. Marketing y Ventas',
+        desc: 'Estructura el guion oficial de ventas paso a paso, DemoBook en GAS, hojas de leads y objeciones.',
+        file: 'ssot-03-marketing-y-ventas.md',
+        emoji: '🎭',
+        color: '#C2F4E7'
+      },
+      {
+        id: '04',
+        title: '04. Operaciones y Roadmap',
+        desc: 'Contiene hitos de las 4 fases, métricas DAU/LTV/CAC, banco de ideas de Keep y backlog de tareas.',
+        file: 'ssot-04-operaciones-y-roadmap.md',
+        emoji: '📅',
+        color: '#D6C8FA'
+      },
+      {
+        id: '05',
+        title: '05. Mesa de Trabajo (Branding)',
+        desc: 'Consolida la colorimetría HEX/HSL oficial (Púrpura, Lavanda, Menta), tipografías y recursos visuales.',
+        file: 'ssot-05-mesa-de-trabajo.md',
+        emoji: '🎨',
+        color: '#C2F4E7'
+      }
+    ];
+
+    let html = `
+      <div class="markdown-body">
+        <h2>🤖 Descarga de Contextos para Agentes Especializados</h2>
+        <p style="margin-bottom: 24px;">Optimiza la ventana de contexto de tus chats de Gemini, Claude o ChatGPT descargando únicamente el segmento del SSOT que requiere tu agente de IA. Esto reduce el ruido cognitivo, acelera las respuestas y ahorra tokens.</p>
+        
+        <div class="ia-cards-grid">
+    `;
+
+    contexts.forEach(c => {
+      html += `
+        <div class="ia-card" style="border-left: 4px solid ${c.color}">
+          <div class="ia-card-header">
+            <span class="ia-card-emoji">${c.emoji}</span>
+            <h3 class="ia-card-title">${c.title}</h3>
+          </div>
+          <p class="ia-card-desc">${c.desc}</p>
+          <div class="ia-card-footer">
+            <code class="ia-card-filename">${c.file}</code>
+            <a href="/${c.file}" download="${c.file}" class="ia-download-btn">
+              <span>📥 Descargar</span>
+            </a>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `
+        </div>
+        
+        <div class="ia-instruction-box">
+          <h3>💡 Consejo Pro de Workflow: Google Drive & Gemini Extensions</h3>
+          <p>
+            Gracias a la sincronización automática de Google Drive, no tienes que descargar y subir archivos manualmente en cada chat. Cada una de estas verticales se guarda y actualiza automáticamente bajo el nombre de <code>ssot-actualizado.md</code> dentro de su respectiva subcarpeta <code>registro-diario</code> en Drive.
+          </p>
+          <p style="margin-top: 8px;">
+            Solo escribe esto en el chat de Gemini Web (usando la extensión @Google Drive):
+          </p>
+          <pre><code>@Google Drive lee ssot-actualizado.md en la carpeta 02-arquitectura-tecnica y explícame el funcionamiento de...</code></pre>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+  },
+
   // 5. Page Document renderer
   doc: (docPath) => {
     const page = db.pages.find(p => p.path === docPath);
