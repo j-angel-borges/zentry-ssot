@@ -11,6 +11,10 @@ tags: ["marketing", "ventas", "demobook", "kit-de-ventas", "evidencia-cientifica
 
 El **DemoBook** es el conjunto de recursos visuales, multimedia e investigativos que el asesor comercial utiliza cara a cara con el cliente para respaldar el pitch de ventas y guiar la presentación. No debe confundirse con la herramienta de captación *Zentry Prospect*, ya que el DemoBook es el material que ilustra y valida científicamente cada fase del guion de ventas (**La DEMO**).
 
+> [!IMPORTANT]
+> **Acceso Exclusivo del Vendedor (Uso Interno)**:
+> El DemoBook y todos sus recursos integrados (slides, videos, imágenes y estudios de validación) son de **uso exclusivo para el vendedor**. El cliente final nunca tiene acceso directo, descarga ni control sobre estas herramientas; son recursos diseñados únicamente como soporte metodológico del asesor durante su flujo de trabajo.
+
 ---
 
 ## 🏗️ Estructura Estratégica de Diapositivas (Slides)

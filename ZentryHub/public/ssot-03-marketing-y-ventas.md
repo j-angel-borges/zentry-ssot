@@ -77,6 +77,10 @@ tags: ["marketing", "ventas", "demobook", "kit-de-ventas", "evidencia-cientifica
 
 El **DemoBook** es el conjunto de recursos visuales, multimedia e investigativos que el asesor comercial utiliza cara a cara con el cliente para respaldar el pitch de ventas y guiar la presentación. No debe confundirse con la herramienta de captación *Zentry Prospect*, ya que el DemoBook es el material que ilustra y valida científicamente cada fase del guion de ventas (**La DEMO**).
 
+> [!IMPORTANT]
+> **Acceso Exclusivo del Vendedor (Uso Interno)**:
+> El DemoBook y todos sus recursos integrados (slides, videos, imágenes y estudios de validación) son de **uso exclusivo para el vendedor**. El cliente final nunca tiene acceso directo, descarga ni control sobre estas herramientas; son recursos diseñados únicamente como soporte metodológico del asesor durante su flujo de trabajo.
+
 ---
 
 ## 🏗️ Estructura Estratégica de Diapositivas (Slides)
@@ -163,6 +167,10 @@ tags: ["marketing", "ventas", "prospeccion", "apps-script", "sheets"]
 # 📊 Zentry Prospect (Zentry Prospecc)
 
 Este documento detalla la infraestructura tecnológica y las especificaciones de la aplicación web de prospección **Zentry Prospect** (diseñada bajo Google Apps Script y Google Sheets). Su propósito es capturar, calificar y centralizar leads en campo de forma rápida y automatizada (e.g. en eventos presenciales como la *Expo Maternidad*).
+
+> [!IMPORTANT]
+> **Operación Exclusiva del Asesor (Uso Interno)**:
+> La aplicación web de Zentry Prospect (sus vistas HTML y flujos de prospección), el panel de administración y las hojas de cálculo asociadas son de **uso y control exclusivo del vendedor**. El cliente o prospecto final nunca opera este software, ni tiene acceso directo a la URL; el asesor comercial es el único responsable de interactuar con la interfaz en su propio terminal móvil para calificar y registrar las respuestas del prospecto.
 
 ---
 
@@ -257,6 +265,10 @@ tags: ["marketing", "ventas", "guion", "demo-venta"]
 # 🎭 Guion de Venta Directa: La DEMO ZentryOS
 
 Este documento constituye la guía doctrinal inalterable para la presentación comercial cara a cara (o videollamada de alta conversión) ante los padres y el menor. Sigue el flujo secuencial del **Doc Matriz** para llevar al prospecto desde la concienciación de riesgo hasta el cierre comercial inmediato.
+
+> [!IMPORTANT]
+> **Control y Operación de las Herramientas**:
+> Todo el material visual y tecnológico empleado durante la presentación (las diapositivas del DemoBook y la interfaz de Zentry Prospect) es operado **exclusivamente por el asesor comercial**. El cliente final actúa únicamente como espectador del material y encuestado activo, sin tener acceso directo ni autonomía para manipular estas herramientas y flujos HTML.
 
 ---
 

@@ -11,6 +11,10 @@ tags: ["marketing", "ventas", "guion", "demo-venta"]
 
 Este documento constituye la guía doctrinal inalterable para la presentación comercial cara a cara (o videollamada de alta conversión) ante los padres y el menor. Sigue el flujo secuencial del **Doc Matriz** para llevar al prospecto desde la concienciación de riesgo hasta el cierre comercial inmediato.
 
+> [!IMPORTANT]
+> **Control y Operación de las Herramientas**:
+> Todo el material visual y tecnológico empleado durante la presentación (las diapositivas del DemoBook y la interfaz de Zentry Prospect) es operado **exclusivamente por el asesor comercial**. El cliente final actúa únicamente como espectador del material y encuestado activo, sin tener acceso directo ni autonomía para manipular estas herramientas y flujos HTML.
+
 ---
 
 ## 🧭 Flujo del Proceso de Venta Directa
