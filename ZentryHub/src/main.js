@@ -505,6 +505,37 @@ const renderers = {
     container.innerHTML = html;
   },
 
+  // 6. DemoBook View
+  demobook: () => {
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #533B87 0%, #0c0d10 100%)';
+    document.getElementById('page-icon').textContent = '📖';
+    document.getElementById('page-title').textContent = 'Portal DemoBook';
+    document.getElementById('properties-block').style.display = 'none';
+
+    const container = document.getElementById('workspace-content');
+    container.innerHTML = `
+      <div class="markdown-body">
+        <h2>📖 Recursos y Herramientas del DemoBook</h2>
+        <p style="margin-bottom: 24px;">Este es el portal de herramientas de venta directa para el equipo comercial de ZentryOS. Solo los asesores de ventas tienen acceso y operan estos recursos durante su flujo de trabajo de presentación.</p>
+        
+        <div class="demobook-grid">
+          <a href="https://script.google.com/macros/s/AKfycbz7j-XGfe5ppXEovbk8ysDDr_tN9e7UN7teOSVHHpyv3cvgghwkqdPgcVq-R8pItNQe/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+            <div class="demobook-card">
+              <div class="demobook-card-header">
+                <span class="demobook-card-icon">📋</span>
+                <h3 class="demobook-card-title">Preguntas-Bienestar</h3>
+              </div>
+              <p class="demobook-card-desc">Cuestionario interactivo de diagnóstico de bienestar digital. Utilizado por el asesor para calificar y registrar las respuestas del lead en campo.</p>
+              <div class="demobook-card-footer">
+                <span class="demobook-card-action">Abrir herramienta ➔</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    `;
+  },
+
   // 5. Page Document renderer
   doc: (docPath) => {
     const page = db.pages.find(p => p.path === docPath);
