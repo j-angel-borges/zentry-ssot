@@ -15,6 +15,12 @@ El **DemoBook** es el conjunto de recursos visuales, multimedia e investigativos
 > **Acceso Exclusivo del Vendedor (Uso Interno)**:
 > El DemoBook y todos sus recursos integrados (slides, videos, imágenes y estudios de validación) son de **uso exclusivo para el vendedor**. El cliente final nunca tiene acceso directo, descarga ni control sobre estas herramientas; son recursos diseñados únicamente como soporte metodológico del asesor durante su flujo de trabajo.
 
+> [!NOTE]
+> **Accesos y Enlaces del DemoBook**:
+> *   **Visualizador de Diapositivas Interactivas (Web App)**: [ZentryOS - DemoBook Slides](https://script.google.com/macros/s/AKfycbwZS6erGX6Urcf3rPMoQRTf1x-eLluWte3O2ZSg-j4Mu-hzMYZLTkKmekpU0RtV6OtOFA/exec)
+> *   **Guion Comercial Bilateral (Google Doc)**: [ZentryOS - Guion Comercial Bilateral (DemoBook)](https://docs.google.com/document/d/1lNfswQonpHZWwq47YKuI8aZhyrIlflxuO1riXMAKPGM/edit)
+> *   **Carpeta del Proyecto en Google Drive**: [demobook-bienestar-digital](https://drive.google.com/drive/folders/1Dm_t7y94szuYGpxYyUevrQ5jv2f10y6c)
+
 ---
 
 ## 🏗️ Estructura Estratégica de Diapositivas (Slides)

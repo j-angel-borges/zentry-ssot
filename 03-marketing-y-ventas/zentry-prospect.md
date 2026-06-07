@@ -15,6 +15,11 @@ Este documento detalla la infraestructura tecnológica y las especificaciones de
 > **Operación Exclusiva del Asesor (Uso Interno)**:
 > La aplicación web de Zentry Prospect (sus vistas HTML y flujos de prospección), el panel de administración y las hojas de cálculo asociadas son de **uso y control exclusivo del vendedor**. El cliente o prospecto final nunca opera este software, ni tiene acceso directo a la URL; el asesor comercial es el único responsable de interactuar con la interfaz en su propio terminal móvil para calificar y registrar las respuestas del prospecto.
 
+> [!NOTE]
+> **Accesos y Enlaces de Zentry Prospect**:
+> *   **Evaluación Interactiva (Web App)**: [Zentry Prospect - Evaluación](https://script.google.com/macros/s/AKfycbw4CvYMxV-9qgAINHJheOa_NURhaWwYrU9gIaeEd5ZwgSCyFmE0GYhrc2CKjSqddG6q/exec)
+> *   **Base de Datos de Captación (Google Sheet)**: [ZentryOS - Base de Datos Bienestar Digital](https://docs.google.com/spreadsheets/d/1c7gE85qIGQyU_EYTCvtNEuShgnJhIJ_EKpUN5yoil5E/edit)
+
 ---
 
 ## 🏗️ Arquitectura de la Aplicación Web (Google Apps Script)

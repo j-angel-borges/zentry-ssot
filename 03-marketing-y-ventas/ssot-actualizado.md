@@ -100,6 +100,12 @@ El **DemoBook** es el conjunto de recursos visuales, multimedia e investigativos
 > **Acceso Exclusivo del Vendedor (Uso Interno)**:
 > El DemoBook y todos sus recursos integrados (slides, videos, imágenes y estudios de validación) son de **uso exclusivo para el vendedor**. El cliente final nunca tiene acceso directo, descarga ni control sobre estas herramientas; son recursos diseñados únicamente como soporte metodológico del asesor durante su flujo de trabajo.
 
+> [!NOTE]
+> **Accesos y Enlaces del DemoBook**:
+> *   **Visualizador de Diapositivas Interactivas (Web App)**: [ZentryOS - DemoBook Slides](https://script.google.com/macros/s/AKfycbwZS6erGX6Urcf3rPMoQRTf1x-eLluWte3O2ZSg-j4Mu-hzMYZLTkKmekpU0RtV6OtOFA/exec)
+> *   **Guion Comercial Bilateral (Google Doc)**: [ZentryOS - Guion Comercial Bilateral (DemoBook)](https://docs.google.com/document/d/1lNfswQonpHZWwq47YKuI8aZhyrIlflxuO1riXMAKPGM/edit)
+> *   **Carpeta del Proyecto en Google Drive**: [demobook-bienestar-digital](https://drive.google.com/drive/folders/1Dm_t7y94szuYGpxYyUevrQ5jv2f10y6c)
+
 ---
 
 ## 🏗️ Estructura Estratégica de Diapositivas (Slides)
@@ -190,6 +196,11 @@ Este documento detalla la infraestructura tecnológica y las especificaciones de
 > [!IMPORTANT]
 > **Operación Exclusiva del Asesor (Uso Interno)**:
 > La aplicación web de Zentry Prospect (sus vistas HTML y flujos de prospección), el panel de administración y las hojas de cálculo asociadas son de **uso y control exclusivo del vendedor**. El cliente o prospecto final nunca opera este software, ni tiene acceso directo a la URL; el asesor comercial es el único responsable de interactuar con la interfaz en su propio terminal móvil para calificar y registrar las respuestas del prospecto.
+
+> [!NOTE]
+> **Accesos y Enlaces de Zentry Prospect**:
+> *   **Evaluación Interactiva (Web App)**: [Zentry Prospect - Evaluación](https://script.google.com/macros/s/AKfycbw4CvYMxV-9qgAINHJheOa_NURhaWwYrU9gIaeEd5ZwgSCyFmE0GYhrc2CKjSqddG6q/exec)
+> *   **Base de Datos de Captación (Google Sheet)**: [ZentryOS - Base de Datos Bienestar Digital](https://docs.google.com/spreadsheets/d/1c7gE85qIGQyU_EYTCvtNEuShgnJhIJ_EKpUN5yoil5E/edit)
 
 ---
 
