@@ -505,30 +505,25 @@ const renderers = {
     container.innerHTML = html;
   },
 
-  // 6. DemoBook View
+  // 6. Demobook View
   demobook: () => {
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #533B87 0%, #0c0d10 100%)';
-    document.getElementById('page-icon').textContent = '📖';
-    document.getElementById('page-title').textContent = 'Portal DemoBook';
+    const workspace = document.querySelector('.workspace');
+    if (workspace) workspace.classList.add('minimal-view');
+
+    document.getElementById('page-title').textContent = 'Demobook';
     document.getElementById('properties-block').style.display = 'none';
 
     const container = document.getElementById('workspace-content');
     container.innerHTML = `
-      <div class="markdown-body">
-        <h2>📖 Recursos y Herramientas del DemoBook</h2>
-        <p style="margin-bottom: 24px;">Este es el portal de herramientas de venta directa para el equipo comercial de ZentryOS. Solo los asesores de ventas tienen acceso y operan estos recursos durante su flujo de trabajo de presentación.</p>
-        
+      <div class="demobook-minimal-container">
         <div class="demobook-grid">
           <a href="https://script.google.com/macros/s/AKfycbz7j-XGfe5ppXEovbk8ysDDr_tN9e7UN7teOSVHHpyv3cvgghwkqdPgcVq-R8pItNQe/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
-            <div class="demobook-card">
-              <div class="demobook-card-header">
+            <div class="demobook-card-minimal">
+              <div class="demobook-card-content">
                 <span class="demobook-card-icon">📋</span>
-                <h3 class="demobook-card-title">Preguntas-Bienestar</h3>
+                <span class="demobook-card-title">Preguntas-Bienestar</span>
               </div>
-              <p class="demobook-card-desc">Cuestionario interactivo de diagnóstico de bienestar digital. Utilizado por el asesor para calificar y registrar las respuestas del lead en campo.</p>
-              <div class="demobook-card-footer">
-                <span class="demobook-card-action">Abrir herramienta ➔</span>
-              </div>
+              <span class="demobook-card-arrow">➔</span>
             </div>
           </a>
         </div>
@@ -700,6 +695,10 @@ function renderKanbanCards() {
 function handleRouting() {
   const hash = window.location.hash || '#backlog';
   
+  // Reset minimal-view by default
+  const workspace = document.querySelector('.workspace');
+  if (workspace) workspace.classList.remove('minimal-view');
+
   // Highlight active Nav Link
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');

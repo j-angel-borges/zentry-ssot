@@ -54,6 +54,25 @@ Dado que ZentryOS combina desarrollo de software móvil de bajo nivel con servic
 *   **Validaciones en Campo**: Pruebas piloto presenciales con cohortes de familias seleccionadas para evaluar el nivel de elusión del Kiosk Mode y el engagement con el tutor de IA.
 *   **Gobernanza del SSOT**: Asegurar que toda decisión de desarrollo que impacte en la arquitectura técnica esté documentada previamente en este manifiesto.
 
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
+
 
 
 ---

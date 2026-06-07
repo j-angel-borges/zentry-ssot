@@ -149,6 +149,25 @@ Esta vertical detalla las bases conceptuales, neurológicas y comerciales que su
 *   **Gamificación Cognitiva**: Reemplazar el tiempo libre del dispositivo con retos intelectuales dinámicos que se resuelven conversando con un tutor IA.
 *   **Telemetría No Invasiva**: Medición constante del progreso escolar y del bienestar emocional del menor a partir de sus conversaciones con el sistema operativo, enviando informes semanales al padre.
 
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
+
 
 
 ---
@@ -418,6 +437,25 @@ graph TD
 *   **Seguridad y MDM**: APIs de `DevicePolicyManager` para restricción de sistema.
 *   **Comando y Control (C&C)**: Firebase Firestore para escucha remota en tiempo real.
 *   **Inteligencia Artificial**: Google Generative AI Client SDK (`generativeai:0.9.0`), empleando `gemini-2.5-flash-lite` para respuestas rápidas y rentables de texto y análisis multimodal.
+
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
 
 
 
@@ -842,6 +880,25 @@ ZentryOS no se promociona como una app de espionaje o castigo parental. La retó
 *   **"Devuélvele su imaginación"**: Destacar cómo el aburrimiento constructivo (sin pantallas compulsivas) impulsa al niño a dibujar, leer, jugar al aire libre y programar.
 *   **"Del consumo pasivo a la creación activa"**: El menor no consume contenido prefabricado para adormecer su cerebro; interactúa con una IA que lo reta a pensar.
 *   **"Tecnología sin culpa"**: Permite a los padres dar un smartphone a sus hijos sabiendo que se convertirá en un tutor escolar y no en un casino digital.
+
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
 
 
 
@@ -1445,6 +1502,25 @@ Dado que ZentryOS combina desarrollo de software móvil de bajo nivel con servic
 *   **Validaciones en Campo**: Pruebas piloto presenciales con cohortes de familias seleccionadas para evaluar el nivel de elusión del Kiosk Mode y el engagement con el tutor de IA.
 *   **Gobernanza del SSOT**: Asegurar que toda decisión de desarrollo que impacte en la arquitectura técnica esté documentada previamente en este manifiesto.
 
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
+
 
 
 ---
@@ -1874,6 +1950,25 @@ El ecosistema visual de ZentryOS se construye bajo tres conceptos fundamentales 
 *   **Transparencia (Glassmorphism)**: El uso estratégico de desenfoques de fondo (blur de 25px) y opacidades (35% blanco) simula que el sistema operativo flota sobre el fondo del universo Zentry, eliminando la pesadez de los menús nativos convencionales.
 *   **Micro-animaciones Hágicas**: Las recompensas visuales al superar un reto lógico utilizan colores brillantes y efectos de física fluida en Compose para transformar el esfuerzo escolar en placer interactivo.
 
+---
+
+## 🎨 Lineamientos de Diseño (Contexto Breve)
+
+Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el diseño visual debe respetar estrictamente las siguientes pautas:
+
+*   **Paleta Cromática Oficial**:
+    *   **Púrpura Zentry (`#533B87`)**: Identidad de marca, toggles y títulos principales.
+    *   **Lavanda Zentry (`#D6C8FA`)**: Fondo de botones primarios ("Get Started") e interactividad.
+    *   **Verde Menta (`#C2F4E7`)**: Progreso, éxitos y estados activos.
+    *   **Blanco Glacial (`#EBF1F5`)**: Base de fondo y contenedores translúcidos (glassmorphism).
+    *   **Gris Neutro Oscuro (`#4A5160`)**: Texto principal, subtítulos y legibilidad general.
+*   **Enfoque Visual**:
+    *   **NO es una Dark Tech UI**: El fondo debe ser claro (Blanco Glacial) con marmoleados y degradados suaves de lila (Lavanda) y verde (Verde Menta). Se deben evitar creativos oscuros o diseños fuera de la línea visual.
+    *   **Efecto Cristal (Glassmorphism)**: Tarjetas flotantes y paneles con fondo translúcido (`rgba(255, 255, 255, 0.4)`), bordes sutiles y desenfoque (`blur(25px)`).
+*   **Tipografía**:
+    *   **Outfit**: Para títulos y elementos destacados.
+    *   **Inter**: Para cuerpo de lectura y textos explicativos.
+
 
 
 ---
@@ -1901,44 +1996,48 @@ ZentryOS utiliza una paleta cromática basada en gradientes esmerilados (glassmo
 De acuerdo con las guías de interfaz oficiales de la marca, los colores autorizados para el sistema y recursos de diseño son los siguientes:
 
 ### 1. Púrpura Zentry (`#533B87`)
-*   **Uso**: Color dominante de identidad. Utilizado en el texto de los botones primarios (sobre fondo lavanda), interruptores de selección activos (toggles), cabeceras destacadas y como tono oscuro del gradiente aurora.
+*   **Uso**: Color dominante de marca y títulos destacados. Utilizado para textos y títulos principales (grandes encabezados), interruptores de selección activos (toggles), y el texto de los botones primarios (sobre fondo lavanda). Nunca se utiliza como color de fondo principal o en áreas grandes para evitar una estética oscura.
 
 ### 2. Lavanda Zentry (`#D6C8FA`)
 *   **Uso**: Color de acento e interactividad. Utilizado como fondo de botones primarios ("Get Started"), elementos de fondo de listas seleccionadas y detalles luminosos en la interfaz.
 
 ### 3. Verde Menta (`#C2F4E7`)
-*   **Uso**: Color secundario y de estados positivos. Utilizado para representar progreso completado, logros lúdicos, estados activos de éxito y en gradientes de fondo con efecto aurora.
+*   **Uso**: Color secundario y de estados positivos. Utilizado para representar progreso completado, logros lúdicos, estados activos de éxito y mezclado orgánicamente en los gradientes de fondo.
 
 ### 4. Blanco Glacial (`#EBF1F5`)
-*   **Uso**: Color de texto principal y superficies claras. Proporciona una legibilidad óptima sobre fondos oscuros o translúcidos de cristal.
+*   **Uso**: Superficies, contenedores translúcidos y fondo. Proporciona la base de la interfaz y la estructura de cristal (glassmorphism) que flota sobre el fondo aurora, aportando ligereza y brillo.
 
 ### 5. Gris Neutro Oscuro (`#4A5160`)
-*   **Uso**: Color de contraste y legibilidad secundaria. Utilizado para subtítulos, etiquetas secundarias ("Secondary Labels"), bordes finos de tarjetas y textos informativos discretos.
+*   **Uso**: Color de texto principal y legibilidad general. Utilizado para todo el cuerpo de texto, subtítulos, etiquetas secundarias ("Secondary Labels"), bordes finos de tarjetas y descripciones, asegurando un óptimo contraste y descanso visual en fondos claros y esmerilados.
+
+> [!IMPORTANT]
+> **Dirección Visual de Marca - Evitar Temas Oscuros**:
+> ZentryOS **NO es una Dark Tech UI** ni utiliza fondos negros o púrpuras oscuros. La identidad visual es super minimalista, limpia e iluminada. Se basa exclusivamente en fondos claros (Blanco Glacial) combinados con degradados marmoleados y orgánicos de lila (Lavanda) y verde (Verde Menta).
 
 ---
 
 ## 🔮 Especificación Glassmorphism (Efecto Cristal)
 
-La interfaz del Launcher y el Zentry Hub implementa paneles translúcidos que emulan cristal esmerilado para integrarse orgánicamente sobre el fondo aurora:
+La interfaz del Launcher y el Zentry Hub implementa paneles translúcidos que emulan cristal esmerilado ligero, optimizados para fondos claros:
 
-*   **Fondo de Panel**: `rgba(235, 241, 245, 0.08)` (Blanco Glacial translúcido) o `rgba(74, 81, 96, 0.15)` (Gris Neutro Oscuro para jerarquía secundaria).
-*   **Filtro de Desenfoque (Blur)**: `backdrop-filter: blur(20px);`
-*   **Bordes del Cristal**: `1px solid rgba(255, 255, 255, 0.08);`
-*   **Sombra**: `box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);`
+*   **Fondo de Panel**: `rgba(255, 255, 255, 0.4)` (Blanco Glacial translúcido / frosted glass) o `rgba(235, 241, 245, 0.45)`.
+*   **Filtro de Desenfoque (Blur)**: `backdrop-filter: blur(25px);`
+*   **Bordes del Cristal**: `1px solid rgba(255, 255, 255, 0.4);`
+*   **Sombra**: `box-shadow: 0 8px 32px 0 rgba(74, 81, 96, 0.08);` (Sombra gris muy suave para dar profundidad sin oscurecer).
 
 ---
 
 ## 🌈 Fórmulas de Gradientes
 
-Los degradados de ZentryOS son orgánicos y dinámicos:
+Los degradados de ZentryOS son claros, orgánicos y fluidos:
 
-*   **Gradiente Aurora de Fondo (Tablet UI)**:  
-    `linear-gradient(135deg, #C2F4E7 0%, #D6C8FA 50%, #533B87 100%)`
+*   **Gradiente Aurora de Fondo (Tablet UI / Mobile)**:  
+    `linear-gradient(135deg, #EBF1F5 0%, #C2F4E7 45%, #D6C8FA 90%, #EBF1F5 100%)` (Un marmoleado suave de Verde Menta y Lavanda sobre una base de Blanco Glacial).
 *   **Gradiente de Barra de Progreso**:  
     `linear-gradient(90deg, #D6C8FA 0%, #533B87 100%)`
-*   **Glow Radial de Acento (Fondo Oscuro)**:
-    - *Esquina Superior Izquierda*: `radial-gradient(circle, rgba(194, 244, 231, 0.08) 0%, transparent 50%)`
-    - *Esquina Inferior Derecha*: `radial-gradient(circle, rgba(214, 200, 250, 0.08) 0%, transparent 50%)`
+*   **Glow Radial de Acento (Fondo Claro)**:
+    - *Esquina Superior Izquierda*: `radial-gradient(circle, rgba(194, 244, 231, 0.25) 0%, transparent 60%)`
+    - *Esquina Inferior Derecha*: `radial-gradient(circle, rgba(214, 200, 250, 0.25) 0%, transparent 60%)`
 
 
 
