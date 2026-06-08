@@ -38,6 +38,55 @@ function initTasks() {
 
 initTasks();
 
+// --- Storage & Data Helpers for Backlog widgets ---
+function getMITData() {
+  const defaultMIT = [
+    { text: 'Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose', checked: false },
+    { text: 'Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano', checked: false },
+    { text: 'Finalizar Demo Venta Directa con factor WOW', checked: false }
+  ];
+  const stored = localStorage.getItem('zentry_mit');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) { return defaultMIT; }
+  }
+  return defaultMIT;
+}
+
+function saveMITData(mit) {
+  localStorage.setItem('zentry_mit', JSON.stringify(mit));
+}
+
+function getCorkboardObjectives() {
+  const defaultObjs = [
+    'Lanzar prototipo ZentryOS Kiosk Mode en Android.',
+    'Completar guión comercial y cerrar primer cliente prospecto.',
+    'Sincronizar base de conocimientos con todos los agentes de IA.'
+  ];
+  const stored = localStorage.getItem('zentry_objectives');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) { return defaultObjs; }
+  }
+  return defaultObjs;
+}
+
+function saveCorkboardObjectives(objs) {
+  localStorage.setItem('zentry_objectives', JSON.stringify(objs));
+}
+
+function getCalendarConfig() {
+  return localStorage.getItem('zentry_calendar') || '';
+}
+
+function saveCalendarConfig(url) {
+  localStorage.setItem('zentry_calendar', url);
+}
+
+const mockCalendarEvents = [
+  { time: '09:00 - 09:30', title: 'Daily Scrum - ZentryOS Devs', desc: 'Sync de avance diario y blockers en Jetpack Compose.' },
+  { time: '11:00 - 12:00', title: 'Demo Comercial - Feedback', desc: 'Presentación del DemoBook con prospecto. Ver factor WOW.' },
+  { time: '16:00 - 17:00', title: 'Reunión Hito Arquitectura', desc: 'Definir especificación de la telemetría Firestore.' }
+];
+
 // Markdown Parser Utility
 function mdToHtml(md) {
   if (!md) return '';
@@ -246,6 +295,10 @@ function buildDocTree() {
 const renderers = {
   // 1. Kanban Backlog View
   backlog: () => {
+    // Add backlog-view class to workspace
+    const workspace = document.querySelector('.workspace');
+    if (workspace) workspace.classList.add('backlog-view');
+
     document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #ebf1f5 0%, #c2f4e7 50%, #d6c8fa 100%)';
     document.getElementById('page-icon').textContent = '📋';
     document.getElementById('page-title').textContent = 'Tablero Backlog';
@@ -253,56 +306,101 @@ const renderers = {
     
     const container = document.getElementById('workspace-content');
     container.innerHTML = `
-      <div class="filter-bar">
-        <div class="filter-group">
-          <label class="filter-label">🏷️ Vertical:</label>
-          <select id="filter-vertical" class="filter-select">
-            <option value="all">Todas</option>
-            <option value="tec">Técnica (02-arquitectura)</option>
-            <option value="prod">Producto (01-vision)</option>
-            <option value="mkt">Ventas / Marketing (03-ventas)</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label class="filter-label">⚡ Prioridad:</label>
-          <select id="filter-priority" class="filter-select">
-            <option value="all">Todas</option>
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-        </div>
-        <div class="filter-bar-actions">
-          <button id="add-task-btn" class="btn-add-task">＋ Nueva Tarea</button>
-          <button id="reset-tasks-btn" class="btn-reset-tasks" title="Restaurar tareas por defecto del SSOT">🔄 Restaurar</button>
-        </div>
-      </div>
-      <div class="kanban-board">
-        <div class="kanban-column" id="col-pendiente">
-          <div class="column-header">
-            <span class="column-title">⏳ Por Hacer</span>
-            <span class="column-count" id="count-pendiente">0</span>
+      <div class="backlog-layout-grid">
+        <!-- Left panel: 3 M.I.T. -->
+        <div class="backlog-left-col">
+          <div class="mit-card glass-panel">
+            <div class="mit-header">
+              <span class="mit-icon">🎯</span>
+              <h3 class="mit-title">3 Indispensables de Hoy</h3>
+            </div>
+            <div class="mit-list" id="mit-list-container">
+              <!-- Loaded dynamically -->
+            </div>
           </div>
-          <div class="kanban-cards" id="cards-pendiente"></div>
         </div>
-        <div class="kanban-column" id="col-progreso">
-          <div class="column-header">
-            <span class="column-title">⚡ En Curso</span>
-            <span class="column-count" id="count-progreso">0</span>
+
+        <!-- Center panel: Kanban Board -->
+        <div class="backlog-center-col">
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label class="filter-label">🏷️ Vertical:</label>
+              <select id="filter-vertical" class="filter-select">
+                <option value="all">Todas</option>
+                <option value="tec">Técnica (02-arquitectura)</option>
+                <option value="prod">Producto (01-vision)</option>
+                <option value="mkt">Ventas / Marketing (03-ventas)</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">⚡ Prioridad:</label>
+              <select id="filter-priority" class="filter-select">
+                <option value="all">Todas</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+            <div class="filter-bar-actions">
+              <button id="add-task-btn" class="btn-add-task">＋ Nueva Tarea</button>
+              <button id="reset-tasks-btn" class="btn-reset-tasks" title="Restaurar tareas por defecto del SSOT">🔄 Restaurar</button>
+            </div>
           </div>
-          <div class="kanban-cards" id="cards-progreso"></div>
+          <div class="kanban-board">
+            <div class="kanban-column" id="col-pendiente">
+              <div class="column-header">
+                <span class="column-title">⏳ Por Hacer</span>
+                <span class="column-count" id="count-pendiente">0</span>
+              </div>
+              <div class="kanban-cards" id="cards-pendiente"></div>
+            </div>
+            <div class="kanban-column" id="col-progreso">
+              <div class="column-header">
+                <span class="column-title">⚡ En Curso</span>
+                <span class="column-count" id="count-progreso">0</span>
+              </div>
+              <div class="kanban-cards" id="cards-progreso"></div>
+            </div>
+            <div class="kanban-column" id="col-completado">
+              <div class="column-header">
+                <span class="column-title">✅ Completado</span>
+                <span class="column-count" id="count-completado">0</span>
+              </div>
+              <div class="kanban-cards" id="cards-completado"></div>
+            </div>
+          </div>
         </div>
-        <div class="kanban-column" id="col-completado">
-          <div class="column-header">
-            <span class="column-title">✅ Completado</span>
-            <span class="column-count" id="count-completado">0</span>
+
+        <!-- Right panel: Corkboard objectives + Google Calendar -->
+        <div class="backlog-right-col">
+          <div class="corkboard-widget glass-panel">
+            <div class="corkboard-header">
+              <span class="corkboard-icon">📌</span>
+              <h3 class="corkboard-title">Objetivos de la Semana</h3>
+            </div>
+            <div class="corkboard-board" id="corkboard-objectives">
+              <!-- Loaded dynamically -->
+            </div>
           </div>
-          <div class="kanban-cards" id="cards-completado"></div>
+
+          <div class="agenda-widget glass-panel">
+            <div class="agenda-header">
+              <span class="agenda-icon">📅</span>
+              <h3 class="agenda-title">Agenda</h3>
+              <button id="configure-calendar-btn" class="btn-config-calendar" title="Configurar Google Calendar">⚙️</button>
+            </div>
+            <div class="agenda-body" id="agenda-body-container">
+              <!-- Loaded dynamically -->
+            </div>
+            <div class="agenda-footer" id="agenda-footer-container">
+              <!-- Inline Connect button if not connected -->
+            </div>
+          </div>
         </div>
       </div>
     `;
 
-    // Render Cards with current filters
+    // Render Cards
     renderKanbanCards();
 
     // Bind Filter Change events
@@ -331,6 +429,15 @@ const renderers = {
         renderKanbanCards();
       }
     });
+
+    // Render 3 M.I.T. Widget
+    renderMITWidget();
+
+    // Render Corkboard Objectives
+    renderCorkboardObjectives();
+
+    // Render Agenda Widget
+    renderAgendaWidget();
 
     // Setup Drag and Drop dropzones
     setupDragAndDrop();
@@ -651,6 +758,175 @@ const renderers = {
   }
 };
 
+// --- Widget Renderers ---
+
+// Render 3 M.I.T. Widget
+function renderMITWidget() {
+  const container = document.getElementById('mit-list-container');
+  if (!container) return;
+
+  const mitData = getMITData();
+  container.innerHTML = '';
+
+  mitData.forEach((item, idx) => {
+    const mitItem = document.createElement('div');
+    mitItem.className = `mit-item ${item.checked ? 'checked' : ''}`;
+    
+    mitItem.innerHTML = `
+      <input type="checkbox" class="mit-checkbox" ${item.checked ? 'checked' : ''}>
+      <input type="text" class="mit-input" value="${item.text}" placeholder="Hacer indispensable ${idx + 1}...">
+    `;
+
+    const checkbox = mitItem.querySelector('.mit-checkbox');
+    const input = mitItem.querySelector('.mit-input');
+
+    checkbox.addEventListener('change', (e) => {
+      mitData[idx].checked = e.target.checked;
+      mitItem.classList.toggle('checked', e.target.checked);
+      saveMITData(mitData);
+    });
+
+    input.addEventListener('input', (e) => {
+      mitData[idx].text = e.target.value;
+      saveMITData(mitData);
+    });
+
+    container.appendChild(mitItem);
+  });
+}
+
+// Render Corkboard Objectives
+function renderCorkboardObjectives() {
+  const container = document.getElementById('corkboard-objectives');
+  if (!container) return;
+
+  const objs = getCorkboardObjectives();
+  container.innerHTML = '';
+
+  objs.forEach((text, idx) => {
+    const postIt = document.createElement('div');
+    postIt.className = 'sticky-note';
+    
+    postIt.innerHTML = `
+      <span class="sticky-note-pin">📌</span>
+      <textarea class="sticky-note-content" placeholder="Escribe un objetivo semanal...">${text}</textarea>
+    `;
+
+    const textarea = postIt.querySelector('.sticky-note-content');
+    textarea.addEventListener('input', (e) => {
+      objs[idx] = e.target.value;
+      saveCorkboardObjectives(objs);
+    });
+
+    // Auto-resize textarea to fit content
+    const resizeTextarea = () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    };
+    textarea.addEventListener('focus', resizeTextarea);
+    textarea.addEventListener('input', resizeTextarea);
+    
+    // Initial size setting
+    setTimeout(resizeTextarea, 0);
+
+    container.appendChild(postIt);
+  });
+}
+
+// Render Agenda Widget
+function renderAgendaWidget() {
+  const container = document.getElementById('agenda-body-container');
+  const footer = document.getElementById('agenda-footer-container');
+  if (!container) return;
+
+  const calConfig = getCalendarConfig();
+  container.innerHTML = '';
+  if (footer) footer.innerHTML = '';
+
+  if (calConfig) {
+    // Render GCal Iframe
+    let srcUrl = calConfig;
+    // If user entered just an email / ID, convert to embed URL
+    if (!calConfig.startsWith('http') && calConfig.includes('@')) {
+      srcUrl = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calConfig)}&mode=AGENDA&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=1`;
+    }
+    
+    // Parse iframe src if the user pasted full iframe tag
+    if (calConfig.includes('<iframe') && calConfig.includes('src=')) {
+      const match = calConfig.match(/src="([^"]+)"/);
+      if (match && match[1]) srcUrl = match[1];
+    }
+
+    container.innerHTML = `
+      <div class="gcal-iframe-container">
+        <iframe src="${srcUrl}" class="gcal-iframe" scrolling="yes"></iframe>
+      </div>
+    `;
+  } else {
+    // Render Mock Events
+    let eventsHtml = `<div class="mock-events-list">`;
+    mockCalendarEvents.forEach(ev => {
+      eventsHtml += `
+        <div class="mock-event">
+          <span class="event-time-tag">🕒 ${ev.time}</span>
+          <span class="event-title">${ev.title}</span>
+          <span class="event-desc">${ev.desc}</span>
+          <a href="#" class="event-join-btn">🔗 Unirse a Meet</a>
+        </div>
+      `;
+    });
+    eventsHtml += `</div>`;
+    container.innerHTML = eventsHtml;
+
+    // Show inline connect button in footer
+    if (footer) {
+      footer.innerHTML = `
+        <button id="connect-gcal-btn-footer" class="btn-connect-gcal-inline">🔗 Conectar Google Calendar</button>
+      `;
+      document.getElementById('connect-gcal-btn-footer').addEventListener('click', () => {
+        showCalendarConfigForm();
+      });
+    }
+  }
+
+  // Bind cog button
+  const cogBtn = document.getElementById('configure-calendar-btn');
+  if (cogBtn) {
+    cogBtn.onclick = () => showCalendarConfigForm();
+  }
+}
+
+// Show Calendar configuration form inline
+function showCalendarConfigForm() {
+  const container = document.getElementById('agenda-body-container');
+  const footer = document.getElementById('agenda-footer-container');
+  if (!container) return;
+
+  const currentVal = getCalendarConfig();
+  if (footer) footer.innerHTML = '';
+
+  container.innerHTML = `
+    <div class="calendar-setup-container">
+      <span class="calendar-setup-text">Ingresa tu <strong>ID de Google Calendar</strong> público o el enlace/código iframe para sincronizar tus eventos:</span>
+      <input type="text" id="gcal-config-input" class="calendar-setup-input" placeholder="ej. tu-email@gmail.com o iframe src" value="${currentVal.replace(/"/g, '&quot;')}">
+      <div class="calendar-setup-actions">
+        <button id="gcal-save-btn" class="btn-setup-save">Guardar</button>
+        <button id="gcal-cancel-btn" class="btn-setup-cancel">Cancelar</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('gcal-save-btn').onclick = () => {
+    const inputVal = document.getElementById('gcal-config-input').value.trim();
+    saveCalendarConfig(inputVal);
+    renderAgendaWidget();
+  };
+
+  document.getElementById('gcal-cancel-btn').onclick = () => {
+    renderAgendaWidget();
+  };
+}
+
 // Render Kanban board lists based on active filters
 function renderKanbanCards() {
   const cardsPendiente = document.getElementById('cards-pendiente');
@@ -798,6 +1074,21 @@ if (sidebarCollapsed) {
   document.getElementById('app').classList.add('sidebar-collapsed');
 }
 
+// Drag-and-drop vertical position calculation helper
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.kanban-card:not(.dragging)')];
+  
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
 // Drag & Drop Setup
 function setupDragAndDrop() {
   const columns = [
@@ -812,6 +1103,16 @@ function setupDragAndDrop() {
     col.el.addEventListener('dragover', (e) => {
       e.preventDefault();
       col.el.classList.add('drag-over');
+      
+      const afterElement = getDragAfterElement(col.el, e.clientY);
+      const draggingCard = document.querySelector('.kanban-card.dragging');
+      if (draggingCard) {
+        if (afterElement == null) {
+          col.el.appendChild(draggingCard);
+        } else {
+          col.el.insertBefore(draggingCard, afterElement);
+        }
+      }
     });
 
     col.el.addEventListener('dragleave', () => {
@@ -822,12 +1123,38 @@ function setupDragAndDrop() {
       e.preventDefault();
       col.el.classList.remove('drag-over');
       const taskId = e.dataTransfer.getData('text/plain');
-      const task = state.tasks.find(t => t.id === taskId);
-      if (task && task.status !== col.status) {
-        task.status = col.status;
-        localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
-        renderKanbanCards();
+      const taskIndex = state.tasks.findIndex(t => t.id === taskId);
+      if (taskIndex === -1) return;
+      
+      const task = state.tasks[taskIndex];
+      // Update status
+      task.status = col.status;
+      
+      // Determine the position of the dropped card relative to other cards in the column
+      const children = [...col.el.querySelectorAll('.kanban-card')];
+      const newIndexInColumn = children.findIndex(child => child.querySelector('.card-id').textContent === taskId);
+      
+      // Remove from array
+      state.tasks.splice(taskIndex, 1);
+      
+      if (newIndexInColumn === children.length - 1) {
+        // Drop at the end
+        if (children.length > 1) {
+          const prevCardId = children[newIndexInColumn - 1].querySelector('.card-id').textContent;
+          const prevTaskIndex = state.tasks.findIndex(t => t.id === prevCardId);
+          state.tasks.splice(prevTaskIndex + 1, 0, task);
+        } else {
+          state.tasks.push(task);
+        }
+      } else {
+        // Drop before a visible sibling card
+        const nextCardId = children[newIndexInColumn + 1].querySelector('.card-id').textContent;
+        const nextTaskIndex = state.tasks.findIndex(t => t.id === nextCardId);
+        state.tasks.splice(nextTaskIndex, 0, task);
       }
+      
+      localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
+      renderKanbanCards();
     });
   });
 }

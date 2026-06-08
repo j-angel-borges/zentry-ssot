@@ -1387,3 +1387,418 @@ body {
   color: #ffffff;
   border-color: #b91c1c;
 }
+
+/* --- New Backlog 3-Column Layout --- */
+.workspace.backlog-view .workspace-content,
+.workspace.backlog-view .workspace-header,
+.workspace.backlog-view .properties-container {
+  max-width: 1600px;
+}
+
+.backlog-layout-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 340px;
+  gap: 24px;
+  width: 100%;
+  margin-top: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1300px) {
+  .backlog-layout-grid {
+    grid-template-columns: 1fr;
+  }
+  .backlog-left-col, .backlog-right-col {
+    max-width: 100%;
+  }
+}
+
+/* Glass panel container */
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(74, 81, 96, 0.05);
+  margin-bottom: 20px;
+}
+
+/* 3 M.I.T. Widget styling */
+.mit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mit-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.mit-icon {
+  font-size: 20px;
+}
+
+.mit-title {
+  font-family: var(--font-family-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.mit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.mit-item:hover {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: var(--primary);
+}
+
+.mit-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary-dark);
+}
+
+.mit-input {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  font-family: var(--font-family-body);
+  transition: all 0.2s ease;
+}
+
+.mit-item.checked {
+  background: rgba(74, 81, 96, 0.04);
+  opacity: 0.65;
+}
+
+.mit-item.checked .mit-input {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Corkboard Widget styling */
+.corkboard-widget {
+  padding: 16px;
+}
+
+.corkboard-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.corkboard-icon {
+  font-size: 20px;
+}
+
+.corkboard-title {
+  font-family: var(--font-family-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.corkboard-board {
+  background-color: #dfb688;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 12%, transparent 13%), radial-gradient(rgba(0, 0, 0, 0.08) 12%, transparent 13%);
+  background-size: 14px 14px;
+  background-position: 0 0, 7px 7px;
+  border: 5px solid #8b5a2b;
+  border-radius: 10px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: inset 0 4px 15px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1);
+  min-height: 280px;
+}
+
+.sticky-note {
+  position: relative;
+  padding: 16px 12px 12px 12px;
+  min-height: 70px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #333;
+  font-family: var(--font-family-body);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: text;
+}
+
+.sticky-note:nth-child(1) {
+  background: #fff9db; /* Yellow */
+  transform: rotate(-1.5deg);
+}
+
+.sticky-note:nth-child(2) {
+  background: #ffe3e3; /* Pink */
+  transform: rotate(1.2deg);
+}
+
+.sticky-note:nth-child(3) {
+  background: #e3fafc; /* Blue */
+  transform: rotate(-0.8deg);
+}
+
+.sticky-note:hover {
+  transform: scale(1.03) rotate(0deg) !important;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  z-index: 5;
+}
+
+.sticky-note-pin {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+}
+
+.sticky-note-content {
+  width: 100%;
+  height: 100%;
+  min-height: 40px;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: #2b2b2b;
+  font-weight: 500;
+  resize: none;
+  overflow: hidden;
+  font-family: var(--font-family-body);
+}
+
+/* Agenda Widget styling */
+.agenda-widget {
+  display: flex;
+  flex-direction: column;
+}
+
+.agenda-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+.agenda-title {
+  font-family: var(--font-family-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.btn-config-calendar {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+  padding: 2px;
+}
+
+.btn-config-calendar:hover {
+  opacity: 1;
+  transform: rotate(30deg);
+}
+
+.agenda-body {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Google Calendar iframe wrapper */
+.gcal-iframe-container {
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: #ffffff;
+}
+
+.gcal-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Mock Calendar events styling */
+.mock-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mock-event {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+.mock-event:hover {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: var(--primary);
+}
+
+.event-time-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: rgba(83, 59, 135, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.event-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.event-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.event-join-btn {
+  font-size: 11px;
+  color: #0f766e;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.event-join-btn:hover {
+  text-decoration: underline;
+}
+
+.calendar-setup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.calendar-setup-text {
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.calendar-setup-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: rgba(255,255,255,0.7);
+  font-size: 12px;
+  outline: none;
+  color: var(--text-main);
+}
+
+.calendar-setup-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-setup-save {
+  background-color: var(--primary-dark);
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.btn-setup-cancel {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.btn-setup-save:hover {
+  background-color: #422d70;
+}
+
+.btn-setup-cancel:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.agenda-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-connect-gcal-inline {
+  background: transparent;
+  border: 1px solid rgba(83, 59, 135, 0.3);
+  color: var(--primary-dark);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-connect-gcal-inline:hover {
+  background: rgba(83, 59, 135, 0.08);
+}
