@@ -16,8 +16,27 @@ const state = {
     vertical: 'all',
     priority: 'all',
     status: 'all'
-  }
+  },
+  tasks: [],
+  currentEditingTask: null
 };
+
+// Initialize Tasks from LocalStorage or DB
+function initTasks() {
+  const stored = localStorage.getItem('zentry_tasks');
+  if (stored) {
+    try {
+      state.tasks = JSON.parse(stored);
+    } catch (e) {
+      state.tasks = JSON.parse(JSON.stringify(db.tasks));
+    }
+  } else {
+    state.tasks = JSON.parse(JSON.stringify(db.tasks));
+    localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
+  }
+}
+
+initTasks();
 
 // Markdown Parser Utility
 function mdToHtml(md) {
@@ -227,7 +246,7 @@ function buildDocTree() {
 const renderers = {
   // 1. Kanban Backlog View
   backlog: () => {
-    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #1c142e 0%, #0c0d10 100%)';
+    document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #ebf1f5 0%, #c2f4e7 50%, #d6c8fa 100%)';
     document.getElementById('page-icon').textContent = '📋';
     document.getElementById('page-title').textContent = 'Tablero Backlog';
     document.getElementById('properties-block').style.display = 'flex';
@@ -252,6 +271,10 @@ const renderers = {
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
           </select>
+        </div>
+        <div class="filter-bar-actions">
+          <button id="add-task-btn" class="btn-add-task">＋ Nueva Tarea</button>
+          <button id="reset-tasks-btn" class="btn-reset-tasks" title="Restaurar tareas por defecto del SSOT">🔄 Restaurar</button>
         </div>
       </div>
       <div class="kanban-board">
@@ -294,6 +317,23 @@ const renderers = {
       state.filters.priority = e.target.value;
       renderKanbanCards();
     });
+
+    // Add task click listener
+    document.getElementById('add-task-btn').addEventListener('click', () => {
+      openTaskModalForCreate();
+    });
+
+    // Reset tasks listener
+    document.getElementById('reset-tasks-btn').addEventListener('click', () => {
+      if (confirm('¿Estás seguro de que deseas restaurar las tareas por defecto del SSOT? Esto borrará tus cambios locales.')) {
+        localStorage.removeItem('zentry_tasks');
+        initTasks();
+        renderKanbanCards();
+      }
+    });
+
+    // Setup Drag and Drop dropzones
+    setupDragAndDrop();
   },
 
   // 2. Google Keep Notes View
@@ -617,7 +657,7 @@ function renderKanbanCards() {
   let cCompletado = 0;
 
   // Filter Tasks
-  db.tasks.forEach(task => {
+  state.tasks.forEach(task => {
     // 1. Vertical filter
     if (state.filters.vertical !== 'all') {
       const v = state.filters.vertical; // 'tec', 'prod', 'mkt'
@@ -633,13 +673,26 @@ function renderKanbanCards() {
 
     const card = document.createElement('div');
     card.className = 'kanban-card';
+    card.setAttribute('draggable', 'true');
+    
+    // Drag and Drop card event listeners
+    card.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', task.id);
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+    });
     
     let pClass = 'priority-media';
     if (task.priority.toLowerCase() === 'alta') pClass = 'priority-high';
     if (task.priority.toLowerCase() === 'baja') pClass = 'priority-baja';
 
     // Assignee initials
-    let initials = task.assignedTo.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    let initials = 'UA';
+    if (task.assignedTo) {
+      initials = task.assignedTo.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    }
 
     card.innerHTML = `
       <div class="card-header">
@@ -648,29 +701,17 @@ function renderKanbanCards() {
       </div>
       <div class="card-body">${task.description}</div>
       <div class="card-footer">
-        <span class="card-origin">Ref: ${task.origin}</span>
+        <span class="card-origin">Ref: ${task.origin || 'N/A'}</span>
         <span class="card-assignee">
           <div class="assignee-avatar">${initials}</div>
-          <span>${task.assignedTo}</span>
+          <span>${task.assignedTo || 'Unassigned'}</span>
         </span>
       </div>
     `;
 
-    // Click on Card opens the Keep note or relevant doc if referenced
+    // Click on Card opens the edit modal
     card.addEventListener('click', () => {
-      // Find Keep note that contains original ID
-      if (task.origin && task.origin.includes('Keep')) {
-        window.location.hash = '#ideas';
-      } else {
-        // Fallback: search doc matching the vertical
-        if (task.id.startsWith('TEC')) {
-          window.location.hash = '#doc/02-arquitectura-tecnica/README.md';
-        } else if (task.id.startsWith('MKT')) {
-          window.location.hash = '#doc/03-marketing-y-ventas/README.md';
-        } else {
-          window.location.hash = '#doc/01-vision-y-producto/README.md';
-        }
-      }
+      openTaskModalForEdit(task);
     });
 
     const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
@@ -726,6 +767,235 @@ function handleRouting() {
 
 // Listen to Hash Changes
 window.addEventListener('hashchange', handleRouting);
+
+// Sidebar Toggle Event Handler
+document.getElementById('sidebar-toggle').addEventListener('click', () => {
+  const app = document.getElementById('app');
+  app.classList.toggle('sidebar-collapsed');
+  const isCollapsed = app.classList.contains('sidebar-collapsed');
+  localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
+});
+
+// Load Sidebar Collapsed State Preference
+const sidebarCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+if (sidebarCollapsed) {
+  document.getElementById('app').classList.add('sidebar-collapsed');
+}
+
+// Drag & Drop Setup
+function setupDragAndDrop() {
+  const columns = [
+    { el: document.getElementById('cards-pendiente'), status: 'Pendiente' },
+    { el: document.getElementById('cards-progreso'), status: 'En curso' },
+    { el: document.getElementById('cards-completado'), status: 'Completado' }
+  ];
+
+  columns.forEach(col => {
+    if (!col.el) return;
+    
+    col.el.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      col.el.classList.add('drag-over');
+    });
+
+    col.el.addEventListener('dragleave', () => {
+      col.el.classList.remove('drag-over');
+    });
+
+    col.el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      col.el.classList.remove('drag-over');
+      const taskId = e.dataTransfer.getData('text/plain');
+      const task = state.tasks.find(t => t.id === taskId);
+      if (task && task.status !== col.status) {
+        task.status = col.status;
+        localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
+        renderKanbanCards();
+      }
+    });
+  });
+}
+
+// Modal View Elements
+const modal = document.getElementById('task-modal');
+const modalTaskId = document.getElementById('modal-task-id');
+const modalClose = document.getElementById('modal-close');
+const taskForm = document.getElementById('task-form');
+const taskDesc = document.getElementById('task-desc');
+const taskPriority = document.getElementById('task-priority');
+const taskStatus = document.getElementById('task-status');
+const taskAssignee = document.getElementById('task-assignee');
+const taskOrigin = document.getElementById('task-origin');
+const taskDeleteBtn = document.getElementById('task-delete-btn');
+const taskGoRef = document.getElementById('task-go-ref');
+
+// Open Modal for Editing
+function openTaskModalForEdit(task) {
+  state.currentEditingTask = task;
+  
+  modalTaskId.textContent = task.id;
+  taskDesc.value = task.description || '';
+  taskPriority.value = task.priority || 'Media';
+  
+  // Map internal status string to select value
+  const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
+  if (cleanStatus.includes('pendiente') || cleanStatus.includes('hacer') || cleanStatus.includes('todo')) {
+    taskStatus.value = 'Pendiente';
+  } else if (cleanStatus.includes('progreso') || cleanStatus.includes('curso') || cleanStatus.includes('proceso')) {
+    taskStatus.value = 'En curso';
+  } else {
+    taskStatus.value = 'Completado';
+  }
+  
+  taskAssignee.value = task.assignedTo || '';
+  taskOrigin.value = task.origin || '';
+  
+  // Show Delete and Ref buttons
+  taskDeleteBtn.style.display = 'block';
+  if (task.origin || task.id) {
+    taskGoRef.style.display = 'block';
+  } else {
+    taskGoRef.style.display = 'none';
+  }
+  
+  // Open modal animation
+  modal.classList.add('show');
+}
+
+// Open Modal for Creating
+function openTaskModalForCreate() {
+  state.currentEditingTask = null;
+  
+  // Auto-generate task ID based on active filters
+  let prefix = 'TASK';
+  if (state.filters.vertical === 'tec') prefix = 'TEC';
+  else if (state.filters.vertical === 'prod') prefix = 'PROD';
+  else if (state.filters.vertical === 'mkt') prefix = 'MKT';
+  
+  const matches = state.tasks.filter(t => t.id.startsWith(prefix));
+  let nextNum = 1;
+  if (matches.length > 0) {
+    const ids = matches.map(t => {
+      const parts = t.id.split('-');
+      const num = parseInt(parts[parts.length - 1]);
+      return isNaN(num) ? 0 : num;
+    });
+    nextNum = Math.max(...ids) + 1;
+  }
+  
+  const paddedNum = String(nextNum).padStart(2, '0');
+  modalTaskId.textContent = `Crear Nueva Tarea (${prefix}-${paddedNum})`;
+  
+  // Clear fields
+  taskDesc.value = '';
+  taskPriority.value = 'Media';
+  taskStatus.value = 'Pendiente';
+  taskAssignee.value = '';
+  taskOrigin.value = '';
+  
+  // Hide Delete and Ref buttons for new task
+  taskDeleteBtn.style.display = 'none';
+  taskGoRef.style.display = 'none';
+  
+  modal.classList.add('show');
+}
+
+// Close Modal
+function closeModal() {
+  modal.classList.remove('show');
+}
+
+// Bind Modal Close listeners
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) closeModal();
+});
+
+// Delete Task Handler
+taskDeleteBtn.addEventListener('click', () => {
+  if (state.currentEditingTask && confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+    state.tasks = state.tasks.filter(t => t.id !== state.currentEditingTask.id);
+    localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
+    closeModal();
+    renderKanbanCards();
+  }
+});
+
+// Go to Reference Document Handler
+taskGoRef.addEventListener('click', () => {
+  if (!state.currentEditingTask) return;
+  const task = state.currentEditingTask;
+  closeModal();
+  
+  if (task.origin && task.origin.includes('Keep')) {
+    window.location.hash = '#ideas';
+  } else {
+    // Navigate based on prefix
+    if (task.id.startsWith('TEC')) {
+      window.location.hash = '#doc/02-arquitectura-tecnica/README.md';
+    } else if (task.id.startsWith('MKT')) {
+      window.location.hash = '#doc/03-marketing-y-ventas/README.md';
+    } else {
+      window.location.hash = '#doc/01-vision-y-producto/README.md';
+    }
+  }
+});
+
+// Form Submit Handler
+taskForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const desc = taskDesc.value.trim();
+  const priority = taskPriority.value;
+  const status = taskStatus.value; // 'Pendiente', 'En curso', 'Completado'
+  const assignee = taskAssignee.value.trim();
+  const origin = taskOrigin.value.trim();
+  
+  if (state.currentEditingTask) {
+    // Edit Mode
+    const task = state.tasks.find(t => t.id === state.currentEditingTask.id);
+    if (task) {
+      task.description = desc;
+      task.priority = priority;
+      task.status = status;
+      task.assignedTo = assignee;
+      task.origin = origin;
+    }
+  } else {
+    // Create Mode
+    // Calculate final ID
+    let prefix = 'TASK';
+    if (state.filters.vertical === 'tec') prefix = 'TEC';
+    else if (state.filters.vertical === 'prod') prefix = 'PROD';
+    else if (state.filters.vertical === 'mkt') prefix = 'MKT';
+    
+    const matches = state.tasks.filter(t => t.id.startsWith(prefix));
+    let nextNum = 1;
+    if (matches.length > 0) {
+      const ids = matches.map(t => {
+        const parts = t.id.split('-');
+        const num = parseInt(parts[parts.length - 1]);
+        return isNaN(num) ? 0 : num;
+      });
+      nextNum = Math.max(...ids) + 1;
+    }
+    const paddedNum = String(nextNum).padStart(2, '0');
+    const finalId = `${prefix}-${paddedNum}`;
+    
+    state.tasks.push({
+      id: finalId,
+      description: desc,
+      priority: priority,
+      status: status,
+      assignedTo: assignee,
+      origin: origin
+    });
+  }
+  
+  localStorage.setItem('zentry_tasks', JSON.stringify(state.tasks));
+  closeModal();
+  renderKanbanCards();
+});
 
 // Initial Load
 buildDocTree();

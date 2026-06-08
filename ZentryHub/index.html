@@ -72,6 +72,9 @@
 
       <!-- Main Workspace -->
       <main class="workspace">
+        <!-- Sidebar Toggle Button -->
+        <button id="sidebar-toggle" class="sidebar-toggle-btn" title="Contraer/Desplegar Barra Lateral">☰</button>
+
         <!-- Banner and Icon Area -->
         <div class="workspace-banner" id="page-banner">
           <div class="banner-gradient"></div>
@@ -109,6 +112,64 @@
           <!-- Dynamically loaded views (Kanban, Markdown pages, etc.) -->
         </div>
       </main>
+    </div>
+
+    <!-- Reusable Premium Modal -->
+    <div id="task-modal" class="modal-overlay">
+      <div class="modal-content glass-modal">
+        <div class="modal-header">
+          <h2 id="modal-task-id" class="modal-task-id">TEC-01</h2>
+          <button id="modal-close" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="task-form">
+            <div class="form-group">
+              <label for="task-desc">Descripción de la Tarea</label>
+              <textarea id="task-desc" required rows="3" placeholder="Ej. Implementar persistencia de telemetría..."></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="task-priority">Prioridad</label>
+                <select id="task-priority">
+                  <option value="Alta">Alta</option>
+                  <option value="Media">Media</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="task-status">Estado</label>
+                <select id="task-status">
+                  <option value="Pendiente">Por Hacer</option>
+                  <option value="En curso">En Curso</option>
+                  <option value="Completado">Completado</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="task-assignee">Responsable</label>
+                <input type="text" id="task-assignee" required placeholder="Nombre del responsable">
+              </div>
+              
+              <div class="form-group">
+                <label for="task-origin">Origen / Referencia</label>
+                <input type="text" id="task-origin" placeholder="Ej. Keep (1) o Vision Doc">
+              </div>
+            </div>
+            
+            <div class="modal-actions">
+              <button type="button" id="task-delete-btn" class="btn btn-danger">Eliminar Tarea</button>
+              <div class="modal-actions-right">
+                <button type="button" id="task-go-ref" class="btn btn-secondary">Ver Referencia</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     
     <script type="module" src="/src/main.js"></script>

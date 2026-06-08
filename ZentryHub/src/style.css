@@ -53,6 +53,8 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   height: 100%;
+  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease, border-color 0.3s;
+  overflow: hidden;
 }
 
 .sidebar-header {
@@ -1066,4 +1068,288 @@ body {
 .demobook-card-minimal:hover .demobook-card-arrow {
   transform: translateX(4px);
   color: var(--primary);
+}
+
+/* Sidebar Toggle Button floating in workspace */
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(74, 81, 96, 0.12);
+  color: var(--primary-dark);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(74, 81, 96, 0.08);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.75);
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(74, 81, 96, 0.12);
+}
+
+/* Sidebar Collapsed State */
+.notion-layout.sidebar-collapsed .sidebar {
+  width: 0;
+  border-right: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Drag Over visual state */
+.kanban-cards.drag-over {
+  background-color: rgba(83, 59, 135, 0.04);
+  border-radius: 8px;
+  outline: 2px dashed rgba(83, 59, 135, 0.25);
+  min-height: 100px;
+}
+
+.kanban-card.dragging {
+  opacity: 0.4;
+  transform: scale(0.98);
+}
+
+/* Backlog actions */
+.filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.filter-bar-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.btn-add-task {
+  background-color: var(--primary-dark);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(83, 59, 135, 0.2);
+}
+
+.btn-add-task:hover {
+  background-color: #422d70;
+  transform: translateY(-1px);
+}
+
+.btn-reset-tasks {
+  background-color: rgba(74, 81, 96, 0.08);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reset-tasks:hover {
+  background-color: rgba(74, 81, 96, 0.15);
+}
+
+/* Premium Modal Layout */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(74, 81, 96, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+.glass-modal {
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(83, 59, 135, 0.15);
+  border-radius: 18px;
+  width: 90%;
+  max-width: 540px;
+  padding: 28px;
+  box-shadow: 0 16px 40px rgba(74, 81, 96, 0.15);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-overlay.show .glass-modal {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+.modal-task-id {
+  font-family: var(--font-family-title);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  color: var(--primary-dark);
+}
+
+/* Modal Form Styles */
+#task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+#task-form input[type="text"],
+#task-form select,
+#task-form textarea {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text-main);
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+#task-form input[type="text"]:focus,
+#task-form select:focus,
+#task-form textarea:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+#task-form textarea {
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  gap: 12px;
+}
+
+.modal-actions-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* Premium Buttons inside Modal */
+.btn {
+  font-family: var(--font-family-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background-color: var(--primary-dark);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(83, 59, 135, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: #422d70;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: rgba(83, 59, 135, 0.08);
+  color: var(--primary-dark);
+  border: 1px solid rgba(83, 59, 135, 0.18);
+}
+
+.btn-secondary:hover {
+  background-color: rgba(83, 59, 135, 0.15);
+}
+
+.btn-danger {
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+  color: #ffffff;
+  border-color: #b91c1c;
 }
