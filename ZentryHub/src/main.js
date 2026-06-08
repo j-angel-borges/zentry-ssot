@@ -557,7 +557,7 @@ const renderers = {
     container.innerHTML = `
       <div class="demobook-minimal-container">
         <div class="demobook-grid">
-          <a href="https://script.google.com/macros/s/AKfycbz7j-XGfe5ppXEovbk8ysDDr_tN9e7UN7teOSVHHpyv3cvgghwkqdPgcVq-R8pItNQe/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+          <a href="https://script.google.com/macros/s/AKfycbxcL87WoSNKkbFl7WyWi6UqvDHjsCRbz1gBdB9XCDLn7MWNUX1mPFEoHgxRVIE5RHPB/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
             <div class="demobook-card-minimal">
               <div class="demobook-card-content">
                 <span class="demobook-card-icon">📋</span>
