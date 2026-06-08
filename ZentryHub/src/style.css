@@ -44,6 +44,9 @@ body {
 
 /* Sidebar */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 260px;
   background-color: var(--bg-sidebar);
   backdrop-filter: blur(25px);
@@ -51,9 +54,10 @@ body {
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
   height: 100%;
-  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease, border-color 0.3s;
+  z-index: 1050;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
+  transform: translateX(0);
   overflow: hidden;
 }
 
@@ -544,6 +548,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 350px; /* Ensure drop zone is large even when empty */
+}
+
+/* Prevent text/icon elements inside card from interfering with drag/hover drops */
+.kanban-card * {
+  pointer-events: none;
 }
 
 .kanban-card {
@@ -1074,12 +1084,12 @@ body {
 .sidebar-toggle-btn {
   position: absolute;
   top: 20px;
-  left: 20px;
-  z-index: 1000;
+  left: 280px; /* Default: open state position */
+  z-index: 1060; /* Above sidebar overlay */
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(74, 81, 96, 0.12);
   color: var(--primary-dark);
   font-size: 15px;
@@ -1090,19 +1100,43 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(74, 81, 96, 0.08);
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.2s, box-shadow 0.2s;
 }
 
 .sidebar-toggle-btn:hover {
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.85);
   transform: scale(1.08);
-  box-shadow: 0 6px 16px rgba(74, 81, 96, 0.12);
+  box-shadow: 0 6px 16px rgba(74, 81, 96, 0.15);
+}
+
+.notion-layout.sidebar-collapsed .sidebar-toggle-btn {
+  left: 20px; /* Collapsed state position */
 }
 
 /* Sidebar Collapsed State */
 .notion-layout.sidebar-collapsed .sidebar {
-  width: 0;
-  border-right: none;
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sidebar Backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(74, 81, 96, 0.2);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 1040;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.notion-layout.sidebar-collapsed .sidebar-backdrop {
   opacity: 0;
   pointer-events: none;
 }
@@ -1192,7 +1226,7 @@ body {
 }
 
 .glass-modal {
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.92); /* Higher opacity to prevent text overlap ghosting */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(83, 59, 135, 0.15);

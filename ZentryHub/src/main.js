@@ -776,6 +776,13 @@ document.getElementById('sidebar-toggle').addEventListener('click', () => {
   localStorage.setItem('sidebar_collapsed', isCollapsed ? 'true' : 'false');
 });
 
+// Sidebar Backdrop Click Event Handler (close sidebar when clicking outside)
+document.getElementById('sidebar-backdrop').addEventListener('click', () => {
+  const app = document.getElementById('app');
+  app.classList.add('sidebar-collapsed');
+  localStorage.setItem('sidebar_collapsed', 'true');
+});
+
 // Load Sidebar Collapsed State Preference
 const sidebarCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
 if (sidebarCollapsed) {
