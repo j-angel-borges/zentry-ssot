@@ -566,6 +566,15 @@ const renderers = {
               <span class="demobook-card-arrow">➔</span>
             </div>
           </a>
+          <a href="https://script.google.com/macros/s/AKfycbwZS6erGX6Urcf3rPMoQRTf1x-eLluWte3O2ZSg-j4Mu-hzMYZLTkKmekpU0RtV6OtOFA/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+            <div class="demobook-card-minimal">
+              <div class="demobook-card-content">
+                <span class="demobook-card-icon">📊</span>
+                <span class="demobook-card-title">Slides - Demobook</span>
+              </div>
+              <span class="demobook-card-arrow">➔</span>
+            </div>
+          </a>
         </div>
       </div>
     `;
