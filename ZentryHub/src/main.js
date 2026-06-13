@@ -833,6 +833,60 @@ function renderCorkboardObjectives() {
   });
 }
 
+// Helper to format calendar URL to show only current day agenda
+function formatCalendarUrl(url) {
+  try {
+    let cleanUrl = url.trim();
+    // Parse iframe src if the user pasted full iframe tag
+    if (cleanUrl.includes('<iframe') && cleanUrl.includes('src=')) {
+      const match = cleanUrl.match(/src="([^"]+)"/);
+      if (match && match[1]) cleanUrl = match[1];
+    }
+    
+    // If user entered just an email / ID, convert to embed URL base
+    if (!cleanUrl.startsWith('http') && cleanUrl.includes('@')) {
+      cleanUrl = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(cleanUrl)}`;
+    }
+    
+    const urlObj = new URL(cleanUrl);
+    const params = urlObj.searchParams;
+    
+    // Set view mode to agenda
+    params.set('mode', 'AGENDA');
+    
+    // Calculate today YYYYMMDD and tomorrow YYYYMMDD (exclusive boundary)
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
+    const formatDateStr = (d) => {
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}${mm}${dd}`;
+    };
+    
+    const todayStr = formatDateStr(today);
+    const tomorrowStr = formatDateStr(tomorrow);
+    
+    // Set dates parameter to limit to today only
+    params.set('dates', `${todayStr}/${tomorrowStr}`);
+    
+    // Custom premium integrations: hide tabs/title/calendars
+    params.set('showTitle', '0');
+    params.set('showTabs', '0');
+    params.set('showCalendars', '0');
+    params.set('showNav', '1');
+    params.set('showDate', '1');
+    params.set('showPrint', '0');
+    params.set('showTz', '1');
+    
+    return urlObj.toString();
+  } catch (e) {
+    return url;
+  }
+}
+
 // Render Agenda Widget
 function renderAgendaWidget() {
   const container = document.getElementById('agenda-body-container');
@@ -844,39 +898,8 @@ function renderAgendaWidget() {
   if (footer) footer.innerHTML = '';
 
   if (calConfig) {
-    // Render GCal Iframe
-    let srcUrl = calConfig;
-    
-    // Parse iframe src if the user pasted full iframe tag
-    if (calConfig.includes('<iframe') && calConfig.includes('src=')) {
-      const match = calConfig.match(/src="([^"]+)"/);
-      if (match && match[1]) srcUrl = match[1];
-    }
-
-    // Normalize URL format
-    if (!srcUrl.startsWith('http') && (srcUrl.includes('calendar.google.com') || srcUrl.includes('google.com/calendar'))) {
-      srcUrl = 'https://' + srcUrl;
-    } else if (!srcUrl.startsWith('http') && srcUrl.includes('@')) {
-      srcUrl = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(srcUrl)}&mode=AGENDA&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=1`;
-    }
-
-    // Dynamically inject today's date range to force a single-day agenda view
-    try {
-      const decodedUrl = srcUrl.replace(/&amp;/g, '&');
-      const urlObj = new URL(decodedUrl);
-      
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      const dateStr = `${yyyy}${mm}${dd}`;
-      
-      urlObj.searchParams.set('dates', `${dateStr}/${dateStr}`);
-      urlObj.searchParams.set('mode', 'AGENDA'); // Ensure Agenda view
-      srcUrl = urlObj.toString();
-    } catch (e) {
-      console.warn("Could not dynamically inject dates into Calendar URL", e);
-    }
+    // Render GCal Iframe formatted to today's agenda view
+    const srcUrl = formatCalendarUrl(calConfig);
 
     container.innerHTML = `
       <div class="gcal-iframe-container">
