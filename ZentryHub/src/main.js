@@ -18,7 +18,13 @@ const state = {
     status: 'all'
   },
   tasks: [],
-  currentEditingTask: null
+  currentEditingTask: null,
+  // Espacio Personal state
+  personalDate: new Date().toISOString().split('T')[0],
+  chatMessages: [],
+  pendingSuggestions: null,
+  calendarEvents: [],
+  calendarConnected: false
 };
 
 // Initialize Tasks from LocalStorage or DB
@@ -71,6 +77,78 @@ function getCorkboardObjectives() {
 
 function saveCorkboardObjectives(objs) {
   localStorage.setItem('zentry_objectives', JSON.stringify(objs));
+}
+
+// --- Timeblock Data Helpers ---
+function getTimeblockData(dateStr) {
+  const key = `zentry_timeblock_${dateStr}`;
+  const stored = localStorage.getItem(key);
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) { return {}; }
+  }
+  return {};
+}
+
+function saveTimeblockData(dateStr, data) {
+  localStorage.setItem(`zentry_timeblock_${dateStr}`, JSON.stringify(data));
+}
+
+function generateTimeSlots() {
+  const slots = [];
+  for (let h = 6; h <= 23; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      const hh = String(h).padStart(2, '0');
+      const mm = String(m).padStart(2, '0');
+      slots.push({ time: `${hh}:${mm}`, isHour: m === 0 });
+    }
+  }
+  return slots;
+}
+
+function formatDateLabel(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return `${days[d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function shiftDate(dateStr, days) {
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+function formatTime12h(time24) {
+  const [h, m] = time24.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+}
+
+function getCurrentTimePosition() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  if (h < 6 || h > 23) return null;
+  const slotIndex = (h - 6) * 4 + Math.floor(m / 15);
+  const minuteOffset = m % 15;
+  const pixelOffset = slotIndex * 38 + (minuteOffset / 15) * 38;
+  return pixelOffset;
+}
+
+// --- AI Chat Helpers ---
+function getChatHistory() {
+  const stored = localStorage.getItem('zentry_chat_history');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) { return []; }
+  }
+  return [];
+}
+
+function saveChatHistory(messages) {
+  // Keep only last 50 messages
+  const trimmed = messages.slice(-50);
+  localStorage.setItem('zentry_chat_history', JSON.stringify(trimmed));
 }
 
 // Markdown Parser Utility
@@ -296,10 +374,10 @@ const renderers = {
       container.innerHTML = `
         <div class="backlog-selector-container">
           <a href="#backlog/personal" class="selector-card">
-            <div class="selector-card-icon">👤</div>
-            <span class="selector-card-title">Tablero Personal</span>
-            <span class="selector-card-desc">Gestión de tareas individuales, desarrollo de marca personal y pendientes privados.</span>
-            <button class="btn-selector-enter">Entrar al Tablero</button>
+            <div class="selector-card-icon">🧘</div>
+            <span class="selector-card-title">Espacio Personal</span>
+            <span class="selector-card-desc">Tu cabina de productividad: timeblocking, asistente IA y conexión con Google Calendar.</span>
+            <button class="btn-selector-enter">Entrar al Espacio</button>
           </a>
           <a href="#backlog/zentry" class="selector-card">
             <div class="selector-card-icon">☄️</div>
@@ -309,6 +387,15 @@ const renderers = {
           </a>
         </div>
       `;
+      return;
+    }
+
+    // Personal mode → Espacio Personal (timeblock + AI chat)
+    if (state.backlogMode === 'personal') {
+      document.getElementById('properties-block').style.display = 'none';
+      document.getElementById('page-banner').style.display = 'none';
+      document.querySelector('.workspace-header').style.display = 'none';
+      renderEspacioPersonal(container);
       return;
     }
 
@@ -824,11 +911,335 @@ function renderCorkboardObjectives() {
     
     // Initial size setting
     setTimeout(resizeTextarea, 0);
-
     container.appendChild(postIt);
   });
 }
 
+// ========================================
+// ESPACIO PERSONAL: Timeblock + AI Chat
+// ========================================
+
+function renderEspacioPersonal(container) {
+  // Load chat history
+  state.chatMessages = getChatHistory();
+  if (state.chatMessages.length === 0) {
+    state.chatMessages = [{
+      role: 'assistant',
+      text: '¡Hola! Soy **Zentry AI** 🧘. Puedo ayudarte a organizar tu día. Dime qué tienes pendiente y llenaré tu timeblock con sugerencias inteligentes.\n\nEjemplo: *\"Necesito trabajar en la interfaz de Compose, preparar el pitch de ventas y revisar métricas\"*'
+    }];
+  }
+
+  const dateStr = state.personalDate;
+  const timeblockData = getTimeblockData(dateStr);
+  const slots = generateTimeSlots();
+  const isToday = dateStr === new Date().toISOString().split('T')[0];
+
+  // Build timeblock rows
+  let slotsHtml = '';
+  slots.forEach(slot => {
+    const data = timeblockData[slot.time] || {};
+    const hasCalEvent = data.source === 'calendar';
+    const isAI = data.source === 'ai';
+    const currentHour = isToday && slot.time === `${String(new Date().getHours()).padStart(2,'0')}:${String(Math.floor(new Date().getMinutes()/15)*15).padStart(2,'0')}`;
+
+    let extraClass = slot.isHour ? ' is-hour' : '';
+    if (currentHour) extraClass += ' is-current-hour';
+    if (hasCalEvent) extraClass += ' has-calendar-event';
+    if (isAI) extraClass += ' ai-suggested';
+
+    const timeLabel = slot.isHour ? formatTime12h(slot.time) : slot.time.split(':')[1];
+    const badgeHtml = hasCalEvent ? '<span class="timeblock-cal-badge">📅 Calendar</span>' : (isAI ? '<span class="timeblock-ai-badge">🤖 IA</span>' : '');
+
+    slotsHtml += `
+      <div class="timeblock-slot${extraClass}" data-time="${slot.time}">
+        <div class="timeblock-time-label">${timeLabel}</div>
+        <div class="timeblock-content">
+          <input type="text" class="timeblock-text" value="${data.text || ''}" placeholder="${slot.isHour ? 'Bloque disponible...' : ''}" data-time="${slot.time}" ${hasCalEvent ? 'readonly' : ''}>
+          ${badgeHtml}
+        </div>
+      </div>
+    `;
+  });
+
+  // Build chat messages
+  let chatMessagesHtml = '';
+  state.chatMessages.forEach(msg => {
+    chatMessagesHtml += `<div class="ai-msg ${msg.role}">${msg.text}</div>`;
+  });
+
+  container.innerHTML = `
+    <div class="espacio-personal-header">
+      <a href="#backlog" class="btn-back-personal">⬅️ Volver a Selección</a>
+      <h2>🧘 Espacio Personal</h2>
+      <div style="width: 140px;"></div>
+    </div>
+
+    <div class="date-navigator">
+      <button class="date-nav-btn" id="date-prev">◀</button>
+      <span class="date-nav-today">${formatDateLabel(dateStr)}</span>
+      ${!isToday ? '<button class="date-nav-today-btn" id="date-today">Hoy</button>' : ''}
+      <button class="date-nav-btn" id="date-next">▶</button>
+      <button class="gcal-sign-in-btn ${state.calendarConnected ? 'connected' : ''}" id="gcal-connect">
+        ${state.calendarConnected ? '✅ Calendar Conectado' : '📅 Conectar Calendar'}
+      </button>
+    </div>
+
+    <div class="espacio-personal-layout">
+      <div class="timeblock-container">
+        <div class="timeblock-grid" id="timeblock-grid">
+          ${isToday ? '<div class="timeblock-current-time" id="current-time-line"></div>' : ''}
+          ${slotsHtml}
+        </div>
+      </div>
+
+      <div class="ai-chat-panel">
+        <div class="ai-chat-header">
+          <span class="ai-chat-header-icon">🤖</span>
+          <div class="ai-chat-header-info">
+            <span class="ai-chat-header-title">Zentry AI</span>
+            <span class="ai-chat-header-sub">Asistente de productividad</span>
+          </div>
+        </div>
+        <div class="ai-chat-messages" id="ai-chat-messages">
+          ${chatMessagesHtml}
+        </div>
+        <div class="ai-chat-input-area">
+          <textarea class="ai-chat-input" id="ai-chat-input" placeholder="Escribe qué necesitas hacer hoy..." rows="1"></textarea>
+          <button class="ai-chat-send" id="ai-chat-send" title="Enviar">➤</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // --- Bind Events ---
+
+  // Date navigation
+  document.getElementById('date-prev')?.addEventListener('click', () => {
+    state.personalDate = shiftDate(state.personalDate, -1);
+    renderEspacioPersonal(container);
+  });
+  document.getElementById('date-next')?.addEventListener('click', () => {
+    state.personalDate = shiftDate(state.personalDate, 1);
+    renderEspacioPersonal(container);
+  });
+  document.getElementById('date-today')?.addEventListener('click', () => {
+    state.personalDate = new Date().toISOString().split('T')[0];
+    renderEspacioPersonal(container);
+  });
+
+  // Timeblock editing
+  container.querySelectorAll('.timeblock-text').forEach(input => {
+    input.addEventListener('blur', (e) => {
+      const time = e.target.dataset.time;
+      const val = e.target.value.trim();
+      const data = getTimeblockData(state.personalDate);
+      if (val) {
+        data[time] = { text: val, source: data[time]?.source || 'manual' };
+      } else {
+        delete data[time];
+      }
+      saveTimeblockData(state.personalDate, data);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.target.blur();
+        // Focus next slot
+        const allInputs = [...container.querySelectorAll('.timeblock-text')];
+        const idx = allInputs.indexOf(e.target);
+        if (idx < allInputs.length - 1) allInputs[idx + 1].focus();
+      }
+    });
+  });
+
+  // Current time indicator
+  if (isToday) {
+    updateCurrentTimeLine();
+    // Update every 60 seconds
+    if (window._timeblockInterval) clearInterval(window._timeblockInterval);
+    window._timeblockInterval = setInterval(updateCurrentTimeLine, 60000);
+
+    // Scroll to current time
+    setTimeout(() => {
+      const pos = getCurrentTimePosition();
+      if (pos) {
+        const grid = document.getElementById('timeblock-grid');
+        if (grid) grid.parentElement.scrollTop = Math.max(0, pos - 120);
+      }
+    }, 200);
+  }
+
+  // AI Chat
+  const chatInput = document.getElementById('ai-chat-input');
+  const chatSend = document.getElementById('ai-chat-send');
+  const chatMessages = document.getElementById('ai-chat-messages');
+
+  // Scroll to bottom of chat
+  if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Auto-resize textarea
+  chatInput?.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+  });
+
+  chatSend?.addEventListener('click', () => sendChatMessage(container));
+  chatInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage(container);
+    }
+  });
+
+  // Google Calendar connect button
+  document.getElementById('gcal-connect')?.addEventListener('click', () => {
+    if (!state.calendarConnected) {
+      // Placeholder: will require OAuth Client ID configuration
+      alert('Para conectar Google Calendar, configura tu OAuth Client ID en el panel de Vercel.\n\nInstrucciones:\n1. Ve a console.cloud.google.com\n2. Habilita Calendar API\n3. Crea un OAuth Client ID\n4. Agrega el dominio de Vercel como origen autorizado');
+    }
+  });
+}
+
+function updateCurrentTimeLine() {
+  const line = document.getElementById('current-time-line');
+  if (!line) return;
+  const pos = getCurrentTimePosition();
+  if (pos !== null) {
+    line.style.top = pos + 'px';
+    line.style.display = 'block';
+  } else {
+    line.style.display = 'none';
+  }
+}
+
+async function sendChatMessage(container) {
+  const chatInput = document.getElementById('ai-chat-input');
+  const chatMessages = document.getElementById('ai-chat-messages');
+  if (!chatInput || !chatMessages) return;
+
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  // Add user message
+  state.chatMessages.push({ role: 'user', text: message });
+  chatMessages.innerHTML += `<div class="ai-msg user">${message}</div>`;
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+
+  // Show typing indicator
+  chatMessages.innerHTML += `<div class="ai-typing-indicator" id="ai-typing"><span></span><span></span><span></span></div>`;
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Disable send button
+  const sendBtn = document.getElementById('ai-chat-send');
+  if (sendBtn) sendBtn.disabled = true;
+
+  try {
+    const timeblockData = getTimeblockData(state.personalDate);
+
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        currentDate: state.personalDate,
+        existingBlocks: timeblockData,
+        calendarEvents: state.calendarEvents
+      })
+    });
+
+    const data = await response.json();
+
+    // Remove typing indicator
+    document.getElementById('ai-typing')?.remove();
+
+    // Add assistant reply
+    let replyHtml = data.reply || 'Sin respuesta del modelo.';
+
+    // If there are suggestions, add action buttons
+    if (data.suggestions && data.suggestions.length > 0) {
+      state.pendingSuggestions = data.suggestions;
+
+      // Show preview of suggestions
+      let previewHtml = '<br><br>📋 **Sugerencias de timeblock:**<br>';
+      data.suggestions.forEach(s => {
+        previewHtml += `• \`${formatTime12h(s.time)}\` — ${s.text}<br>`;
+      });
+
+      replyHtml += previewHtml;
+      replyHtml += `
+        <div class="ai-suggestions-actions">
+          <button class="btn-apply-suggestions" id="btn-apply-ai">✨ Aplicar al Timeblock</button>
+          <button class="btn-dismiss-suggestions" id="btn-dismiss-ai">Descartar</button>
+        </div>
+      `;
+    }
+
+    state.chatMessages.push({ role: 'assistant', text: replyHtml });
+    chatMessages.innerHTML += `<div class="ai-msg assistant">${replyHtml}</div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Save chat history
+    saveChatHistory(state.chatMessages);
+
+    // Bind suggestion action buttons
+    document.getElementById('btn-apply-ai')?.addEventListener('click', () => {
+      applyAISuggestions(container);
+    });
+    document.getElementById('btn-dismiss-ai')?.addEventListener('click', () => {
+      state.pendingSuggestions = null;
+      document.querySelector('.ai-suggestions-actions')?.remove();
+      const sysMsg = document.createElement('div');
+      sysMsg.className = 'ai-msg system';
+      sysMsg.textContent = 'Sugerencias descartadas.';
+      chatMessages.appendChild(sysMsg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+  } catch (err) {
+    document.getElementById('ai-typing')?.remove();
+    const errorHtml = '⚠️ No se pudo conectar con el agente IA. Verifica tu conexión o la configuración de la API Key en Vercel.';
+    state.chatMessages.push({ role: 'assistant', text: errorHtml });
+    chatMessages.innerHTML += `<div class="ai-msg assistant">${errorHtml}</div>`;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    saveChatHistory(state.chatMessages);
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+  }
+}
+
+function applyAISuggestions(container) {
+  if (!state.pendingSuggestions) return;
+
+  const data = getTimeblockData(state.personalDate);
+
+  state.pendingSuggestions.forEach(suggestion => {
+    if (!data[suggestion.time]) {
+      data[suggestion.time] = { text: suggestion.text, source: 'ai' };
+    }
+  });
+
+  saveTimeblockData(state.personalDate, data);
+  state.pendingSuggestions = null;
+
+  // Add system message
+  const chatMessages = document.getElementById('ai-chat-messages');
+  if (chatMessages) {
+    const sysMsg = document.createElement('div');
+    sysMsg.className = 'ai-msg system';
+    sysMsg.textContent = `✅ ${Object.keys(data).length} bloques aplicados al timeblock.`;
+    chatMessages.appendChild(sysMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // Remove action buttons
+  document.querySelector('.ai-suggestions-actions')?.remove();
+
+  // Re-render the timeblock
+  const workspaceContent = document.getElementById('workspace-content');
+  if (workspaceContent) renderEspacioPersonal(workspaceContent);
+}
 
 
 // Render Kanban board lists based on active filters
@@ -938,6 +1349,12 @@ function handleRouting() {
     workspace.classList.remove('minimal-view');
     workspace.classList.remove('backlog-view'); // Reset backlog view full width
   }
+
+  // Restore elements that might be hidden by Espacio Personal
+  const pageBanner = document.getElementById('page-banner');
+  const wsHeader = document.querySelector('.workspace-header');
+  if (pageBanner) pageBanner.style.display = '';
+  if (wsHeader) wsHeader.style.display = '';
 
   // Highlight active Nav Link
   document.querySelectorAll('.nav-link').forEach(link => {
