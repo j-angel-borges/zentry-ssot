@@ -24,7 +24,7 @@ const state = {
   chatMessages: [],
   pendingSuggestions: null,
   calendarEvents: [],
-  calendarConnected: false
+  calendarConnected: !!localStorage.getItem('gcal_access_token') || !!localStorage.getItem('gcal_gas_url')
 };
 
 // Initialize Tasks from LocalStorage or DB
@@ -91,6 +91,113 @@ function getTimeblockData(dateStr) {
 
 function saveTimeblockData(dateStr, data) {
   localStorage.setItem(`zentry_timeblock_${dateStr}`, JSON.stringify(data));
+}
+
+function checkOAuthCallback() {
+  const hash = window.location.hash;
+  if (hash.includes('access_token=')) {
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    const expiresIn = params.get('expires_in') || '3600';
+    if (accessToken) {
+      localStorage.setItem('gcal_access_token', accessToken);
+      localStorage.setItem('gcal_token_expires', String(Date.now() + parseInt(expiresIn) * 1000));
+      localStorage.removeItem('gcal_gas_url');
+      state.calendarConnected = true;
+      window.location.hash = '#backlog/personal';
+      return true;
+    }
+  }
+  return false;
+}
+
+async function loadCalendarEvents() {
+  const gasUrl = localStorage.getItem('gcal_gas_url');
+  const token = localStorage.getItem('gcal_access_token');
+  const expires = localStorage.getItem('gcal_token_expires');
+  
+  if (gasUrl) {
+    state.calendarConnected = true;
+    try {
+      const res = await fetch(gasUrl);
+      if (!res.ok) throw new Error('GAS error');
+      const events = await res.json();
+      state.calendarEvents = events.map(e => ({
+        title: e.title || e.summary || '(Sin título)',
+        start: e.startTime || e.start?.dateTime || e.start,
+        end: e.endTime || e.end?.dateTime || e.end,
+        description: e.description || ''
+      }));
+      applyCalendarEventsToTimeblock();
+    } catch (err) {
+      console.error('Error fetching calendar events via GAS:', err);
+    }
+  } else if (token) {
+    if (expires && Date.now() > parseInt(expires)) {
+      localStorage.removeItem('gcal_access_token');
+      localStorage.removeItem('gcal_token_expires');
+      state.calendarConnected = false;
+      return;
+    }
+    state.calendarConnected = true;
+    const today = new Date(state.personalDate + 'T00:00:00');
+    const timeMin = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0).toISOString();
+    const timeMax = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59).toISOString();
+    try {
+      const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Google Calendar API error');
+      const data = await res.json();
+      state.calendarEvents = data.items.map(item => ({
+        title: item.summary || '(Sin título)',
+        start: item.start.dateTime || item.start.date,
+        end: item.end.dateTime || item.end.date,
+        description: item.description || ''
+      }));
+      applyCalendarEventsToTimeblock();
+    } catch (err) {
+      console.error('Error fetching calendar events via Google OAuth:', err);
+    }
+  } else {
+    state.calendarConnected = false;
+  }
+}
+
+function applyCalendarEventsToTimeblock() {
+  if (state.calendarEvents.length === 0) return;
+  
+  const data = getTimeblockData(state.personalDate);
+  Object.keys(data).forEach(key => {
+    if (data[key]?.source === 'calendar') {
+      delete data[key];
+    }
+  });
+  
+  state.calendarEvents.forEach(event => {
+    const start = new Date(event.start);
+    const end = new Date(event.end);
+    
+    const dateStr = state.personalDate;
+    const startStr = start.toISOString().split('T')[0];
+    const endStr = end.toISOString().split('T')[0];
+    
+    if (startStr !== dateStr && endStr !== dateStr) return;
+    
+    const startMinutes = start.getHours() * 60 + start.getMinutes();
+    const endMinutes = end.getHours() * 60 + end.getMinutes();
+    
+    const slots = generateTimeSlots();
+    slots.forEach(slot => {
+      const [sh, sm] = slot.time.split(':').map(Number);
+      const slotMinutes = sh * 60 + sm;
+      if (slotMinutes >= startMinutes && slotMinutes < endMinutes) {
+        data[slot.time] = { text: event.title, source: 'calendar' };
+      }
+    });
+  });
+  
+  saveTimeblockData(state.personalDate, data);
 }
 
 function generateTimeSlots() {
@@ -396,6 +503,13 @@ const renderers = {
       document.getElementById('page-banner').style.display = 'none';
       document.querySelector('.workspace-header').style.display = 'none';
       renderEspacioPersonal(container);
+      
+      // Load and update calendar events in background if connected
+      if (state.calendarConnected) {
+        loadCalendarEvents().then(() => {
+          renderEspacioPersonal(container);
+        });
+      }
       return;
     }
 
@@ -1094,10 +1208,95 @@ function renderEspacioPersonal(container) {
 
   // Google Calendar connect button
   document.getElementById('gcal-connect')?.addEventListener('click', () => {
-    if (!state.calendarConnected) {
-      // Placeholder: will require OAuth Client ID configuration
-      alert('Para conectar Google Calendar, configura tu OAuth Client ID en el panel de Vercel.\n\nInstrucciones:\n1. Ve a console.cloud.google.com\n2. Habilita Calendar API\n3. Crea un OAuth Client ID\n4. Agrega el dominio de Vercel como origen autorizado');
-    }
+    const gcalModal = document.getElementById('gcal-modal');
+    if (!gcalModal) return;
+    
+    const clientIdInput = document.getElementById('gcal-client-id');
+    const gasUrlInput = document.getElementById('gcal-gas-url');
+    if (clientIdInput) clientIdInput.value = localStorage.getItem('gcal_client_id') || '';
+    if (gasUrlInput) gasUrlInput.value = localStorage.getItem('gcal_gas_url') || '';
+    
+    gcalModal.classList.add('show');
+    
+    const btnOAuth = document.getElementById('tab-btn-oauth');
+    const btnGAS = document.getElementById('tab-btn-gas');
+    const contentOAuth = document.getElementById('content-oauth');
+    const contentGAS = document.getElementById('content-gas');
+    
+    // Switch tabs
+    btnOAuth?.addEventListener('click', () => {
+      btnOAuth.classList.add('active');
+      btnOAuth.style.borderBottom = '2px solid var(--purple-zentry)';
+      btnOAuth.style.color = 'var(--purple-zentry)';
+      btnGAS?.classList.remove('active');
+      if (btnGAS) {
+        btnGAS.style.borderBottom = '2px solid transparent';
+        btnGAS.style.color = 'var(--text-muted)';
+      }
+      if (contentOAuth) contentOAuth.style.display = 'block';
+      if (contentGAS) contentGAS.style.display = 'none';
+    });
+    
+    btnGAS?.addEventListener('click', () => {
+      btnGAS.classList.add('active');
+      btnGAS.style.borderBottom = '2px solid var(--purple-zentry)';
+      btnGAS.style.color = 'var(--purple-zentry)';
+      btnOAuth?.classList.remove('active');
+      if (btnOAuth) {
+        btnOAuth.style.borderBottom = '2px solid transparent';
+        btnOAuth.style.color = 'var(--text-muted)';
+      }
+      if (contentGAS) contentGAS.style.display = 'block';
+      if (contentOAuth) contentOAuth.style.display = 'none';
+    });
+    
+    const closeBtn = document.getElementById('gcal-modal-close');
+    const cancelBtn = document.getElementById('gcal-modal-cancel');
+    const saveBtn = document.getElementById('gcal-modal-save');
+    
+    const hideGcalModal = () => {
+      gcalModal.classList.remove('show');
+    };
+    
+    closeBtn?.addEventListener('click', hideGcalModal);
+    cancelBtn?.addEventListener('click', hideGcalModal);
+    gcalModal.addEventListener('click', (e) => {
+      if (e.target === gcalModal) hideGcalModal();
+    });
+    
+    saveBtn?.addEventListener('click', async () => {
+      const isOAuthActive = btnOAuth?.classList.contains('active');
+      if (isOAuthActive) {
+        const clientId = clientIdInput?.value.trim();
+        if (!clientId) {
+          alert('Por favor ingresa un Client ID válido.');
+          return;
+        }
+        localStorage.setItem('gcal_client_id', clientId);
+        localStorage.removeItem('gcal_gas_url');
+        
+        const redirectUri = window.location.origin + window.location.pathname;
+        const scope = 'https://www.googleapis.com/auth/calendar.events.readonly';
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&state=gcal`;
+        hideGcalModal();
+        window.location.href = url;
+      } else {
+        const gasUrl = gasUrlInput?.value.trim();
+        if (!gasUrl) {
+          alert('Por favor ingresa una URL de Apps Script válida.');
+          return;
+        }
+        localStorage.setItem('gcal_gas_url', gasUrl);
+        localStorage.removeItem('gcal_client_id');
+        localStorage.removeItem('gcal_access_token');
+        localStorage.removeItem('gcal_token_expires');
+        
+        hideGcalModal();
+        await loadCalendarEvents();
+        const workspaceContent = document.getElementById('workspace-content');
+        if (workspaceContent) renderEspacioPersonal(workspaceContent);
+      }
+    });
   });
 }
 
@@ -1725,5 +1924,6 @@ taskForm.addEventListener('submit', (e) => {
 });
 
 // Initial Load
+checkOAuthCallback();
 buildDocTree();
 handleRouting();
