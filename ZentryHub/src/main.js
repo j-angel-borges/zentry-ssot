@@ -18,7 +18,8 @@ const state = {
     status: 'all'
   },
   tasks: [],
-  currentEditingTask: null
+  currentEditingTask: null,
+  backlogWorkspace: null
 };
 
 // Initialize Tasks from LocalStorage or DB
@@ -291,6 +292,53 @@ function buildDocTree() {
   });
 }
 
+// Workspace Selector Renderer
+function renderWorkspaceSelector(container) {
+  const zentryTasksCount = state.tasks.filter(task => {
+    const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
+    const completed = cleanStatus.includes('completado') || cleanStatus.includes('hecho') || cleanStatus.includes('done');
+    const isPersonal = task.origin === 'Personal';
+    return !completed && !isPersonal;
+  }).length;
+
+  const personalTasksCount = state.tasks.filter(task => {
+    const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
+    const completed = cleanStatus.includes('completado') || cleanStatus.includes('hecho') || cleanStatus.includes('done');
+    const isPersonal = task.origin === 'Personal';
+    return !completed && isPersonal;
+  }).length;
+
+  container.innerHTML = `
+    <div class="selector-page-container">
+      <h2 class="selector-title">Selecciona el Espacio de Trabajo</h2>
+      <div class="selector-grid">
+        <div class="selector-card" id="selector-card-zentry">
+          <div class="selector-card-icon">🚀</div>
+          <h3 class="selector-card-title">Zentry</h3>
+          <p class="selector-card-desc">Tareas y backlog del ecosistema ZentryOS y agentes de IA.</p>
+          <span class="selector-card-counter">${zentryTasksCount} tareas activas</span>
+        </div>
+        <div class="selector-card" id="selector-card-personal">
+          <div class="selector-card-icon">🧘‍♂️</div>
+          <h3 class="selector-card-title">Personal</h3>
+          <p class="selector-card-desc">Backlog personal, rutinas y objetivos individuales.</p>
+          <span class="selector-card-counter">${personalTasksCount} tareas activas</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('selector-card-zentry').addEventListener('click', () => {
+    state.backlogWorkspace = 'zentry';
+    renderers.backlog();
+  });
+
+  document.getElementById('selector-card-personal').addEventListener('click', () => {
+    state.backlogWorkspace = 'personal';
+    renderers.backlog();
+  });
+}
+
 // Views Renderers
 const renderers = {
   // 1. Kanban Backlog View
@@ -301,10 +349,26 @@ const renderers = {
 
     document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #ebf1f5 0%, #c2f4e7 50%, #d6c8fa 100%)';
     document.getElementById('page-icon').textContent = '📋';
-    document.getElementById('page-title').textContent = 'Tablero Backlog';
-    document.getElementById('properties-block').style.display = 'flex';
     
     const container = document.getElementById('workspace-content');
+    
+    if (state.backlogWorkspace === null) {
+      document.getElementById('page-title').textContent = 'Tablero Backlog';
+      document.getElementById('properties-block').style.display = 'none';
+      renderWorkspaceSelector(container);
+      return;
+    }
+    
+    // Otherwise render the board!
+    const wsName = state.backlogWorkspace === 'zentry' ? 'Zentry' : 'Personal';
+    document.getElementById('page-title').innerHTML = `
+      <div class="backlog-header-container">
+        <button id="back-to-selector-btn" class="btn-back-to-selector">← Volver</button>
+        <span>Tablero Backlog - ${wsName}</span>
+      </div>
+    `;
+    document.getElementById('properties-block').style.display = 'flex';
+    
     container.innerHTML = `
       <div class="backlog-layout-grid">
         <!-- Left panel: 3 M.I.T. -->
@@ -371,7 +435,7 @@ const renderers = {
           </div>
         </div>
 
-        <!-- Right panel: Corkboard objectives + Google Calendar -->
+        <!-- Right panel: Corkboard objectives -->
         <div class="backlog-right-col">
           <div class="corkboard-widget glass-panel">
             <div class="corkboard-header">
@@ -382,23 +446,15 @@ const renderers = {
               <!-- Loaded dynamically -->
             </div>
           </div>
-
-          <div class="agenda-widget glass-panel">
-            <div class="agenda-header">
-              <span class="agenda-icon">📅</span>
-              <h3 class="agenda-title">Agenda</h3>
-              <button id="configure-calendar-btn" class="btn-config-calendar" title="Configurar Google Calendar">⚙️</button>
-            </div>
-            <div class="agenda-body" id="agenda-body-container">
-              <!-- Loaded dynamically -->
-            </div>
-            <div class="agenda-footer" id="agenda-footer-container">
-              <!-- Inline Connect button if not connected -->
-            </div>
-          </div>
         </div>
       </div>
     `;
+
+    // Bind back button
+    document.getElementById('back-to-selector-btn').addEventListener('click', () => {
+      state.backlogWorkspace = null;
+      renderers.backlog();
+    });
 
     // Render Cards
     renderKanbanCards();
@@ -435,9 +491,6 @@ const renderers = {
 
     // Render Corkboard Objectives
     renderCorkboardObjectives();
-
-    // Render Agenda Widget
-    renderAgendaWidget();
 
     // Setup Drag and Drop dropzones
     setupDragAndDrop();
@@ -987,7 +1040,14 @@ function renderKanbanCards() {
 
   // Filter Tasks
   state.tasks.forEach(task => {
-    // 1. Vertical filter
+    // 1. Workspace filter
+    if (state.backlogWorkspace) {
+      const isPersonalTask = task.origin === 'Personal';
+      if (state.backlogWorkspace === 'personal' && !isPersonalTask) return;
+      if (state.backlogWorkspace === 'zentry' && isPersonalTask) return;
+    }
+
+    // 2. Vertical filter
     if (state.filters.vertical !== 'all') {
       const v = state.filters.vertical; // 'tec', 'prod', 'mkt'
       if (v === 'tec' && !task.id.startsWith('TEC')) return;
@@ -995,7 +1055,7 @@ function renderKanbanCards() {
       if (v === 'mkt' && !task.id.startsWith('MKT')) return;
     }
 
-    // 2. Priority filter
+    // 3. Priority filter
     if (state.filters.priority !== 'all') {
       if (task.priority.toLowerCase() !== state.filters.priority.toLowerCase()) return;
     }
@@ -1212,9 +1272,23 @@ const taskDesc = document.getElementById('task-desc');
 const taskPriority = document.getElementById('task-priority');
 const taskStatus = document.getElementById('task-status');
 const taskAssignee = document.getElementById('task-assignee');
-const taskOrigin = document.getElementById('task-origin');
+const taskOriginSelect = document.getElementById('task-origin-select');
+const taskOriginCustom = document.getElementById('task-origin-custom');
 const taskDeleteBtn = document.getElementById('task-delete-btn');
 const taskGoRef = document.getElementById('task-go-ref');
+
+// Handle toggle custom origin input
+if (taskOriginSelect) {
+  taskOriginSelect.addEventListener('change', () => {
+    if (taskOriginSelect.value === 'Otro') {
+      taskOriginCustom.style.display = 'block';
+      taskOriginCustom.required = true;
+    } else {
+      taskOriginCustom.style.display = 'none';
+      taskOriginCustom.required = false;
+    }
+  });
+}
 
 // Open Modal for Editing
 function openTaskModalForEdit(task) {
@@ -1234,8 +1308,23 @@ function openTaskModalForEdit(task) {
     taskStatus.value = 'Completado';
   }
   
-  taskAssignee.value = task.assignedTo || '';
-  taskOrigin.value = task.origin || '';
+  if (task.assignedTo === 'Agente' || task.assignedTo === 'Jose Angel') {
+    taskAssignee.value = task.assignedTo;
+  } else {
+    taskAssignee.value = 'Jose Angel';
+  }
+  
+  if (task.origin === 'Zentry' || task.origin === 'Personal') {
+    taskOriginSelect.value = task.origin;
+    taskOriginCustom.style.display = 'none';
+    taskOriginCustom.required = false;
+    taskOriginCustom.value = '';
+  } else {
+    taskOriginSelect.value = 'Otro';
+    taskOriginCustom.style.display = 'block';
+    taskOriginCustom.required = true;
+    taskOriginCustom.value = task.origin || '';
+  }
   
   // Show Delete and Ref buttons
   taskDeleteBtn.style.display = 'block';
@@ -1277,8 +1366,12 @@ function openTaskModalForCreate() {
   taskDesc.value = '';
   taskPriority.value = 'Media';
   taskStatus.value = 'Pendiente';
-  taskAssignee.value = '';
-  taskOrigin.value = '';
+  taskAssignee.value = 'Jose Angel';
+  
+  taskOriginSelect.value = state.backlogWorkspace === 'personal' ? 'Personal' : 'Zentry';
+  taskOriginCustom.value = '';
+  taskOriginCustom.style.display = 'none';
+  taskOriginCustom.required = false;
   
   // Hide Delete and Ref buttons for new task
   taskDeleteBtn.style.display = 'none';
@@ -1335,8 +1428,8 @@ taskForm.addEventListener('submit', (e) => {
   const desc = taskDesc.value.trim();
   const priority = taskPriority.value;
   const status = taskStatus.value; // 'Pendiente', 'En curso', 'Completado'
-  const assignee = taskAssignee.value.trim();
-  const origin = taskOrigin.value.trim();
+  const assignee = taskAssignee.value;
+  const origin = taskOriginSelect.value === 'Otro' ? taskOriginCustom.value.trim() : taskOriginSelect.value;
   
   if (state.currentEditingTask) {
     // Edit Mode
