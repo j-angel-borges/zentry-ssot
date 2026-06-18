@@ -18,8 +18,7 @@ const state = {
     status: 'all'
   },
   tasks: [],
-  currentEditingTask: null,
-  backlogWorkspace: null
+  currentEditingTask: null
 };
 
 // Initialize Tasks from LocalStorage or DB
@@ -73,20 +72,6 @@ function getCorkboardObjectives() {
 function saveCorkboardObjectives(objs) {
   localStorage.setItem('zentry_objectives', JSON.stringify(objs));
 }
-
-function getCalendarConfig() {
-  return localStorage.getItem('zentry_calendar') || '';
-}
-
-function saveCalendarConfig(url) {
-  localStorage.setItem('zentry_calendar', url);
-}
-
-const mockCalendarEvents = [
-  { time: '09:00 - 09:30', title: 'Daily Scrum - ZentryOS Devs', desc: 'Sync de avance diario y blockers en Jetpack Compose.' },
-  { time: '11:00 - 12:00', title: 'Demo Comercial - Feedback', desc: 'Presentación del DemoBook con prospecto. Ver factor WOW.' },
-  { time: '16:00 - 17:00', title: 'Reunión Hito Arquitectura', desc: 'Definir especificación de la telemetría Firestore.' }
-];
 
 // Markdown Parser Utility
 function mdToHtml(md) {
@@ -292,53 +277,6 @@ function buildDocTree() {
   });
 }
 
-// Workspace Selector Renderer
-function renderWorkspaceSelector(container) {
-  const zentryTasksCount = state.tasks.filter(task => {
-    const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
-    const completed = cleanStatus.includes('completado') || cleanStatus.includes('hecho') || cleanStatus.includes('done');
-    const isPersonal = task.origin === 'Personal';
-    return !completed && !isPersonal;
-  }).length;
-
-  const personalTasksCount = state.tasks.filter(task => {
-    const cleanStatus = task.status.toLowerCase().replace(/\s+/g, '');
-    const completed = cleanStatus.includes('completado') || cleanStatus.includes('hecho') || cleanStatus.includes('done');
-    const isPersonal = task.origin === 'Personal';
-    return !completed && isPersonal;
-  }).length;
-
-  container.innerHTML = `
-    <div class="selector-page-container">
-      <h2 class="selector-title">Selecciona el Espacio de Trabajo</h2>
-      <div class="selector-grid">
-        <div class="selector-card" id="selector-card-zentry">
-          <div class="selector-card-icon">🚀</div>
-          <h3 class="selector-card-title">Zentry</h3>
-          <p class="selector-card-desc">Tareas y backlog del ecosistema ZentryOS y agentes de IA.</p>
-          <span class="selector-card-counter">${zentryTasksCount} tareas activas</span>
-        </div>
-        <div class="selector-card" id="selector-card-personal">
-          <div class="selector-card-icon">🧘‍♂️</div>
-          <h3 class="selector-card-title">Personal</h3>
-          <p class="selector-card-desc">Backlog personal, rutinas y objetivos individuales.</p>
-          <span class="selector-card-counter">${personalTasksCount} tareas activas</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById('selector-card-zentry').addEventListener('click', () => {
-    state.backlogWorkspace = 'zentry';
-    renderers.backlog();
-  });
-
-  document.getElementById('selector-card-personal').addEventListener('click', () => {
-    state.backlogWorkspace = 'personal';
-    renderers.backlog();
-  });
-}
-
 // Views Renderers
 const renderers = {
   // 1. Kanban Backlog View
@@ -349,26 +287,32 @@ const renderers = {
 
     document.getElementById('page-banner').style.background = 'linear-gradient(135deg, #ebf1f5 0%, #c2f4e7 50%, #d6c8fa 100%)';
     document.getElementById('page-icon').textContent = '📋';
-    
+    document.getElementById('page-title').textContent = 'Tablero Backlog';
+
     const container = document.getElementById('workspace-content');
-    
-    if (state.backlogWorkspace === null) {
-      document.getElementById('page-title').textContent = 'Tablero Backlog';
+
+    if (state.backlogMode === 'selection') {
       document.getElementById('properties-block').style.display = 'none';
-      renderWorkspaceSelector(container);
+      container.innerHTML = `
+        <div class="backlog-selector-container">
+          <a href="#backlog/personal" class="selector-card">
+            <div class="selector-card-icon">👤</div>
+            <span class="selector-card-title">Tablero Personal</span>
+            <span class="selector-card-desc">Gestión de tareas individuales, desarrollo de marca personal y pendientes privados.</span>
+            <button class="btn-selector-enter">Entrar al Tablero</button>
+          </a>
+          <a href="#backlog/zentry" class="selector-card">
+            <div class="selector-card-icon">☄️</div>
+            <span class="selector-card-title">Tablero Zentry</span>
+            <span class="selector-card-desc">Coordinación del roadmap comercial, arquitectura técnica MVP y ecosistema ZentryOS.</span>
+            <button class="btn-selector-enter">Entrar al Tablero</button>
+          </a>
+        </div>
+      `;
       return;
     }
-    
-    // Otherwise render the board!
-    const wsName = state.backlogWorkspace === 'zentry' ? 'Zentry' : 'Personal';
-    document.getElementById('page-title').innerHTML = `
-      <div class="backlog-header-container">
-        <button id="back-to-selector-btn" class="btn-back-to-selector">← Volver</button>
-        <span>Tablero Backlog - ${wsName}</span>
-      </div>
-    `;
+
     document.getElementById('properties-block').style.display = 'flex';
-    
     container.innerHTML = `
       <div class="backlog-layout-grid">
         <!-- Left panel: 3 M.I.T. -->
@@ -386,6 +330,11 @@ const renderers = {
 
         <!-- Center panel: Kanban Board -->
         <div class="backlog-center-col">
+          <div class="backlog-header-controls">
+            <a href="#backlog" class="btn-back-to-selector">⬅️ Volver a Selección</a>
+            <span class="backlog-mode-badge">${state.backlogMode === 'personal' ? 'Personal' : 'Zentry'}</span>
+          </div>
+
           <div class="filter-bar">
             <div class="filter-group">
               <label class="filter-label">🏷️ Vertical:</label>
@@ -449,12 +398,6 @@ const renderers = {
         </div>
       </div>
     `;
-
-    // Bind back button
-    document.getElementById('back-to-selector-btn').addEventListener('click', () => {
-      state.backlogWorkspace = null;
-      renderers.backlog();
-    });
 
     // Render Cards
     renderKanbanCards();
@@ -886,143 +829,7 @@ function renderCorkboardObjectives() {
   });
 }
 
-// Helper to format calendar URL to show only current day agenda
-function formatCalendarUrl(url) {
-  try {
-    let cleanUrl = url.trim();
-    // Parse iframe src if the user pasted full iframe tag
-    if (cleanUrl.includes('<iframe') && cleanUrl.includes('src=')) {
-      const match = cleanUrl.match(/src="([^"]+)"/);
-      if (match && match[1]) cleanUrl = match[1];
-    }
-    
-    // If user entered just an email / ID, convert to embed URL base
-    if (!cleanUrl.startsWith('http') && cleanUrl.includes('@')) {
-      cleanUrl = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(cleanUrl)}`;
-    }
-    
-    const urlObj = new URL(cleanUrl);
-    const params = urlObj.searchParams;
-    
-    // Set view mode to agenda
-    params.set('mode', 'AGENDA');
-    
-    // Calculate today YYYYMMDD and tomorrow YYYYMMDD (exclusive boundary)
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    
-    const formatDateStr = (d) => {
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const dd = String(d.getDate()).padStart(2, '0');
-      return `${yyyy}${mm}${dd}`;
-    };
-    
-    const todayStr = formatDateStr(today);
-    const tomorrowStr = formatDateStr(tomorrow);
-    
-    // Set dates parameter to limit to today only
-    params.set('dates', `${todayStr}/${tomorrowStr}`);
-    
-    // Custom premium integrations: hide tabs/title/calendars
-    params.set('showTitle', '0');
-    params.set('showTabs', '0');
-    params.set('showCalendars', '0');
-    params.set('showNav', '1');
-    params.set('showDate', '1');
-    params.set('showPrint', '0');
-    params.set('showTz', '1');
-    
-    return urlObj.toString();
-  } catch (e) {
-    return url;
-  }
-}
 
-// Render Agenda Widget
-function renderAgendaWidget() {
-  const container = document.getElementById('agenda-body-container');
-  const footer = document.getElementById('agenda-footer-container');
-  if (!container) return;
-
-  const calConfig = getCalendarConfig();
-  container.innerHTML = '';
-  if (footer) footer.innerHTML = '';
-
-  if (calConfig) {
-    // Render GCal Iframe formatted to today's agenda view
-    const srcUrl = formatCalendarUrl(calConfig);
-
-    container.innerHTML = `
-      <div class="gcal-iframe-container">
-        <iframe src="${srcUrl}" class="gcal-iframe" scrolling="yes"></iframe>
-      </div>
-    `;
-  } else {
-    // Render Mock Events
-    let eventsHtml = `<div class="mock-events-list">`;
-    mockCalendarEvents.forEach(ev => {
-      eventsHtml += `
-        <div class="mock-event">
-          <span class="event-time-tag">🕒 ${ev.time}</span>
-          <span class="event-title">${ev.title}</span>
-          <span class="event-desc">${ev.desc}</span>
-          <a href="#" class="event-join-btn">🔗 Unirse a Meet</a>
-        </div>
-      `;
-    });
-    eventsHtml += `</div>`;
-    container.innerHTML = eventsHtml;
-
-    // Show inline connect button in footer
-    if (footer) {
-      footer.innerHTML = `
-        <button id="connect-gcal-btn-footer" class="btn-connect-gcal-inline">🔗 Conectar Google Calendar</button>
-      `;
-      document.getElementById('connect-gcal-btn-footer').addEventListener('click', () => {
-        showCalendarConfigForm();
-      });
-    }
-  }
-
-  // Bind cog button
-  const cogBtn = document.getElementById('configure-calendar-btn');
-  if (cogBtn) {
-    cogBtn.onclick = () => showCalendarConfigForm();
-  }
-}
-
-// Show Calendar configuration form inline
-function showCalendarConfigForm() {
-  const container = document.getElementById('agenda-body-container');
-  const footer = document.getElementById('agenda-footer-container');
-  if (!container) return;
-
-  const currentVal = getCalendarConfig();
-  if (footer) footer.innerHTML = '';
-
-  container.innerHTML = `
-    <div class="calendar-setup-container">
-      <span class="calendar-setup-text">Ingresa tu <strong>ID de Google Calendar</strong> público o el enlace/código iframe para sincronizar tus eventos:</span>
-      <input type="text" id="gcal-config-input" class="calendar-setup-input" placeholder="ej. tu-email@gmail.com o iframe src" value="${currentVal.replace(/"/g, '&quot;')}">
-      <div class="calendar-setup-actions">
-        <button id="gcal-save-btn" class="btn-setup-save">Guardar</button>
-        <button id="gcal-cancel-btn" class="btn-setup-cancel">Cancelar</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById('gcal-save-btn').onclick = () => {
-    const inputVal = document.getElementById('gcal-config-input').value.trim();
-    saveCalendarConfig(inputVal);
-    renderAgendaWidget();
-  };
-
-  document.getElementById('gcal-cancel-btn').onclick = () => {
-    renderAgendaWidget();
-  };
-}
 
 // Render Kanban board lists based on active filters
 function renderKanbanCards() {
@@ -1040,14 +847,14 @@ function renderKanbanCards() {
 
   // Filter Tasks
   state.tasks.forEach(task => {
-    // 1. Workspace filter
-    if (state.backlogWorkspace) {
-      const isPersonalTask = task.origin === 'Personal';
-      if (state.backlogWorkspace === 'personal' && !isPersonalTask) return;
-      if (state.backlogWorkspace === 'zentry' && isPersonalTask) return;
+    // 0. Backlog mode filter
+    if (state.backlogMode === 'personal') {
+      if (task.origin !== 'Personal') return;
+    } else if (state.backlogMode === 'zentry') {
+      if (task.origin === 'Personal') return;
     }
 
-    // 2. Vertical filter
+    // 1. Vertical filter
     if (state.filters.vertical !== 'all') {
       const v = state.filters.vertical; // 'tec', 'prod', 'mkt'
       if (v === 'tec' && !task.id.startsWith('TEC')) return;
@@ -1055,7 +862,7 @@ function renderKanbanCards() {
       if (v === 'mkt' && !task.id.startsWith('MKT')) return;
     }
 
-    // 3. Priority filter
+    // 2. Priority filter
     if (state.filters.priority !== 'all') {
       if (task.priority.toLowerCase() !== state.filters.priority.toLowerCase()) return;
     }
@@ -1090,7 +897,7 @@ function renderKanbanCards() {
       </div>
       <div class="card-body">${task.description}</div>
       <div class="card-footer">
-        <span class="card-origin">Ref: ${task.origin || 'N/A'}</span>
+        <span class="card-origin">Acción: ${task.origin || 'N/A'}</span>
         <span class="card-assignee">
           <div class="assignee-avatar">${initials}</div>
           <span>${task.assignedTo || 'Unassigned'}</span>
@@ -1127,7 +934,10 @@ function handleRouting() {
   
   // Reset minimal-view by default
   const workspace = document.querySelector('.workspace');
-  if (workspace) workspace.classList.remove('minimal-view');
+  if (workspace) {
+    workspace.classList.remove('minimal-view');
+    workspace.classList.remove('backlog-view'); // Reset backlog view full width
+  }
 
   // Highlight active Nav Link
   document.querySelectorAll('.nav-link').forEach(link => {
@@ -1139,6 +949,20 @@ function handleRouting() {
     state.activeDocPath = hash.replace('#doc/', '');
     buildDocTree(); // Rebuild tree to show active state
     renderers.doc(state.activeDocPath);
+  } else if (hash.startsWith('#backlog')) {
+    state.activeView = 'backlog';
+    if (hash === '#backlog/zentry') {
+      state.backlogMode = 'zentry';
+    } else if (hash === '#backlog/personal') {
+      state.backlogMode = 'personal';
+    } else {
+      state.backlogMode = 'selection';
+    }
+    const navLink = document.querySelector(`.nav-link[data-view="backlog"]`);
+    if (navLink) navLink.classList.add('active');
+    
+    buildDocTree(); // Clear tree highlights
+    renderers.backlog();
   } else {
     state.activeView = hash.replace('#', '');
     const navLink = document.querySelector(`.nav-link[data-view="${state.activeView}"]`);
@@ -1272,23 +1096,22 @@ const taskDesc = document.getElementById('task-desc');
 const taskPriority = document.getElementById('task-priority');
 const taskStatus = document.getElementById('task-status');
 const taskAssignee = document.getElementById('task-assignee');
-const taskOriginSelect = document.getElementById('task-origin-select');
-const taskOriginCustom = document.getElementById('task-origin-custom');
+const taskActionType = document.getElementById('task-action-type');
+const taskActionCustom = document.getElementById('task-action-custom');
 const taskDeleteBtn = document.getElementById('task-delete-btn');
 const taskGoRef = document.getElementById('task-go-ref');
 
-// Handle toggle custom origin input
-if (taskOriginSelect) {
-  taskOriginSelect.addEventListener('change', () => {
-    if (taskOriginSelect.value === 'Otro') {
-      taskOriginCustom.style.display = 'block';
-      taskOriginCustom.required = true;
-    } else {
-      taskOriginCustom.style.display = 'none';
-      taskOriginCustom.required = false;
-    }
-  });
-}
+// Toggle Custom Input based on Action Type selection
+taskActionType.addEventListener('change', (e) => {
+  if (e.target.value === 'Otro') {
+    taskActionCustom.style.display = 'block';
+    taskActionCustom.required = true;
+  } else {
+    taskActionCustom.style.display = 'none';
+    taskActionCustom.required = false;
+    taskActionCustom.value = '';
+  }
+});
 
 // Open Modal for Editing
 function openTaskModalForEdit(task) {
@@ -1308,22 +1131,20 @@ function openTaskModalForEdit(task) {
     taskStatus.value = 'Completado';
   }
   
-  if (task.assignedTo === 'Agente' || task.assignedTo === 'Jose Angel') {
-    taskAssignee.value = task.assignedTo;
-  } else {
-    taskAssignee.value = 'Jose Angel';
-  }
+  taskAssignee.value = task.assignedTo === 'Agente' ? 'Agente' : 'Jose Angel';
   
-  if (task.origin === 'Zentry' || task.origin === 'Personal') {
-    taskOriginSelect.value = task.origin;
-    taskOriginCustom.style.display = 'none';
-    taskOriginCustom.required = false;
-    taskOriginCustom.value = '';
+  if (task.origin === 'Zentry' || !task.origin) {
+    taskActionType.value = 'Zentry';
+    taskActionCustom.style.display = 'none';
+    taskActionCustom.value = '';
+  } else if (task.origin === 'Personal') {
+    taskActionType.value = 'Personal';
+    taskActionCustom.style.display = 'none';
+    taskActionCustom.value = '';
   } else {
-    taskOriginSelect.value = 'Otro';
-    taskOriginCustom.style.display = 'block';
-    taskOriginCustom.required = true;
-    taskOriginCustom.value = task.origin || '';
+    taskActionType.value = 'Otro';
+    taskActionCustom.style.display = 'block';
+    taskActionCustom.value = task.origin;
   }
   
   // Show Delete and Ref buttons
@@ -1368,10 +1189,13 @@ function openTaskModalForCreate() {
   taskStatus.value = 'Pendiente';
   taskAssignee.value = 'Jose Angel';
   
-  taskOriginSelect.value = state.backlogWorkspace === 'personal' ? 'Personal' : 'Zentry';
-  taskOriginCustom.value = '';
-  taskOriginCustom.style.display = 'none';
-  taskOriginCustom.required = false;
+  if (state.backlogMode === 'personal') {
+    taskActionType.value = 'Personal';
+  } else {
+    taskActionType.value = 'Zentry';
+  }
+  taskActionCustom.style.display = 'none';
+  taskActionCustom.value = '';
   
   // Hide Delete and Ref buttons for new task
   taskDeleteBtn.style.display = 'none';
@@ -1429,7 +1253,13 @@ taskForm.addEventListener('submit', (e) => {
   const priority = taskPriority.value;
   const status = taskStatus.value; // 'Pendiente', 'En curso', 'Completado'
   const assignee = taskAssignee.value;
-  const origin = taskOriginSelect.value === 'Otro' ? taskOriginCustom.value.trim() : taskOriginSelect.value;
+  
+  let origin = 'Zentry';
+  if (taskActionType.value === 'Personal') {
+    origin = 'Personal';
+  } else if (taskActionType.value === 'Otro') {
+    origin = taskActionCustom.value.trim() || 'Otro';
+  }
   
   if (state.currentEditingTask) {
     // Edit Mode
