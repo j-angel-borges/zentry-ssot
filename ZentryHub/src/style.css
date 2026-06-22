@@ -1951,9 +1951,7 @@ body {
 
 /* Layout */
 .espacio-personal-layout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
+  display: block;
   padding: 0 8px;
   min-height: calc(100vh - 120px);
 }
@@ -2101,6 +2099,45 @@ body {
   transition: background 0.15s;
 }
 
+.timeblock-slot.is-completed .timeblock-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.timeblock-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeblock-details {
+  padding: 4px 12px 12px 12px;
+  animation: slide-down 0.2s ease-out;
+}
+
+.timeblock-details-text {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(214, 200, 250, 0.3);
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: var(--gris-neutro);
+  resize: vertical;
+  min-height: 60px;
+  outline: none;
+}
+
+.timeblock-details-text:focus {
+  border-color: var(--purple-zentry);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .timeblock-slot:hover {
   background: rgba(214,200,250,0.08);
 }
@@ -2139,12 +2176,57 @@ body {
   align-items: center;
   padding: 2px 12px;
   min-height: 38px;
-  cursor: text;
   position: relative;
+  gap: 8px;
+}
+
+.timeblock-checkbox {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(214, 200, 250, 0.6);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.timeblock-checkbox:checked {
+  background-color: var(--purple-zentry);
+  border-color: var(--purple-zentry);
+}
+
+.timeblock-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 11px;
+  left: 2px;
+  top: -1px;
+}
+
+.timeblock-expand-btn {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: rgba(74, 81, 96, 0.4);
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeblock-expand-btn:hover {
+  background: rgba(214, 200, 250, 0.2);
+  color: var(--purple-zentry);
 }
 
 .timeblock-text {
-  width: 100%;
+  flex: 1;
   background: none;
   border: none;
   outline: none;
@@ -2154,6 +2236,7 @@ body {
   padding: 4px 0;
   resize: none;
   overflow: hidden;
+  transition: all 0.2s;
 }
 
 .timeblock-text::placeholder {
