@@ -2076,6 +2076,24 @@ body {
   color: #2d8a6e;
 }
 
+.btn-backup, .btn-history {
+  background: none;
+  border: 1px solid rgba(214,200,250,0.4);
+  color: var(--purple-zentry);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-backup:hover, .btn-history:hover {
+  background: rgba(214, 200, 250, 0.2);
+}
+
 /* Timeblock Container */
 .timeblock-container {
   background: rgba(255,255,255,0.45);

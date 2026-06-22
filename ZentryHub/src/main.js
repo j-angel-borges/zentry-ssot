@@ -1057,9 +1057,12 @@ function renderEspacioPersonal(container) {
       <span class="date-nav-today">${formatDateLabel(dateStr)}</span>
       ${!isToday ? '<button class="date-nav-today-btn" id="date-today">Hoy</button>' : ''}
       <button class="date-nav-btn" id="date-next">▶</button>
+      <div style="flex: 1;"></div>
       <button class="gcal-sign-in-btn ${state.calendarConnected ? 'connected' : ''}" id="gcal-connect">
         ${state.calendarConnected ? '✅ Calendar Conectado' : '📅 Conectar Calendar'}
       </button>
+      <button class="btn-backup" id="btn-backup" title="Guardar copia de seguridad del día">📥</button>
+      <button class="btn-history" id="btn-history" title="Ver historial">🕰️</button>
     </div>
 
     <div class="espacio-personal-layout">
@@ -1086,6 +1089,35 @@ function renderEspacioPersonal(container) {
   document.getElementById('date-today')?.addEventListener('click', () => {
     state.personalDate = new Date().toISOString().split('T')[0];
     renderEspacioPersonal(container);
+  });
+
+  // Backup & History
+  document.getElementById('btn-backup')?.addEventListener('click', () => {
+    const data = getTimeblockData(state.personalDate);
+    if (Object.keys(data).length === 0) {
+      alert('No hay datos en este día para respaldar.');
+      return;
+    }
+    const history = JSON.parse(localStorage.getItem('zentry_timeblock_history') || '[]');
+    history.push({
+      id: Date.now().toString(),
+      date: state.personalDate,
+      timestamp: new Date().toISOString(),
+      data: JSON.parse(JSON.stringify(data))
+    });
+    localStorage.setItem('zentry_timeblock_history', JSON.stringify(history));
+    
+    // Show visual feedback
+    const btn = document.getElementById('btn-backup');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✅';
+    setTimeout(() => {
+      if (btn) btn.innerHTML = originalText;
+    }, 2000);
+  });
+
+  document.getElementById('btn-history')?.addEventListener('click', () => {
+    renderHistoryView(container);
   });
 
   // Timeblock editing
@@ -1287,6 +1319,49 @@ function renderEspacioPersonal(container) {
       const workspaceContent = document.getElementById('workspace-content');
       if (workspaceContent) renderEspacioPersonal(workspaceContent);
     });
+  });
+}
+
+function renderHistoryView(container) {
+  const history = JSON.parse(localStorage.getItem('zentry_timeblock_history') || '[]');
+  
+  let historyHtml = '';
+  if (history.length === 0) {
+    historyHtml = '<div style="padding: 40px; color: var(--text-muted); text-align: center; font-size: 16px;">No hay historial de backups guardados.</div>';
+  } else {
+    // Sort descending by timestamp
+    history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    historyHtml = history.map(h => {
+      const ts = new Date(h.timestamp).toLocaleString();
+      const numBlocks = Object.keys(h.data || {}).length;
+      return `
+        <div class="history-card" style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(74,81,96,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+          <div>
+            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px;">📅 ${h.date}</div>
+            <div style="font-size: 13px; color: var(--text-muted);">Backup guardado el: ${ts}</div>
+          </div>
+          <div>
+            <span style="background: rgba(144, 112, 230, 0.1); color: var(--purple-zentry); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">${numBlocks} bloques registrados</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  container.innerHTML = `
+    <div class="espacio-personal-header">
+      <button id="btn-back-to-espacio" style="background:none; border:none; color:var(--text-main); font-weight:500; cursor:pointer; display:flex; align-items:center; gap:5px;">⬅️ Volver a Espacio Personal</button>
+      <h2>🕰️ Historial de Backups</h2>
+      <div style="width: 220px;"></div>
+    </div>
+    <div class="history-container" style="max-width: 800px; margin: 30px auto; padding: 0 20px;">
+      ${historyHtml}
+    </div>
+  `;
+
+  document.getElementById('btn-back-to-espacio')?.addEventListener('click', () => {
+    renderEspacioPersonal(container);
   });
 }
 
