@@ -837,7 +837,7 @@ const renderers = {
               <span class="demobook-card-arrow">➔</span>
             </div>
           </a>
-          <a href="https://script.google.com/macros/s/AKfycbwZS6erGX6Urcf3rPMoQRTf1x-eLluWte3O2ZSg-j4Mu-hzMYZLTkKmekpU0RtV6OtOFA/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+          <a href="https://script.google.com/macros/s/AKfycbxsTrvsAbg_CVLNpDZA5gWlrtR_VLc_nsRGgkFeFsAfF-R3-hH2l0LbJNCwU-PaK_M1jQ/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
             <div class="demobook-card-minimal">
               <div class="demobook-card-content">
                 <span class="demobook-card-icon">📊</span>
@@ -1279,8 +1279,15 @@ function renderEspacioPersonal(container) {
       const line = document.getElementById('current-time-line');
       if (line) {
         line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        // Fallback to timeblock slot of current hour
+        const currentHourStr = String(new Date().getHours()).padStart(2, '0') + ':00';
+        const currentSlot = document.querySelector(`.timeblock-slot[data-time="${currentHourStr}"]`);
+        if (currentSlot) {
+          currentSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
-    }, 200);
+    }, 300);
   }
 
 
