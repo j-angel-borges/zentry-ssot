@@ -93,46 +93,29 @@ function saveTimeblockData(dateStr, data) {
   localStorage.setItem(`zentry_timeblock_${dateStr}`, JSON.stringify(data));
 }
 
-function checkOAuthCallback() {
-  const hash = window.location.hash;
-  if (hash.includes('access_token=')) {
-    const params = new URLSearchParams(hash.substring(1));
-    const accessToken = params.get('access_token');
-    const expiresIn = params.get('expires_in') || '3600';
-    if (accessToken) {
-      localStorage.setItem('gcal_access_token', accessToken);
-      localStorage.setItem('gcal_token_expires', String(Date.now() + parseInt(expiresIn) * 1000));
-      localStorage.removeItem('gcal_gas_url');
+let tokenClient;
+
+function initGapi() {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: '730964985085-u31sk2qof963oq5pbu7gob8pmhtt9mu6.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/calendar.events',
+    callback: (tokenResponse) => {
+      localStorage.setItem('gcal_access_token', tokenResponse.access_token);
+      localStorage.setItem('gcal_token_expires', String(Date.now() + 3600 * 1000));
       state.calendarConnected = true;
-      window.location.hash = '#backlog/personal';
-      return true;
-    }
-  }
-  return false;
+      loadCalendarEvents().then(() => {
+        const workspaceContent = document.getElementById('workspace-content');
+        if (workspaceContent) renderEspacioPersonal(workspaceContent);
+      });
+    },
+  });
 }
 
 async function loadCalendarEvents() {
-  const gasUrl = localStorage.getItem('gcal_gas_url');
   const token = localStorage.getItem('gcal_access_token');
   const expires = localStorage.getItem('gcal_token_expires');
   
-  if (gasUrl) {
-    state.calendarConnected = true;
-    try {
-      const res = await fetch(gasUrl);
-      if (!res.ok) throw new Error('GAS error');
-      const events = await res.json();
-      state.calendarEvents = events.map(e => ({
-        title: e.title || e.summary || '(Sin título)',
-        start: e.startTime || e.start?.dateTime || e.start,
-        end: e.endTime || e.end?.dateTime || e.end,
-        description: e.description || ''
-      }));
-      applyCalendarEventsToTimeblock();
-    } catch (err) {
-      console.error('Error fetching calendar events via GAS:', err);
-    }
-  } else if (token) {
+  if (token) {
     if (expires && Date.now() > parseInt(expires)) {
       localStorage.removeItem('gcal_access_token');
       localStorage.removeItem('gcal_token_expires');
@@ -147,9 +130,15 @@ async function loadCalendarEvents() {
       const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Google Calendar API error');
+      if (!res.ok) {
+        if (res.status === 401) {
+          localStorage.removeItem('gcal_access_token');
+          state.calendarConnected = false;
+        }
+        throw new Error('Google Calendar API error');
+      }
       const data = await res.json();
-      state.calendarEvents = data.items.map(item => ({
+      state.calendarEvents = (data.items || []).map(item => ({
         title: item.summary || '(Sin título)',
         start: item.start.dateTime || item.start.date,
         end: item.end.dateTime || item.end.date,
@@ -161,6 +150,49 @@ async function loadCalendarEvents() {
     }
   } else {
     state.calendarConnected = false;
+  }
+}
+
+async function addEventToCalendar(time, details) {
+  const token = localStorage.getItem('gcal_access_token');
+  if (!token) {
+    alert('Por favor conecta Google Calendar primero.');
+    return;
+  }
+
+  const [h, m] = time.split(':').map(Number);
+  const startD = new Date(state.personalDate + 'T00:00:00');
+  startD.setHours(h, m, 0);
+  const endD = new Date(startD);
+  endD.setMinutes(startD.getMinutes() + 15);
+
+  const event = {
+    summary: details.split('\\n')[0] || 'Zentry Task',
+    description: details,
+    start: { dateTime: startD.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    end: { dateTime: endD.toISOString(), timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }
+  };
+
+  try {
+    const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    });
+    if (res.ok) {
+      // Re-fetch events to update the grid
+      await loadCalendarEvents();
+      const workspaceContent = document.getElementById('workspace-content');
+      if (workspaceContent) renderEspacioPersonal(workspaceContent);
+    } else {
+      alert('Error al crear el evento en Calendar.');
+    }
+  } catch (err) {
+    console.error('Error creating event:', err);
+    alert('Error de red al crear el evento.');
   }
 }
 
@@ -1032,14 +1064,6 @@ function renderCorkboardObjectives() {
 // ========================================
 
 function renderEspacioPersonal(container) {
-  // Load chat history
-  state.chatMessages = getChatHistory();
-  if (state.chatMessages.length === 0) {
-    state.chatMessages = [{
-      role: 'assistant',
-      text: '¡Hola! Soy **Zentry AI** 🧘. Puedo ayudarte a organizar tu día. Dime qué tienes pendiente y llenaré tu timeblock con sugerencias inteligentes.\n\nEjemplo: *\"Necesito trabajar en la interfaz de Compose, preparar el pitch de ventas y revisar métricas\"*'
-    }];
-  }
 
   const dateStr = state.personalDate;
   const timeblockData = getTimeblockData(dateStr);
@@ -1076,6 +1100,7 @@ function renderEspacioPersonal(container) {
           </div>
           <div class="timeblock-details" id="details-${slot.time.replace(':','-')}" style="display: none;">
             <textarea class="timeblock-details-text" placeholder="Micro-tareas o detalles del bloque..." data-time="${slot.time}">${detailsVal}</textarea>
+            <button class="timeblock-add-cal-btn" data-time="${slot.time}" style="margin-top: 8px; font-size: 0.8rem; padding: 4px 8px; border-radius: 4px; background: white; border: 1px solid var(--purple-zentry); color: var(--purple-zentry); cursor: pointer;">📅 Crear en Calendar</button>
           </div>
         </div>
       </div>
@@ -1233,94 +1258,28 @@ function renderEspacioPersonal(container) {
 
   // Google Calendar connect button
   document.getElementById('gcal-connect')?.addEventListener('click', () => {
-    const gcalModal = document.getElementById('gcal-modal');
-    if (!gcalModal) return;
-    
-    const clientIdInput = document.getElementById('gcal-client-id');
-    const gasUrlInput = document.getElementById('gcal-gas-url');
-    if (clientIdInput) clientIdInput.value = localStorage.getItem('gcal_client_id') || '';
-    if (gasUrlInput) gasUrlInput.value = localStorage.getItem('gcal_gas_url') || '';
-    
-    gcalModal.classList.add('show');
-    
-    const btnOAuth = document.getElementById('tab-btn-oauth');
-    const btnGAS = document.getElementById('tab-btn-gas');
-    const contentOAuth = document.getElementById('content-oauth');
-    const contentGAS = document.getElementById('content-gas');
-    
-    // Switch tabs
-    btnOAuth?.addEventListener('click', () => {
-      btnOAuth.classList.add('active');
-      btnOAuth.style.borderBottom = '2px solid var(--purple-zentry)';
-      btnOAuth.style.color = 'var(--purple-zentry)';
-      btnGAS?.classList.remove('active');
-      if (btnGAS) {
-        btnGAS.style.borderBottom = '2px solid transparent';
-        btnGAS.style.color = 'var(--text-muted)';
+    if (tokenClient) {
+      tokenClient.requestAccessToken({ prompt: 'consent' });
+    } else {
+      alert('Google Identity Services no está inicializado.');
+    }
+  });
+
+  // Add event to calendar
+  container.querySelectorAll('.timeblock-add-cal-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const time = e.target.dataset.time;
+      const detailsTextarea = document.querySelector(`.timeblock-details-text[data-time="${time}"]`);
+      const textInput = document.querySelector(`.timeblock-text[data-time="${time}"]`);
+      let details = '';
+      if (textInput && textInput.value) details += textInput.value.trim() + '\\n';
+      if (detailsTextarea && detailsTextarea.value) details += detailsTextarea.value.trim();
+      
+      if (!details) {
+        alert('Agrega un título o detalles para crear el evento.');
+        return;
       }
-      if (contentOAuth) contentOAuth.style.display = 'block';
-      if (contentGAS) contentGAS.style.display = 'none';
-    });
-    
-    btnGAS?.addEventListener('click', () => {
-      btnGAS.classList.add('active');
-      btnGAS.style.borderBottom = '2px solid var(--purple-zentry)';
-      btnGAS.style.color = 'var(--purple-zentry)';
-      btnOAuth?.classList.remove('active');
-      if (btnOAuth) {
-        btnOAuth.style.borderBottom = '2px solid transparent';
-        btnOAuth.style.color = 'var(--text-muted)';
-      }
-      if (contentGAS) contentGAS.style.display = 'block';
-      if (contentOAuth) contentOAuth.style.display = 'none';
-    });
-    
-    const closeBtn = document.getElementById('gcal-modal-close');
-    const cancelBtn = document.getElementById('gcal-modal-cancel');
-    const saveBtn = document.getElementById('gcal-modal-save');
-    
-    const hideGcalModal = () => {
-      gcalModal.classList.remove('show');
-    };
-    
-    closeBtn?.addEventListener('click', hideGcalModal);
-    cancelBtn?.addEventListener('click', hideGcalModal);
-    gcalModal.addEventListener('click', (e) => {
-      if (e.target === gcalModal) hideGcalModal();
-    });
-    
-    saveBtn?.addEventListener('click', async () => {
-      const isOAuthActive = btnOAuth?.classList.contains('active');
-      if (isOAuthActive) {
-        const clientId = clientIdInput?.value.trim();
-        if (!clientId) {
-          alert('Por favor ingresa un Client ID válido.');
-          return;
-        }
-        localStorage.setItem('gcal_client_id', clientId);
-        localStorage.removeItem('gcal_gas_url');
-        
-        const redirectUri = window.location.origin + window.location.pathname;
-        const scope = 'https://www.googleapis.com/auth/calendar.events.readonly';
-        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&state=gcal`;
-        hideGcalModal();
-        window.location.href = url;
-      } else {
-        const gasUrl = gasUrlInput?.value.trim();
-        if (!gasUrl) {
-          alert('Por favor ingresa una URL de Apps Script válida.');
-          return;
-        }
-        localStorage.setItem('gcal_gas_url', gasUrl);
-        localStorage.removeItem('gcal_client_id');
-        localStorage.removeItem('gcal_access_token');
-        localStorage.removeItem('gcal_token_expires');
-        
-        hideGcalModal();
-        await loadCalendarEvents();
-        const workspaceContent = document.getElementById('workspace-content');
-        if (workspaceContent) renderEspacioPersonal(workspaceContent);
-      }
+      addEventToCalendar(time, details);
     });
   });
 }
@@ -1823,6 +1782,6 @@ taskForm.addEventListener('submit', (e) => {
 });
 
 // Initial Load
-checkOAuthCallback();
+initGapi();
 buildDocTree();
 handleRouting();
