@@ -1125,20 +1125,22 @@ function renderEspacioPersonal(container) {
     renderEspacioPersonal(container);
   });
 
-  // Timeblock editing (Text)
+  // Timeblock editing
   container.querySelectorAll('.timeblock-text').forEach(input => {
     input.addEventListener('blur', (e) => {
       const time = e.target.dataset.time;
       const val = e.target.value.trim();
       const data = getTimeblockData(state.personalDate);
+      if (!data[time]) data[time] = {};
+      
       if (val) {
-        data[time] = { ...data[time], text: val, source: data[time]?.source || 'manual' };
+        data[time].text = val;
+        data[time].source = data[time].source || 'manual';
+      } else if (!data[time].details) {
+        // Only delete if details are also empty
+        delete data[time];
       } else {
-        if (!data[time]?.details && !data[time]?.completed) {
-          delete data[time];
-        } else {
-          data[time].text = '';
-        }
+        data[time].text = '';
       }
       saveTimeblockData(state.personalDate, data);
     });
@@ -1155,49 +1157,58 @@ function renderEspacioPersonal(container) {
     });
   });
 
-  // Timeblock editing (Checkbox)
-  container.querySelectorAll('.timeblock-checkbox').forEach(chk => {
-    chk.addEventListener('change', (e) => {
-      const time = e.target.dataset.time;
-      const isCompleted = e.target.checked;
-      const data = getTimeblockData(state.personalDate);
-      
-      data[time] = { ...data[time], completed: isCompleted };
-      saveTimeblockData(state.personalDate, data);
-      
-      // Update visual state immediately
-      const slot = e.target.closest('.timeblock-slot');
-      if (isCompleted) {
-        slot.classList.add('is-completed');
-      } else {
-        slot.classList.remove('is-completed');
-      }
-    });
-  });
-
-  // Timeblock editing (Expand & Details)
-  container.querySelectorAll('.timeblock-expand-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const time = e.target.dataset.time;
-      const detailsDiv = document.getElementById(`details-${time.replace(':','-')}`);
-      if (detailsDiv) {
-        const isHidden = detailsDiv.style.display === 'none';
-        detailsDiv.style.display = isHidden ? 'block' : 'none';
-        if (isHidden) {
-          detailsDiv.querySelector('textarea')?.focus();
-        }
-      }
-    });
-  });
-
+  // Timeblock details textarea
   container.querySelectorAll('.timeblock-details-text').forEach(textarea => {
     textarea.addEventListener('blur', (e) => {
       const time = e.target.dataset.time;
       const val = e.target.value.trim();
       const data = getTimeblockData(state.personalDate);
+      if (!data[time]) data[time] = {};
       
-      data[time] = { ...data[time], details: val };
+      data[time].details = val;
+      
+      if (!val && !data[time].text) {
+        delete data[time];
+      }
       saveTimeblockData(state.personalDate, data);
+    });
+  });
+
+  // Timeblock checkbox completion
+  container.querySelectorAll('.timeblock-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', (e) => {
+      const time = e.target.dataset.time;
+      const isChecked = e.target.checked;
+      const data = getTimeblockData(state.personalDate);
+      if (!data[time]) data[time] = {};
+      
+      data[time].completed = isChecked;
+      saveTimeblockData(state.personalDate, data);
+      
+      // Update visual state immediately
+      const slotDiv = e.target.closest('.timeblock-slot');
+      if (slotDiv) {
+        if (isChecked) slotDiv.classList.add('is-completed');
+        else slotDiv.classList.remove('is-completed');
+      }
+    });
+  });
+
+  // Expand buttons
+  container.querySelectorAll('.timeblock-expand-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const time = e.target.dataset.time;
+      const detailsId = `details-${time.replace(':', '-')}`;
+      const detailsEl = document.getElementById(detailsId);
+      if (detailsEl) {
+        if (detailsEl.style.display === 'none') {
+          detailsEl.style.display = 'block';
+          e.target.style.transform = 'rotate(180deg)';
+        } else {
+          detailsEl.style.display = 'none';
+          e.target.style.transform = 'rotate(0deg)';
+        }
+      }
     });
   });
 
@@ -1217,6 +1228,8 @@ function renderEspacioPersonal(container) {
       }
     }, 200);
   }
+
+
 
   // Google Calendar connect button
   document.getElementById('gcal-connect')?.addEventListener('click', () => {
@@ -1323,6 +1336,9 @@ function updateCurrentTimeLine() {
     line.style.display = 'none';
   }
 }
+
+
+
 
 // Render Kanban board lists based on active filters
 function renderKanbanCards() {
