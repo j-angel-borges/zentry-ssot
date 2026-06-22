@@ -1288,7 +1288,6 @@ function renderEspacioPersonal(container) {
       if (workspaceContent) renderEspacioPersonal(workspaceContent);
     });
   });
-  });
 }
 
 function updateCurrentTimeLine() {
