@@ -2319,108 +2319,7 @@ body {
   50% { opacity: 0.6; transform: scale(1.3); }
 }
 
-/* ========================================
-   TIMEBLOCK IMPROVEMENTS (Checkboxes, details)
-   ======================================== */
 
-.timeblock-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.timeblock-checkbox {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(214,200,250,0.8);
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  background: white;
-  flex-shrink: 0;
-}
-
-.timeblock-checkbox:checked {
-  background: var(--purple-zentry);
-  border-color: var(--purple-zentry);
-}
-
-.timeblock-checkbox:checked::after {
-  content: '✓';
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.timeblock-text {
-  flex: 1;
-  background: transparent;
-  border: none;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  color: var(--gris-neutro);
-  outline: none;
-  transition: all 0.2s;
-}
-
-.timeblock-slot.is-completed .timeblock-text {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
-.timeblock-expand-btn {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: rgba(74,81,96,0.4);
-  cursor: pointer;
-  transition: transform 0.3s, color 0.2s;
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.timeblock-expand-btn:hover {
-  color: var(--purple-zentry);
-}
-
-.timeblock-details {
-  width: 100%;
-  padding-top: 8px;
-  padding-left: 26px; /* align with text input */
-  animation: slide-down 0.2s ease-out;
-}
-
-.timeblock-details-text {
-  width: 100%;
-  background: rgba(255,255,255,0.5);
-  border: 1px solid rgba(214,200,250,0.3);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
-  color: var(--gris-neutro);
-  resize: vertical;
-  min-height: 60px;
-  outline: none;
-}
-
-.timeblock-details-text:focus {
-  border-color: var(--purple-zentry);
-  background: #fff;
-}
-
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* ========================================
    RESPONSIVE: Espacio Personal
@@ -2430,7 +2329,13 @@ body {
   .espacio-personal-layout {
     grid-template-columns: 1fr;
   }
-
+  
+  .ai-chat-panel {
+    position: relative;
+    top: 0;
+    max-height: 500px;
+  }
+}
 
 @media (max-width: 600px) {
   .timeblock-slot {
