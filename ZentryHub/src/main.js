@@ -1276,10 +1276,9 @@ function renderEspacioPersonal(container) {
 
     // Scroll to current time
     setTimeout(() => {
-      const pos = getCurrentTimePosition();
-      if (pos) {
-        const grid = document.getElementById('timeblock-grid');
-        if (grid) grid.parentElement.scrollTop = Math.max(0, pos - 120);
+      const line = document.getElementById('current-time-line');
+      if (line) {
+        line.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     }, 200);
   }
