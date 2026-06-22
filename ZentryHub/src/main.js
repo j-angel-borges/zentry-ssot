@@ -96,6 +96,10 @@ function saveTimeblockData(dateStr, data) {
 let tokenClient;
 
 function initGapi() {
+  if (typeof google === 'undefined') {
+    setTimeout(initGapi, 500);
+    return;
+  }
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: '730964985085-u31sk2qof963oq5pbu7gob8pmhtt9mu6.apps.googleusercontent.com',
     scope: 'https://www.googleapis.com/auth/calendar.events',
@@ -1282,6 +1286,24 @@ function renderEspacioPersonal(container) {
       addEventToCalendar(time, details);
     });
   });
+function getCurrentTimePosition() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+
+  if (h < 6 || h >= 22) return null;
+
+  const grid = document.getElementById('timeblock-grid');
+  if (!grid) return null;
+
+  const hourSlot = grid.querySelector(`.timeblock-slot[data-time="${String(h).padStart(2,'0')}:00"]`);
+  if (!hourSlot) return null;
+
+  const slotHeight = hourSlot.offsetHeight;
+  const hourTotalHeight = slotHeight * 4;
+  const offsetWithinHour = (m / 60) * hourTotalHeight;
+  
+  return hourSlot.offsetTop + offsetWithinHour;
 }
 
 function updateCurrentTimeLine() {
