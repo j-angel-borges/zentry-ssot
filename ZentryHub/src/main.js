@@ -1286,25 +1286,8 @@ function renderEspacioPersonal(container) {
       addEventToCalendar(time, details);
     });
   });
-function getCurrentTimePosition() {
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-
-  if (h < 6 || h >= 22) return null;
-
-  const grid = document.getElementById('timeblock-grid');
-  if (!grid) return null;
-
-  const hourSlot = grid.querySelector(`.timeblock-slot[data-time="${String(h).padStart(2,'0')}:00"]`);
-  if (!hourSlot) return null;
-
-  const slotHeight = hourSlot.offsetHeight;
-  const hourTotalHeight = slotHeight * 4;
-  const offsetWithinHour = (m / 60) * hourTotalHeight;
-  
-  return hourSlot.offsetTop + offsetWithinHour;
 }
+
 
 function updateCurrentTimeLine() {
   const line = document.getElementById('current-time-line');
