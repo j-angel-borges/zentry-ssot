@@ -10,10 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Google Identity Services for Calendar Sync -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-
     <title>Zentry Hub - SSOT Dashboard</title>
   </head>
   <body>
@@ -186,7 +183,58 @@
         </div>
       </div>
     </div>
+    <!-- Google Calendar Connection Configuration Modal -->
+    <div id="gcal-modal" class="modal-overlay">
+      <div class="modal-content glass-modal" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2 class="modal-task-id" style="font-size: 20px;">📅 Conectar Google Calendar</h2>
+          <button id="gcal-modal-close" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 15px; font-size: 14px; color: var(--text-muted);">Elige tu método de integración preferido para sincronizar tus eventos en tiempo real con el timeblocking de 15 minutos.</p>
+          
+          <div class="gcal-method-tabs" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(74, 81, 96, 0.1); padding-bottom: 10px;">
+            <button type="button" id="tab-btn-oauth" class="tab-btn active" style="flex: 1; padding: 8px; border: none; background: transparent; cursor: pointer; font-weight: 600; border-bottom: 2px solid var(--purple-zentry); color: var(--purple-zentry);">OAuth 2.0 (Google Cloud)</button>
+            <button type="button" id="tab-btn-gas" class="tab-btn" style="flex: 1; padding: 8px; border: none; background: transparent; cursor: pointer; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid transparent;">Apps Script (Simplificado)</button>
+          </div>
 
+          <!-- OAuth Tab Content -->
+          <div id="content-oauth" class="tab-content" style="display: block;">
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label for="gcal-client-id" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 13px;">Google OAuth Client ID</label>
+              <input type="text" id="gcal-client-id" placeholder="Ej. 12345678-abc.apps.googleusercontent.com" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(74, 81, 96, 0.2); background: rgba(255, 255, 255, 0.5);">
+            </div>
+            <div style="font-size: 12px; line-height: 1.5; color: var(--text-muted); background: rgba(83, 59, 135, 0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+              <strong>Instrucciones:</strong><br>
+              1. En tu proyecto de Google Cloud Console, ve a <em>Credenciales</em>.<br>
+              2. Crea un <strong>ID de cliente de OAuth</strong> de tipo <em>Aplicación web</em>.<br>
+              3. Añade en Orígenes de JavaScript autorizados:<br>
+              <code style="background: rgba(255,255,255,0.7); padding: 2px 4px; border-radius: 4px; display: inline-block; margin-top: 4px; margin-bottom: 4px;">https://zentry-hub-roan.vercel.app</code><br>
+              4. Copia el Client ID, pégalo arriba y presiona Guardar.
+            </div>
+          </div>
+
+          <!-- Apps Script Tab Content -->
+          <div id="content-gas" class="tab-content" style="display: none;">
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label for="gcal-gas-url" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 13px;">Apps Script Web App URL</label>
+              <input type="text" id="gcal-gas-url" placeholder="https://script.google.com/macros/s/.../exec" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(74, 81, 96, 0.2); background: rgba(255, 255, 255, 0.5);">
+            </div>
+            <div style="font-size: 12px; line-height: 1.5; color: var(--text-muted); background: rgba(83, 59, 135, 0.05); padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+              <strong>Instrucciones sin GCP:</strong><br>
+              1. Crea un script en script.google.com y añade la función <code style="font-weight: 600;">doGet(e)</code> que retorne los eventos de tu calendario en formato JSON.<br>
+              2. Impleméntalo (Deploy) como <strong>Aplicación Web</strong> con acceso para <em>"Cualquier persona"</em>.<br>
+              3. Pega el enlace de ejecución generado arriba.
+            </div>
+          </div>
+
+          <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+            <button type="button" id="gcal-modal-cancel" class="btn btn-secondary" style="padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(74,81,96,0.2); background: transparent; cursor: pointer;">Cancelar</button>
+            <button type="button" id="gcal-modal-save" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--purple-zentry); color: white; cursor: pointer; font-weight: 600;">Guardar y Conectar</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <script type="module" src="/src/main.js"></script>
   </body>

@@ -2130,7 +2130,36 @@ body {
 
 .timeblock-details-text:focus {
   border-color: var(--purple-zentry);
-  background: rgba(255, 255, 255, 0.6);
+  background: white;
+}
+
+.timeblock-details-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn-gcal-sync {
+  background: var(--purple-zentry);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-gcal-sync:hover {
+  background: #6b4fad;
+  transform: translateY(-1px);
+}
+
+.btn-gcal-sync:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 @keyframes slide-down {
@@ -2319,8 +2348,6 @@ body {
   50% { opacity: 0.6; transform: scale(1.3); }
 }
 
-
-
 /* ========================================
    RESPONSIVE: Espacio Personal
    ======================================== */
@@ -2328,12 +2355,6 @@ body {
 @media (max-width: 960px) {
   .espacio-personal-layout {
     grid-template-columns: 1fr;
-  }
-  
-  .ai-chat-panel {
-    position: relative;
-    top: 0;
-    max-height: 500px;
   }
 }
 

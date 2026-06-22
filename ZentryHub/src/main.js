@@ -1040,6 +1040,7 @@ function renderEspacioPersonal(container) {
   slots.forEach(slot => {
     const data = timeblockData[slot.time] || {};
     const hasCalEvent = data.source === 'calendar';
+    const isAI = data.source === 'ai';
     const currentHour = isToday && slot.time === `${String(new Date().getHours()).padStart(2,'0')}:${String(Math.floor(new Date().getMinutes()/15)*15).padStart(2,'0')}`;
 
     let extraClass = slot.isHour ? ' is-hour' : '';
@@ -1064,6 +1065,9 @@ function renderEspacioPersonal(container) {
           </div>
           <div class="timeblock-details" id="details-${slot.time.replace(':','-')}" style="display: none;">
             <textarea class="timeblock-details-text" placeholder="Micro-tareas o detalles del bloque..." data-time="${slot.time}">${detailsVal}</textarea>
+            <div class="timeblock-details-actions">
+              <button class="btn-gcal-sync" data-time="${slot.time}" title="Guardar bloque en Google Calendar">📅 Guardar en Calendar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1082,13 +1086,13 @@ function renderEspacioPersonal(container) {
       <span class="date-nav-today">${formatDateLabel(dateStr)}</span>
       ${!isToday ? '<button class="date-nav-today-btn" id="date-today">Hoy</button>' : ''}
       <button class="date-nav-btn" id="date-next">▶</button>
-      <button class="gcal-sign-in-btn" id="gcal-connect">
-        📅 Conectar Calendar
+      <button class="gcal-sign-in-btn ${state.calendarConnected ? 'connected' : ''}" id="gcal-connect">
+        ${state.calendarConnected ? '✅ Calendar Conectado' : '📅 Conectar Calendar'}
       </button>
     </div>
 
     <div class="espacio-personal-layout">
-      <div class="timeblock-container" style="max-width: 800px; margin: 0 auto; width: 100%;">
+      <div class="timeblock-container">
         <div class="timeblock-grid" id="timeblock-grid">
           ${isToday ? '<div class="timeblock-current-time" id="current-time-line"></div>' : ''}
           ${slotsHtml}
@@ -1199,6 +1203,65 @@ function renderEspacioPersonal(container) {
       }
     });
   });
+  // Google Calendar Sync Event
+  container.querySelectorAll('.btn-gcal-sync').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const time = e.target.dataset.time;
+      const data = getTimeblockData(state.personalDate)[time];
+      
+      if (!data || !data.text) {
+        alert("El bloque está vacío. Escribe una tarea primero.");
+        return;
+      }
+      
+      const token = localStorage.getItem('gcal_access_token');
+      const expires = localStorage.getItem('gcal_token_expires');
+      if (!token || !expires || Date.now() > parseInt(expires, 10)) {
+        alert("Calendar no está conectado o la sesión expiró. Por favor presiona 'Conectar Calendar' en la parte superior.");
+        return;
+      }
+
+      // Convert slot time to RFC3339 format considering local timezone
+      const slotDate = new Date(`${state.personalDate}T${time}:00`);
+      const startDateTime = slotDate.toISOString();
+      const endDateTime = new Date(slotDate.getTime() + 15 * 60000).toISOString();
+
+      const eventBody = {
+        summary: data.text,
+        description: data.details || '',
+        start: { dateTime: startDateTime },
+        end: { dateTime: endDateTime }
+      };
+
+      try {
+        btn.textContent = "⌛ Guardando...";
+        btn.disabled = true;
+        const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(eventBody)
+        });
+
+        if (res.ok) {
+          btn.textContent = "✅ Guardado";
+          setTimeout(() => {
+            btn.textContent = "📅 Guardar en Calendar";
+            btn.disabled = false;
+          }, 3000);
+        } else {
+          throw new Error('Error API Calendar');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error al guardar en Google Calendar.');
+        btn.textContent = "📅 Guardar en Calendar";
+        btn.disabled = false;
+      }
+    });
+  });
 
   // Current time indicator
   if (isToday) {
@@ -1221,44 +1284,95 @@ function renderEspacioPersonal(container) {
 
   // Google Calendar connect button
   document.getElementById('gcal-connect')?.addEventListener('click', () => {
-    // Client ID provided by user
-    const CLIENT_ID = '730964985085-u31sk2qof963oq5pbu7gob8pmhtt9mu6.apps.googleusercontent.com';
-    const SCOPES = 'https://www.googleapis.com/auth/calendar.events.readonly';
+    const gcalModal = document.getElementById('gcal-modal');
+    if (!gcalModal) return;
     
-    if (typeof google === 'undefined' || !google.accounts) {
-      alert('La librería de Google Identity Services no ha cargado aún. Por favor, intenta de nuevo en unos segundos.');
-      return;
-    }
-
-    const tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: async (tokenResponse) => {
-        if (tokenResponse.error !== undefined) {
-          console.error(tokenResponse);
-          alert('Hubo un error al autorizar con Google Calendar.');
+    const clientIdInput = document.getElementById('gcal-client-id');
+    const gasUrlInput = document.getElementById('gcal-gas-url');
+    if (clientIdInput) clientIdInput.value = localStorage.getItem('gcal_client_id') || '';
+    if (gasUrlInput) gasUrlInput.value = localStorage.getItem('gcal_gas_url') || '';
+    
+    gcalModal.classList.add('show');
+    
+    const btnOAuth = document.getElementById('tab-btn-oauth');
+    const btnGAS = document.getElementById('tab-btn-gas');
+    const contentOAuth = document.getElementById('content-oauth');
+    const contentGAS = document.getElementById('content-gas');
+    
+    // Switch tabs
+    btnOAuth?.addEventListener('click', () => {
+      btnOAuth.classList.add('active');
+      btnOAuth.style.borderBottom = '2px solid var(--purple-zentry)';
+      btnOAuth.style.color = 'var(--purple-zentry)';
+      btnGAS?.classList.remove('active');
+      if (btnGAS) {
+        btnGAS.style.borderBottom = '2px solid transparent';
+        btnGAS.style.color = 'var(--text-muted)';
+      }
+      if (contentOAuth) contentOAuth.style.display = 'block';
+      if (contentGAS) contentGAS.style.display = 'none';
+    });
+    
+    btnGAS?.addEventListener('click', () => {
+      btnGAS.classList.add('active');
+      btnGAS.style.borderBottom = '2px solid var(--purple-zentry)';
+      btnGAS.style.color = 'var(--purple-zentry)';
+      btnOAuth?.classList.remove('active');
+      if (btnOAuth) {
+        btnOAuth.style.borderBottom = '2px solid transparent';
+        btnOAuth.style.color = 'var(--text-muted)';
+      }
+      if (contentGAS) contentGAS.style.display = 'block';
+      if (contentOAuth) contentOAuth.style.display = 'none';
+    });
+    
+    const closeBtn = document.getElementById('gcal-modal-close');
+    const cancelBtn = document.getElementById('gcal-modal-cancel');
+    const saveBtn = document.getElementById('gcal-modal-save');
+    
+    const hideGcalModal = () => {
+      gcalModal.classList.remove('show');
+    };
+    
+    closeBtn?.addEventListener('click', hideGcalModal);
+    cancelBtn?.addEventListener('click', hideGcalModal);
+    gcalModal.addEventListener('click', (e) => {
+      if (e.target === gcalModal) hideGcalModal();
+    });
+    
+    saveBtn?.addEventListener('click', async () => {
+      const isOAuthActive = btnOAuth?.classList.contains('active');
+      if (isOAuthActive) {
+        const clientId = clientIdInput?.value.trim();
+        if (!clientId) {
+          alert('Por favor ingresa un Client ID válido.');
           return;
         }
-        // Save token and fetch events
-        localStorage.setItem('gcal_access_token', tokenResponse.access_token);
-        localStorage.setItem('gcal_token_expires', String(Date.now() + 3500 * 1000));
+        localStorage.setItem('gcal_client_id', clientId);
         localStorage.removeItem('gcal_gas_url');
-        state.calendarConnected = true;
         
-        const gcalConnectBtn = document.getElementById('gcal-connect');
-        if (gcalConnectBtn) {
-          gcalConnectBtn.innerHTML = '✅ Calendar Conectado';
-          gcalConnectBtn.classList.add('connected');
+        const redirectUri = window.location.origin + window.location.pathname;
+        const scope = 'https://www.googleapis.com/auth/calendar.events';
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&state=gcal`;
+        hideGcalModal();
+        window.location.href = url;
+      } else {
+        const gasUrl = gasUrlInput?.value.trim();
+        if (!gasUrl) {
+          alert('Por favor ingresa una URL de Apps Script válida.');
+          return;
         }
-
+        localStorage.setItem('gcal_gas_url', gasUrl);
+        localStorage.removeItem('gcal_client_id');
+        localStorage.removeItem('gcal_access_token');
+        localStorage.removeItem('gcal_token_expires');
+        
+        hideGcalModal();
         await loadCalendarEvents();
         const workspaceContent = document.getElementById('workspace-content');
         if (workspaceContent) renderEspacioPersonal(workspaceContent);
-      },
+      }
     });
-    
-    // Request access token (opens Google Popup)
-    tokenClient.requestAccessToken({prompt: 'consent'});
   });
 }
 
