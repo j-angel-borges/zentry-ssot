@@ -1099,12 +1099,19 @@ function renderEspacioPersonal(container) {
       return;
     }
     const history = JSON.parse(localStorage.getItem('zentry_timeblock_history') || '[]');
-    history.push({
-      id: Date.now().toString(),
-      date: state.personalDate,
-      timestamp: new Date().toISOString(),
-      data: JSON.parse(JSON.stringify(data))
-    });
+    const existingIndex = history.findIndex(h => h.date === state.personalDate);
+    
+    if (existingIndex >= 0) {
+      history[existingIndex].timestamp = new Date().toISOString();
+      history[existingIndex].data = JSON.parse(JSON.stringify(data));
+    } else {
+      history.push({
+        id: Date.now().toString(),
+        date: state.personalDate,
+        timestamp: new Date().toISOString(),
+        data: JSON.parse(JSON.stringify(data))
+      });
+    }
     localStorage.setItem('zentry_timeblock_history', JSON.stringify(history));
     
     // Show visual feedback
@@ -1332,17 +1339,44 @@ function renderHistoryView(container) {
     // Sort descending by timestamp
     history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     
-    historyHtml = history.map(h => {
+    historyHtml = history.map((h, i) => {
       const ts = new Date(h.timestamp).toLocaleString();
       const numBlocks = Object.keys(h.data || {}).length;
+      
+      let detailsHtml = '';
+      if (numBlocks > 0) {
+        const sortedTimes = Object.keys(h.data).sort();
+        detailsHtml = sortedTimes.map(time => {
+          const b = h.data[time];
+          return `
+            <div style="margin-bottom: 8px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 8px; border-left: 3px solid ${b.completed ? '#2d8a6e' : '#e6a822'};">
+              <div style="font-size: 13px; font-weight: 600; color: var(--text-main);">${time} ${b.completed ? '✅' : '⏳'}</div>
+              <div style="font-size: 14px; margin-top: 4px;">${b.text || 'Sin título'}</div>
+              ${b.details ? `<div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; white-space: pre-wrap;">${b.details}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      } else {
+        detailsHtml = '<div style="font-size: 13px; color: var(--text-muted);">Día sin bloques registrados.</div>';
+      }
+
       return `
-        <div class="history-card" style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(74,81,96,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-          <div>
-            <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px;">📅 ${h.date}</div>
-            <div style="font-size: 13px; color: var(--text-muted);">Backup guardado el: ${ts}</div>
+        <div class="history-card" style="background: rgba(255,255,255,0.7); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(74,81,96,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+          <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="document.getElementById('history-details-${i}').style.display = document.getElementById('history-details-${i}').style.display === 'none' ? 'block' : 'none'">
+            <div>
+              <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px;">📅 ${h.date}</div>
+              <div style="font-size: 13px; color: var(--text-muted);">Backup guardado el: ${ts}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="background: rgba(144, 112, 230, 0.1); color: var(--purple-zentry); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">${numBlocks} bloques registrados</span>
+              <button style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">⌄</button>
+            </div>
           </div>
-          <div>
-            <span style="background: rgba(144, 112, 230, 0.1); color: var(--purple-zentry); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;">${numBlocks} bloques registrados</span>
+          <div id="history-details-${i}" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(74,81,96,0.1);">
+            <div style="margin-bottom: 15px; text-align: right;">
+              <button class="btn-edit-history" data-date="${h.date}" style="background: var(--purple-zentry); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif;">✏️ Editar este día</button>
+            </div>
+            ${detailsHtml}
           </div>
         </div>
       `;
@@ -1362,6 +1396,13 @@ function renderHistoryView(container) {
 
   document.getElementById('btn-back-to-espacio')?.addEventListener('click', () => {
     renderEspacioPersonal(container);
+  });
+  
+  container.querySelectorAll('.btn-edit-history').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      state.personalDate = e.target.dataset.date;
+      renderEspacioPersonal(container);
+    });
   });
 }
 
