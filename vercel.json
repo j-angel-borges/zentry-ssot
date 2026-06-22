@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "buildCommand": "cd ZentryHub && npm run build",
+  "installCommand": "cd ZentryHub && npm install",
+  "outputDirectory": "ZentryHub/dist"
+}
