@@ -2112,10 +2112,51 @@ body {
 
 .timeblock-slot {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 24px 72px 1fr;
   min-height: 38px;
   border-bottom: 1px solid rgba(214,200,250,0.12);
   transition: background 0.15s;
+}
+
+.timeblock-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: grab;
+  font-size: 16px;
+  user-select: none;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+
+.timeblock-slot:hover .timeblock-drag-handle {
+  opacity: 1;
+}
+
+.timeblock-drag-handle:active {
+  cursor: grabbing;
+}
+
+.timeblock-action-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  margin-right: 4px;
+  border-radius: 4px;
+  opacity: 0.3;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.timeblock-slot:hover .timeblock-action-btn {
+  opacity: 1;
+}
+
+.timeblock-action-btn:hover {
+  background: rgba(214,200,250,0.2);
 }
 
 .timeblock-slot.is-completed .timeblock-text {
@@ -2379,7 +2420,7 @@ body {
 
 @media (max-width: 600px) {
   .timeblock-slot {
-    grid-template-columns: 56px 1fr;
+    grid-template-columns: 24px 56px 1fr;
     min-height: 34px;
   }
   

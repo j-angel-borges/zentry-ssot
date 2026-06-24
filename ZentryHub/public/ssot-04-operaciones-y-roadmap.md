@@ -23,9 +23,9 @@ Diseñado para alimentar a agentes y asistentes de IA especializados en esta ár
 
 ---
 title: "Operaciones y Roadmap: Índice y Metodología"
-date: 2026-06-04
-status: "approved"
-progress: 20%
+date: 2026-06-22
+status: "in-progress"
+progress: 15%
 deadline: 2026-08-30
 tags: ["operaciones", "roadmap", "gestion-proyecto"]
 ---
@@ -82,9 +82,9 @@ Para asegurar la consistencia estética en todas las iniciativas de ZentryOS, el
 
 ---
 title: "Roadmap del Producto: Fases e Hitos"
-date: 2026-06-04
-status: "approved"
-progress: 30%
+date: 2026-06-22
+status: "in-progress"
+progress: 15%
 deadline: 2026-08-30
 tags: ["operaciones", "roadmap", "hitos", "planificacion"]
 ---
@@ -159,9 +159,9 @@ gantt
 
 ---
 title: "Progreso y Métricas: KPIs del Proyecto"
-date: 2026-06-04
-status: "approved"
-progress: 25%
+date: 2026-06-22
+status: "in-progress"
+progress: 15%
 deadline: 2026-08-30
 tags: ["operaciones", "metricas", "kpis", "velocidad"]
 ---
@@ -223,7 +223,7 @@ Miden el éxito a largo plazo del producto e impacto educativo:
 
 ---
 title: "Operaciones: Banco de Ideas ZentryOS"
-date: 2026-06-04
+date: 2026-06-22
 status: "approved"
 progress: 100%
 deadline: 2026-08-30
@@ -368,9 +368,9 @@ Este documento consolidado actúa como la **base de datos oficial de ideas, prop
 
 ---
 title: "Operaciones: Backlog de Tareas Semanales"
-date: 2026-06-04
-status: "approved"
-progress: 10%
+date: 2026-06-22
+status: "in-progress"
+progress: 15%
 deadline: 2026-08-30
 tags: ["operaciones", "backlog", "tareas", "weekly-workflow"]
 ---
@@ -385,9 +385,9 @@ Este documento es el **flujo de trabajo activo semanal** de ZentryOS. Aquí cons
 
 | ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **TEC-01** | Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose | ZENTRY SPOT (1) | Alta | Pendiente | UX/Dev Lead |
-| **TEC-02** | Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano | ZENTRY SPOT (1) | Alta | Pendiente | Backend Dev |
-| **TEC-03** | Configurar activaciones automáticas del sistema (Luz Nocturna / Night Mode automático) | ZENTRY SPOT (1) | Media | Pendiente | Android Dev |
+| **TEC-01** | Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose | ZENTRY SPOT (1) | Alta | En curso | UX/Dev Lead |
+| **TEC-02** | Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano | ZENTRY SPOT (1) | Alta | En curso | Backend Dev |
+| **TEC-03** | Configurar activaciones automáticas del sistema (Luz Nocturna / Night Mode automático) | ZENTRY SPOT (1) | Media | En curso | Android Dev |
 | **TEC-04** | Diseñar API y arquitectura de "Inteligencia Matriz" en GCP para vincular TV/Tablet/Móvil | Ecosistema Creativo | Alta | Pendiente | Cloud Architect |
 | **TEC-05** | Diseñar formulario interactivo de Onboarding para edad y gustos del menor | ZENTRY SPOT (4) | Media | Pendiente | Frontend Dev |
 | **TEC-06** | Desarrollar motor de Reporte Pedagógico IA para padres (Psicólogo cognitivo en GCP) | Ecosistema Creativo | Alta | Pendiente | AI Engineer |
@@ -430,7 +430,7 @@ Este documento es el **flujo de trabajo activo semanal** de ZentryOS. Aquí cons
 
 ---
 title: "Operaciones: Bitácora de Actividades Diarias"
-date: 2026-06-04
+date: 2026-06-22
 status: "approved"
 progress: 100%
 deadline: 2026-08-30
@@ -444,6 +444,12 @@ Este documento contiene la **bitácora e historial de eventos diarios** del proy
 ---
 
 ## 🗒️ Historial de Bitácoras
+
+### 🗓️ 2026-06-22
+*   **Vertical 2: Arquitectura Técnica**
+    *   *Actividad*: Análisis profundo de `ZentryPolicyManager` y desactivación de la omisión temporal (UI-Only bypass) para iniciar pruebas de seguridad local del Kiosk Mode.
+*   **Vertical 4: Operaciones y Roadmap**
+    *   *Actividad*: Diagnóstico de la fase actual del proyecto (15%) y diseño de la estrategia de desarrollo capilar por capas para los próximos 8, 20 y 30 días.
 
 ### 🗓️ 2026-06-04
 *   **Vertical 1: Visión y Producto**
@@ -459,6 +465,8 @@ Este documento contiene la **bitácora e historial de eventos diarios** del proy
 
 ## ⚙️ Registro del Servidor de Sincronización (Logs)
 
+*   `[2026-06-22 17:45:00] [INFO] Iniciando escaneo diario en Google Drive G:/Mi unidad/aa. QUARZ/A. ZentryOS/`
+*   `[2026-06-22 17:46:12] [INFO] Sincronización local y compilación del SSOT ejecutada exitosamente.`
 *   `[2026-06-04 22:00:15] [INFO] Iniciando escaneo diario en Google Drive G:/Mi unidad/aa. QUARZ/A. ZentryOS/`
 *   `[2026-06-04 22:00:30] [INFO] Notas de Google Keep extraídas: 3 notas (1 azul, 1 verde, 1 roja).`
 *   `[2026-06-04 22:01:05] [INFO] Sincronizando con banco-de-ideas.md y bitacora-actividades.md.`

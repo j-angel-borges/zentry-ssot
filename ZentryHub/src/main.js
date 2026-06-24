@@ -1025,13 +1025,16 @@ function renderEspacioPersonal(container) {
     const detailsVal = data.details || '';
 
     slotsHtml += `
-      <div class="timeblock-slot${extraClass}" data-time="${slot.time}">
+      <div class="timeblock-slot${extraClass}" data-time="${slot.time}" draggable="true">
+        <div class="timeblock-drag-handle" title="Arrastrar para mover">≡</div>
         <div class="timeblock-time-label">${timeLabel}</div>
         <div class="timeblock-right">
           <div class="timeblock-content">
             <input type="checkbox" class="timeblock-checkbox" data-time="${slot.time}" ${isChecked}>
             <input type="text" class="timeblock-text" value="${data.text || ''}" placeholder="${slot.isHour ? 'Bloque disponible...' : ''}" data-time="${slot.time}" ${hasCalEvent ? 'readonly' : ''}>
             ${badgeHtml}
+            <button class="timeblock-action-btn timeblock-copy-btn" data-time="${slot.time}" title="Copiar bloque">📋</button>
+            <button class="timeblock-action-btn timeblock-delete-btn" data-time="${slot.time}" title="Limpiar bloque">🗑️</button>
             <button class="timeblock-expand-btn" data-time="${slot.time}" title="Añadir detalles">⌄</button>
           </div>
           <div class="timeblock-details" id="details-${slot.time.replace(':','-')}" style="display: none;">
@@ -1157,6 +1160,23 @@ function renderEspacioPersonal(container) {
         if (idx < allInputs.length - 1) allInputs[idx + 1].focus();
       }
     });
+
+    input.addEventListener('paste', async (e) => {
+      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      if (pastedText && pastedText.includes('"type":"zentry-timeblock"')) {
+        try {
+          const parsed = JSON.parse(pastedText);
+          if (parsed.type === 'zentry-timeblock') {
+            e.preventDefault();
+            const time = e.target.dataset.time;
+            const data = getTimeblockData(state.personalDate);
+            data[time] = parsed.data;
+            saveTimeblockData(state.personalDate, data);
+            renderEspacioPersonal(container);
+          }
+        } catch(err) {}
+      }
+    });
   });
 
   // Timeblock details textarea
@@ -1209,6 +1229,85 @@ function renderEspacioPersonal(container) {
         } else {
           detailsEl.style.display = 'none';
           e.target.style.transform = 'rotate(0deg)';
+        }
+      }
+    });
+  });
+
+  // Action: Delete Block
+  container.querySelectorAll('.timeblock-delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const time = e.target.closest('.timeblock-action-btn').dataset.time;
+      const data = getTimeblockData(state.personalDate);
+      if (data[time]) {
+        delete data[time];
+        saveTimeblockData(state.personalDate, data);
+        renderEspacioPersonal(container);
+      }
+    });
+  });
+
+  // Action: Copy Block
+  container.querySelectorAll('.timeblock-copy-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const time = e.target.closest('.timeblock-action-btn').dataset.time;
+      const data = getTimeblockData(state.personalDate);
+      if (data[time]) {
+        const payload = JSON.stringify({ type: 'zentry-timeblock', data: data[time] });
+        try {
+          await navigator.clipboard.writeText(payload);
+          const orig = btn.innerHTML;
+          btn.innerHTML = '✅';
+          setTimeout(() => btn.innerHTML = orig, 1000);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    });
+  });
+
+  // Drag and Drop for Reordering Timeblocks
+  let draggedTime = null;
+  container.querySelectorAll('.timeblock-slot').forEach(slot => {
+    slot.addEventListener('dragstart', (e) => {
+      draggedTime = slot.dataset.time;
+      e.dataTransfer.effectAllowed = 'move';
+      slot.style.opacity = '0.5';
+    });
+    slot.addEventListener('dragend', (e) => {
+      slot.style.opacity = '1';
+      draggedTime = null;
+      container.querySelectorAll('.timeblock-slot').forEach(s => {
+        s.style.borderBottom = '1px solid rgba(214,200,250,0.12)';
+        s.style.background = '';
+      });
+    });
+    slot.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      slot.style.background = 'rgba(214,200,250,0.2)';
+    });
+    slot.addEventListener('dragleave', (e) => {
+      slot.style.background = '';
+    });
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.style.background = '';
+      const targetTime = slot.dataset.time;
+      if (draggedTime && draggedTime !== targetTime) {
+        const data = getTimeblockData(state.personalDate);
+        if (data[draggedTime]) {
+          const sourceData = JSON.parse(JSON.stringify(data[draggedTime]));
+          const targetData = data[targetTime] ? JSON.parse(JSON.stringify(data[targetTime])) : null;
+          
+          data[targetTime] = sourceData;
+          if (targetData) {
+            data[draggedTime] = targetData;
+          } else {
+            delete data[draggedTime];
+          }
+          saveTimeblockData(state.personalDate, data);
+          renderEspacioPersonal(container);
         }
       }
     });

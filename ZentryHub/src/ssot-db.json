@@ -384,9 +384,9 @@
       "title": "Operaciones: Backlog de Tareas Semanales",
       "metadata": {
         "title": "Operaciones: Backlog de Tareas Semanales",
-        "date": "2026-06-04",
-        "status": "approved",
-        "progress": "10%",
+        "date": "2026-06-22",
+        "status": "in-progress",
+        "progress": "15%",
         "deadline": "2026-08-30",
         "tags": [
           "operaciones",
@@ -395,7 +395,7 @@
           "weekly-workflow"
         ]
       },
-      "body": "# 📋 Backlog de Tareas Semanales ZentryOS\r\n\r\nEste documento es el **flujo de trabajo activo semanal** de ZentryOS. Aquí consolidamos, rastreamos y actualizamos los pendientes y to-dos **inferidos** de las ideas que capturamos en Google Keep y en las bitácoras diarias.\r\n\r\n---\r\n\r\n## 🚀 Ingeniería y Arquitectura Técnica (`02-arquitectura-tecnica`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **TEC-01** | Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose | ZENTRY SPOT (1) | Alta | Pendiente | UX/Dev Lead |\r\n| **TEC-02** | Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano | ZENTRY SPOT (1) | Alta | Pendiente | Backend Dev |\r\n| **TEC-03** | Configurar activaciones automáticas del sistema (Luz Nocturna / Night Mode automático) | ZENTRY SPOT (1) | Media | Pendiente | Android Dev |\r\n| **TEC-04** | Diseñar API y arquitectura de \"Inteligencia Matriz\" en GCP para vincular TV/Tablet/Móvil | Ecosistema Creativo | Alta | Pendiente | Cloud Architect |\r\n| **TEC-05** | Diseñar formulario interactivo de Onboarding para edad y gustos del menor | ZENTRY SPOT (4) | Media | Pendiente | Frontend Dev |\r\n| **TEC-06** | Desarrollar motor de Reporte Pedagógico IA para padres (Psicólogo cognitivo en GCP) | Ecosistema Creativo | Alta | Pendiente | AI Engineer |\r\n\r\n---\r\n\r\n## 🎨 Producto y Contenido (`01-vision-y-producto`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **PROD-01** | Estudiar lineamientos pediátricos y pedagógicos para justificar límites circadianos | ZENTRY SPOT (1) | Media | Pendiente | Product Owner |\r\n| **PROD-02** | Definir especificaciones para la oferta de bajo ticket Zentry Mini (Bebés/Toddlers) | ZENTRY SPOT (3) | Baja | Pendiente | Product Manager |\r\n| **PROD-03** | Integración del control parental de YouTube (Restricted Mode / YouTube Kids) según edad | ZENTRY SPOT (4) | Alta | Pendiente | Integration Dev |\r\n| **PROD-04** | Crear guion de retos y dinámicas físicas guiadas por voz (ej. fútbol con Cristiano Ronaldo) | Ecosistema Creativo | Media | Pendiente | Content Designer |\r\n\r\n---\r\n\r\n## 💰 Ventas y Marketing (`03-marketing-y-ventas`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **MKT-01** | Redactar sección comparativa detallada: \"ZentryOS vs. Control Parental Tradicional\" | ZENTRY Spot (2) | Alta | Pendiente | Copywriter / Ventas |\r\n| **MKT-02** | Redactar guion del Precierre 1: \"Excel y el Costo de Personalización de Software\" | ZENTRY PRECIERRE (1) | Alta | Pendiente | Sales Manager |\r\n| **MKT-03** | Redactar guion del Precierre 2: \"Juego Matemático de Inversión de OS Móvil\" | ZENTRY PRECIERRE (2) | Alta | Pendiente | Sales Manager |\r\n| **MKT-04** | Desarrollar analogía de ventas \"Máquina del cuerpo humano y cerebro inteligente\" | ZENTRY PRECIERRE (2) | Media | Pendiente | Sales Trainer |\r\n| **MKT-05** | Diseñar calculadora de costo de OS familiar en Google Sheets para uso de los asesores | ZENTRY PRECIERRE (2) | Alta | Pendiente | Operations Lead |\r\n\r\n---\r\n\r\n## 🔄 Bitácora de Avance del Backlog\r\n\r\n*   **2026-06-04**: *Backlog Inicializado*. Se cargaron 14 tareas prioritarias inferidas de las últimas 7 notas de Google Keep."
+      "body": "# 📋 Backlog de Tareas Semanales ZentryOS\r\n\r\nEste documento es el **flujo de trabajo activo semanal** de ZentryOS. Aquí consolidamos, rastreamos y actualizamos los pendientes y to-dos **inferidos** de las ideas que capturamos en Google Keep y en las bitácoras diarias.\r\n\r\n---\r\n\r\n## 🚀 Ingeniería y Arquitectura Técnica (`02-arquitectura-tecnica`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **TEC-01** | Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose | ZENTRY SPOT (1) | Alta | En curso | UX/Dev Lead |\r\n| **TEC-02** | Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano | ZENTRY SPOT (1) | Alta | En curso | Backend Dev |\r\n| **TEC-03** | Configurar activaciones automáticas del sistema (Luz Nocturna / Night Mode automático) | ZENTRY SPOT (1) | Media | En curso | Android Dev |\r\n| **TEC-04** | Diseñar API y arquitectura de \"Inteligencia Matriz\" en GCP para vincular TV/Tablet/Móvil | Ecosistema Creativo | Alta | Pendiente | Cloud Architect |\r\n| **TEC-05** | Diseñar formulario interactivo de Onboarding para edad y gustos del menor | ZENTRY SPOT (4) | Media | Pendiente | Frontend Dev |\r\n| **TEC-06** | Desarrollar motor de Reporte Pedagógico IA para padres (Psicólogo cognitivo en GCP) | Ecosistema Creativo | Alta | Pendiente | AI Engineer |\r\n\r\n---\r\n\r\n## 🎨 Producto y Contenido (`01-vision-y-producto`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **PROD-01** | Estudiar lineamientos pediátricos y pedagógicos para justificar límites circadianos | ZENTRY SPOT (1) | Media | Pendiente | Product Owner |\r\n| **PROD-02** | Definir especificaciones para la oferta de bajo ticket Zentry Mini (Bebés/Toddlers) | ZENTRY SPOT (3) | Baja | Pendiente | Product Manager |\r\n| **PROD-03** | Integración del control parental de YouTube (Restricted Mode / YouTube Kids) según edad | ZENTRY SPOT (4) | Alta | Pendiente | Integration Dev |\r\n| **PROD-04** | Crear guion de retos y dinámicas físicas guiadas por voz (ej. fútbol con Cristiano Ronaldo) | Ecosistema Creativo | Media | Pendiente | Content Designer |\r\n\r\n---\r\n\r\n## 💰 Ventas y Marketing (`03-marketing-y-ventas`)\r\n\r\n| ID Tarea | Tarea Inferred | Origen (Keep) | Prioridad | Estado | Asignado A |\r\n| :--- | :--- | :---: | :---: | :---: | :---: |\r\n| **MKT-01** | Redactar sección comparativa detallada: \"ZentryOS vs. Control Parental Tradicional\" | ZENTRY Spot (2) | Alta | Pendiente | Copywriter / Ventas |\r\n| **MKT-02** | Redactar guion del Precierre 1: \"Excel y el Costo de Personalización de Software\" | ZENTRY PRECIERRE (1) | Alta | Pendiente | Sales Manager |\r\n| **MKT-03** | Redactar guion del Precierre 2: \"Juego Matemático de Inversión de OS Móvil\" | ZENTRY PRECIERRE (2) | Alta | Pendiente | Sales Manager |\r\n| **MKT-04** | Desarrollar analogía de ventas \"Máquina del cuerpo humano y cerebro inteligente\" | ZENTRY PRECIERRE (2) | Media | Pendiente | Sales Trainer |\r\n| **MKT-05** | Diseñar calculadora de costo de OS familiar en Google Sheets para uso de los asesores | ZENTRY PRECIERRE (2) | Alta | Pendiente | Operations Lead |\r\n\r\n---\r\n\r\n## 🔄 Bitácora de Avance del Backlog\r\n\r\n*   **2026-06-04**: *Backlog Inicializado*. Se cargaron 14 tareas prioritarias inferidas de las últimas 7 notas de Google Keep."
     },
     {
       "path": "04-operaciones-y-roadmap/banco-de-ideas.md",
@@ -404,7 +404,7 @@
       "title": "Operaciones: Banco de Ideas ZentryOS",
       "metadata": {
         "title": "Operaciones: Banco de Ideas ZentryOS",
-        "date": "2026-06-04",
+        "date": "2026-06-22",
         "status": "approved",
         "progress": "100%",
         "deadline": "2026-08-30",
@@ -423,7 +423,7 @@
       "title": "Operaciones: Bitácora de Actividades Diarias",
       "metadata": {
         "title": "Operaciones: Bitácora de Actividades Diarias",
-        "date": "2026-06-04",
+        "date": "2026-06-22",
         "status": "approved",
         "progress": "100%",
         "deadline": "2026-08-30",
@@ -433,7 +433,7 @@
           "registro-diario"
         ]
       },
-      "body": "# 📅 Bitácora de Actividades Diarias\r\n\r\nEste documento contiene la **bitácora e historial de eventos diarios** del proyecto ZentryOS. El Agente de Sincronización consolida en esta sección todas las notas de progreso enviadas por el equipo a través de las carpetas `registro-diario` de Google Drive.\r\n\r\n---\r\n\r\n## 🗒️ Historial de Bitácoras\r\n\r\n### 🗓️ 2026-06-04\r\n*   **Vertical 1: Visión y Producto**\r\n    *   *Actividad*: Análisis del soporte de segmentación etaria para adolescentes (12-20 años). Se refinaron los conceptos del Focus Dashboard para evitar el rechazo parental.\r\n*   **Vertical 2: Arquitectura Técnica**\r\n    *   *Actividad*: Corrección de sintaxis en los diagramas de flujo de Mermaid en la documentación técnica para evitar fallos de compilación en el render de GitHub.\r\n*   **Vertical 3: Marketing y Ventas**\r\n    *   *Actividad*: Creación del guion de Venta Directa paso a paso (DEMO) basado en la retórica del Doc Matriz (romper el hielo, autoridad, miedo). Separación del DemoBook como recursos y herramientas técnicas.\r\n*   **Vertical 5: Mesa de Trabajo (Branding)**\r\n    *   *Actividad*: Restauración del directorio Mesa de Trabajo y definición de la colorimetría digital principal (`#4A90E2`) y tipografía (`Outfit`/`Inter`) basada en el código de la Web App.\r\n\r\n---\r\n\r\n## ⚙️ Registro del Servidor de Sincronización (Logs)\r\n\r\n*   `[2026-06-04 22:00:15] [INFO] Iniciando escaneo diario en Google Drive G:/Mi unidad/aa. QUARZ/A. ZentryOS/`\r\n*   `[2026-06-04 22:00:30] [INFO] Notas de Google Keep extraídas: 3 notas (1 azul, 1 verde, 1 roja).`\r\n*   `[2026-06-04 22:01:05] [INFO] Sincronizando con banco-de-ideas.md y bitacora-actividades.md.`\r\n*   `[2026-06-04 22:01:22] [INFO] Push automático a GitHub completado con éxito (Commit be300aa).`"
+      "body": "# 📅 Bitácora de Actividades Diarias\r\n\r\nEste documento contiene la **bitácora e historial de eventos diarios** del proyecto ZentryOS. El Agente de Sincronización consolida en esta sección todas las notas de progreso enviadas por el equipo a través de las carpetas `registro-diario` de Google Drive.\r\n\r\n---\r\n\r\n## 🗒️ Historial de Bitácoras\r\n\r\n### 🗓️ 2026-06-22\r\n*   **Vertical 2: Arquitectura Técnica**\r\n    *   *Actividad*: Análisis profundo de `ZentryPolicyManager` y desactivación de la omisión temporal (UI-Only bypass) para iniciar pruebas de seguridad local del Kiosk Mode.\r\n*   **Vertical 4: Operaciones y Roadmap**\r\n    *   *Actividad*: Diagnóstico de la fase actual del proyecto (15%) y diseño de la estrategia de desarrollo capilar por capas para los próximos 8, 20 y 30 días.\r\n\r\n### 🗓️ 2026-06-04\r\n*   **Vertical 1: Visión y Producto**\r\n    *   *Actividad*: Análisis del soporte de segmentación etaria para adolescentes (12-20 años). Se refinaron los conceptos del Focus Dashboard para evitar el rechazo parental.\r\n*   **Vertical 2: Arquitectura Técnica**\r\n    *   *Actividad*: Corrección de sintaxis en los diagramas de flujo de Mermaid en la documentación técnica para evitar fallos de compilación en el render de GitHub.\r\n*   **Vertical 3: Marketing y Ventas**\r\n    *   *Actividad*: Creación del guion de Venta Directa paso a paso (DEMO) basado en la retórica del Doc Matriz (romper el hielo, autoridad, miedo). Separación del DemoBook como recursos y herramientas técnicas.\r\n*   **Vertical 5: Mesa de Trabajo (Branding)**\r\n    *   *Actividad*: Restauración del directorio Mesa de Trabajo y definición de la colorimetría digital principal (`#4A90E2`) y tipografía (`Outfit`/`Inter`) basada en el código de la Web App.\r\n\r\n---\r\n\r\n## ⚙️ Registro del Servidor de Sincronización (Logs)\r\n\r\n*   `[2026-06-22 17:45:00] [INFO] Iniciando escaneo diario en Google Drive G:/Mi unidad/aa. QUARZ/A. ZentryOS/`\r\n*   `[2026-06-22 17:46:12] [INFO] Sincronización local y compilación del SSOT ejecutada exitosamente.`\r\n*   `[2026-06-04 22:00:15] [INFO] Iniciando escaneo diario en Google Drive G:/Mi unidad/aa. QUARZ/A. ZentryOS/`\r\n*   `[2026-06-04 22:00:30] [INFO] Notas de Google Keep extraídas: 3 notas (1 azul, 1 verde, 1 roja).`\r\n*   `[2026-06-04 22:01:05] [INFO] Sincronizando con banco-de-ideas.md y bitacora-actividades.md.`\r\n*   `[2026-06-04 22:01:22] [INFO] Push automático a GitHub completado con éxito (Commit be300aa).`"
     },
     {
       "path": "04-operaciones-y-roadmap/progreso-y-metricas.md",
@@ -442,9 +442,9 @@
       "title": "Progreso y Métricas: KPIs del Proyecto",
       "metadata": {
         "title": "Progreso y Métricas: KPIs del Proyecto",
-        "date": "2026-06-04",
-        "status": "approved",
-        "progress": "25%",
+        "date": "2026-06-22",
+        "status": "in-progress",
+        "progress": "15%",
         "deadline": "2026-08-30",
         "tags": [
           "operaciones",
@@ -462,9 +462,9 @@
       "title": "Operaciones y Roadmap: Índice y Metodología",
       "metadata": {
         "title": "Operaciones y Roadmap: Índice y Metodología",
-        "date": "2026-06-04",
-        "status": "approved",
-        "progress": "20%",
+        "date": "2026-06-22",
+        "status": "in-progress",
+        "progress": "15%",
         "deadline": "2026-08-30",
         "tags": [
           "operaciones",
@@ -481,9 +481,9 @@
       "title": "Roadmap del Producto: Fases e Hitos",
       "metadata": {
         "title": "Roadmap del Producto: Fases e Hitos",
-        "date": "2026-06-04",
-        "status": "approved",
-        "progress": "30%",
+        "date": "2026-06-22",
+        "status": "in-progress",
+        "progress": "15%",
         "deadline": "2026-08-30",
         "tags": [
           "operaciones",
@@ -595,7 +595,7 @@
     {
       "id": "TEC-01",
       "description": "Diseñar barra de tiempo superpuesta (Timer UI Overlay) en Jetpack Compose",
-      "status": "Pendiente",
+      "status": "En curso",
       "priority": "Alta",
       "origin": "ZENTRY SPOT (1)",
       "assignedTo": "UX/Dev Lead"
@@ -603,7 +603,7 @@
     {
       "id": "TEC-02",
       "description": "Implementar lógica de límites de tiempo dinámicos basados en ciclo circadiano",
-      "status": "Pendiente",
+      "status": "En curso",
       "priority": "Alta",
       "origin": "ZENTRY SPOT (1)",
       "assignedTo": "Backend Dev"
@@ -611,7 +611,7 @@
     {
       "id": "TEC-03",
       "description": "Configurar activaciones automáticas del sistema (Luz Nocturna / Night Mode automático)",
-      "status": "Pendiente",
+      "status": "En curso",
       "priority": "Media",
       "origin": "ZENTRY SPOT (1)",
       "assignedTo": "Android Dev"
@@ -791,7 +791,7 @@
     }
   ],
   "metadata": {
-    "generatedAt": "2026-06-22T19:41:26.445Z",
+    "generatedAt": "2026-06-22T22:46:15.552Z",
     "projectName": "ZentryOS SSOT",
     "repoUrl": "https://github.com/j-angel-borges/zentry-ssot"
   }
