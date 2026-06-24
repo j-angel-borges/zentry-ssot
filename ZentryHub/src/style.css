@@ -2159,6 +2159,48 @@ body {
   background: rgba(214,200,250,0.2);
 }
 
+.timeblock-type-selector {
+  display: flex;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.timeblock-type-btn {
+  background: transparent;
+  border: 1px solid rgba(214,200,250,0.3);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.timeblock-type-btn:hover {
+  background: rgba(214,200,250,0.1);
+}
+
+.timeblock-type-btn.type-imp.active {
+  background: #4a5160;
+  color: white;
+  border-color: #4a5160;
+}
+
+.timeblock-type-btn.type-prod.active {
+  background: #d4af37;
+  color: white;
+  border-color: #d4af37;
+}
+
+.timeblock-type-btn.type-etc.active {
+  background: #f57c00;
+  color: white;
+  border-color: #f57c00;
+}
+
 .timeblock-slot.is-completed .timeblock-text {
   text-decoration: line-through;
   opacity: 0.5;

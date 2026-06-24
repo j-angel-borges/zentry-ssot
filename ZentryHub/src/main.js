@@ -1023,6 +1023,18 @@ function renderEspacioPersonal(container) {
     const badgeHtml = hasCalEvent ? '<span class="timeblock-cal-badge">📅 Calendar</span>' : '';
     const isChecked = data.completed ? 'checked' : '';
     const detailsVal = data.details || '';
+    const activeType = data.type || '';
+    const btnImpClass = activeType === 'importante' ? ' active' : '';
+    const btnProdClass = activeType === 'productivo' ? ' active' : '';
+    const btnEtcClass = activeType === 'etc' ? ' active' : '';
+
+    const typeSelectorHtml = `
+      <div class="timeblock-type-selector">
+        <button class="timeblock-type-btn type-imp${btnImpClass}" data-time="${slot.time}" data-type="importante" title="Importante">Imp</button>
+        <button class="timeblock-type-btn type-prod${btnProdClass}" data-time="${slot.time}" data-type="productivo" title="Productivo">Prod</button>
+        <button class="timeblock-type-btn type-etc${btnEtcClass}" data-time="${slot.time}" data-type="etc" title="Etcétera">Etc...</button>
+      </div>
+    `;
 
     slotsHtml += `
       <div class="timeblock-slot${extraClass}" data-time="${slot.time}" draggable="true">
@@ -1033,6 +1045,7 @@ function renderEspacioPersonal(container) {
             <input type="checkbox" class="timeblock-checkbox" data-time="${slot.time}" ${isChecked}>
             <input type="text" class="timeblock-text" value="${data.text || ''}" placeholder="${slot.isHour ? 'Bloque disponible...' : ''}" data-time="${slot.time}" ${hasCalEvent ? 'readonly' : ''}>
             ${badgeHtml}
+            ${typeSelectorHtml}
             <button class="timeblock-action-btn timeblock-copy-btn" data-time="${slot.time}" title="Copiar bloque">📋</button>
             <button class="timeblock-action-btn timeblock-delete-btn" data-time="${slot.time}" title="Limpiar bloque">🗑️</button>
             <button class="timeblock-expand-btn" data-time="${slot.time}" title="Añadir detalles">⌄</button>
@@ -1231,6 +1244,24 @@ function renderEspacioPersonal(container) {
           e.target.style.transform = 'rotate(0deg)';
         }
       }
+    });
+  });
+
+  // Type buttons
+  container.querySelectorAll('.timeblock-type-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const time = e.target.dataset.time;
+      const type = e.target.dataset.type;
+      const data = getTimeblockData(state.personalDate);
+      if (!data[time]) data[time] = {};
+      
+      if (data[time].type === type) {
+        delete data[time].type; // Deselect
+      } else {
+        data[time].type = type;
+      }
+      saveTimeblockData(state.personalDate, data);
+      renderEspacioPersonal(container);
     });
   });
 
@@ -1453,11 +1484,37 @@ function renderHistoryView(container) {
         const sortedTimes = Object.keys(h.data).sort();
         detailsHtml = sortedTimes.map(time => {
           const b = h.data[time];
+          
+          let typeLabel = '';
+          let typeColor = 'transparent';
+          if (b.type === 'importante') {
+            typeLabel = 'IMP';
+            typeColor = '#4a5160'; // Gris oscuro
+          } else if (b.type === 'productivo') {
+            typeLabel = 'PROD';
+            typeColor = '#d4af37'; // Dorado
+          } else if (b.type === 'etc') {
+            typeLabel = 'ETC...';
+            typeColor = '#f57c00'; // Naranja
+          }
+          
+          const boxHtml = b.completed 
+            ? `<div style="width: 36px; height: 36px; border-radius: 8px; border: 2px solid #2d8a6e; display: flex; align-items: center; justify-content: center; background: rgba(45, 138, 110, 0.1);"><span style="color:#2d8a6e; font-size: 20px; font-weight:bold;">✓</span></div>`
+            : `<div style="width: 36px; height: 36px; border-radius: 8px; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.5);"></div>`;
+
           return `
-            <div style="margin-bottom: 8px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 8px; border-left: 3px solid ${b.completed ? '#2d8a6e' : '#e6a822'};">
-              <div style="font-size: 13px; font-weight: 600; color: var(--text-main);">${time} ${b.completed ? '✅' : '⏳'}</div>
-              <div style="font-size: 14px; margin-top: 4px;">${b.text || 'Sin título'}</div>
-              ${b.details ? `<div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; white-space: pre-wrap;">${b.details}</div>` : ''}
+            <div style="display: flex; gap: 12px; margin-bottom: 8px; padding: 12px; background: white; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);">
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 4px;">
+                ${boxHtml}
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-size: 13px; font-weight: 600; color: var(--text-main);">${time}</div>
+                  ${typeLabel ? `<div style="font-size: 11px; font-weight: bold; color: ${typeColor}; border: 1.5px solid ${typeColor}; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px;">${typeLabel}</div>` : ''}
+                </div>
+                <div style="font-size: 14px; margin-top: 4px; color: #444;">${b.text || 'Sin título'}</div>
+                ${b.details ? `<div style="font-size: 13px; color: var(--text-muted); margin-top: 6px; white-space: pre-wrap; background: #f8f9fa; padding: 8px; border-radius: 6px; border: 1px solid #eee;">${b.details}</div>` : ''}
+              </div>
             </div>
           `;
         }).join('');
