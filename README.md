@@ -14,7 +14,12 @@ A través del uso de modelos avanzados de IA (como `gemini-2.5-flash-lite`), Zen
 
 ## 📂 Arquitectura de Documentación (SSOT)
 
-Este repositorio está estructurado en cuatro (4) verticales de información clave, diseñadas para servir como la única fuente de verdad para los equipos de ingeniería, diseño, marketing y operaciones:
+Para facilitar la integración de agentes de Inteligencia Artificial (IA) en el desarrollo de ZentryOS, el repositorio cuenta con un mapa de entrada estructurado:
+
+*   **[llms.txt](./llms.txt):** El mapa e índice de navegación optimizado para consumo de LLMs y agentes.
+*   **[CANON.md](./CANON.md):** El pilar de gobernanza técnica, que establece el estado real del proyecto, las decisiones inmutables y la lista anti-regresión.
+
+Adicionalmente, el repositorio está estructurado en cinco (5) verticales de información clave para los equipos humanos de ingeniería, diseño, marketing y operaciones:
 
 ### [1. Visión y Producto](./01-vision-y-producto/README.md)
 Analiza el problema de mercado, la adicción a las pantallas y el diseño de la solución bilateral (padres vs. hijos).

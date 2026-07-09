@@ -1,0 +1,15 @@
+# ZentryOS
+
+> Ecosistema Kiosco y Launcher educativo controlado por IA para dispositivos móviles de niños y adolescentes.
+
+Este archivo sirve como índice y mapa de navegación para agentes de Inteligencia Artificial (como Antigravity) que trabajan en el proyecto. 
+
+## Gobernanza y Reglas de Decisión
+- [CANON.md](CANON.md): El pilar de gobernanza del proyecto. Contiene el estado real honesto, las decisiones técnicas inmutables y la lista de control anti-regresión. **Cargar siempre antes de cualquier tarea de código.**
+
+## Módulos del Proyecto (Capítulos)
+- [01-vision-y-producto/README.md](01-vision-y-producto/README.md): Visión general del producto y segmentación etaria.
+- [02-arquitectura-tecnica/README.md](02-arquitectura-tecnica/README.md): Arquitectura de software, especificación del Kiosk Mode y SDKs.
+- [03-marketing-y-ventas/README.md](03-marketing-y-ventas/README.md): Guion de demostración y objeciones de venta.
+- [04-operaciones-y-roadmap/README.md](04-operaciones-y-roadmap/README.md): Backlog de tareas del sprint actual e historial de actividades.
+- [05-mesa-de-trabajo/README.md](05-mesa-de-trabajo/README.md): Tokens de diseño visual, colores y directrices de branding.
