@@ -62,17 +62,19 @@ Para el nicho ampliado de adolescentes (12 a 20 años) que utilizan iPhones, el 
 
 Se han integrado y validado en hardware real (Redmi 9, Android 10/11) los siguientes controles de sistema avanzados mediante `ZentryPolicyManager` y privilegios de **Device Owner**:
 
-### 1. Sincronización de Navegación y Notificaciones
-Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, y permitir al usuario configurar el sistema, se habilitaron los controles nativos de navegación y el panel de notificaciones en Kiosco:
+### 1. Sincronización de Navegación y Acceso a Ajustes
+Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, se habilitaron los controles nativos de navegación en Kiosco:
 - **Banderas de LockTask:**
   ```kotlin
   val flags = DevicePolicyManager.LOCK_TASK_FEATURE_HOME or
-              DevicePolicyManager.LOCK_TASK_FEATURE_OVERVIEW or
-              DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
-              DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS
+              DevicePolicyManager.LOCK_TASK_FEATURE_OVERVIEW
   dpm.setLockTaskFeatures(adminComponent, flags)
   ```
-- **Configuración rápida de Gestos:** Se añadió un atajo directo a `"android.settings.GESTURE_SETTINGS"` para que el usuario pueda cambiar a navegación gestual rápidamente.
+  La barra de estado superior y el panel de notificaciones rápidas permanecen bloqueados.
+- **Acceso a Ajustes vía Cajón de Aplicaciones:** Se autorizaron los paquetes de configuración de Android en el Kiosco y se habilitó su visualización en el cajón de aplicaciones del Launcher (`ZentryOSHomeScreen.kt`) filtrándolo como excepción dentro de las apps de sistema:
+  ```kotlin
+  if (!isSystem || pkgName == "com.urbandroid.lux" || pkgName == "org.schabi.newpipe" || pkgName == "com.android.settings")
+  ```
 - **Lista Blanca de Sistema:** Se autorizaron los paquetes `"com.android.settings"`, `"android"` (ResolverActivity) y `"com.android.systemui"` en `setLockTaskPackages` para evitar pantallas negras durante las solicitudes de diálogos del sistema.
 
 ### 2. Vinculación Persistente de ZentryOS (Launcher por Defecto)
