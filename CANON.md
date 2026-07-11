@@ -10,10 +10,10 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~5-8%.
-* **UI/UX:** ~10% (Esqueleto básico en Jetpack Compose con glassmorphism incipiente).
-* **Lógica Core:** ~10% (Navegación básica con stubs, sin lógica de negocio real).
-* **Device Owner:** ~5% (Implementado solo como prueba en Redmi 9; código comentado en el codebase principal).
+* **Completitud Comercial:** ~8-12%.
+* **UI/UX:** ~15% (Ajustes de Kiosco premium, integración de atajos nativos, diseño de barra inmersiva).
+* **Lógica Core:** ~25% (Políticas MDM totalmente integradas, asignación automática de Launcher, limpieza masiva de bloatware y gestos de sistema activos).
+* **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas).
 * **Backend:** ~5% (Firebase Vertex AI inicializado con fallos de configuración de APIs).
 * **Tests:** 0% (Ningún test unitario o de integración).
 
@@ -24,10 +24,13 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 ### A. Device Owner & Kiosk Mode
 * **Único Canal:** Se utiliza **Android Enterprise Device Owner** vía ADB (desarrollo) o aprovisionamiento QR en punto de venta como único mecanismo de control y bloqueo del dispositivo.
 * **AccessibilityService RECHAZADO:** No se utiliza para monitoreo o control parental para evitar infracciones de políticas de Google Play y bloqueos automáticos en Android 17+.
+* **Asignación del Launcher:** Se fuerza programáticamente a ZentryOS como el Launcher preferido por defecto del sistema mediante `addPersistentPreferredActivity` al arrancar el Kiosco, eliminando bucles y fallos de pantalla negra (`ResolverActivity`).
+* **Navegación del Kiosco:** Se habilitan los gestos de pantalla nativos de Android en Kiosco mediante `LOCK_TASK_FEATURE_HOME` y `LOCK_TASK_FEATURE_OVERVIEW` para permitir la fluidez dentro de aplicaciones como Google Play Store.
 
 ### B. Integración con Google Workspace
 * **No reinventar la rueda:** En lugar de crear clones de suites de oficina (Slides, Docs), ZentryOS **instala y controla las aplicaciones oficiales de Google Workspace** (Google Docs, Google Slides, Google Sheets) en el dispositivo.
-* **Control de visualización:** ZentryOS (como Device Owner) permite el uso de estas apps específicas de Google, mientras mantiene oculto todo el resto del sistema (Chrome, Gmail, Play Store).
+* **Control de visualización y Bloatware:** ZentryOS (como Device Owner) oculta/congela de forma masiva y dinámica todo el bloatware y juegos de MIUI mediante `setApplicationHidden(..., true)`, excepto las aplicaciones autorizadas (Google Play Store, Teclados del sistema, Configuración de Android y componentes core).
+* **Whitelisting del Sistema:** Se autorizan explícitamente los paquetes `"com.android.settings"`, `"android"` (ResolverActivity) y `"com.android.systemui"` para garantizar que los diálogos de sistema y la configuración de gestos funcionen sin crashes.
 
 ### C. Cerebro Agéntico Central
 * **Vertex AI + Firebase:** El tutor socrático interactúa con el niño y es capaz de ejecutar operaciones en el ecosistema (ej. crear un Google Docs con su tarea, agendar una alarma) utilizando **Function Calling** de Gemini.

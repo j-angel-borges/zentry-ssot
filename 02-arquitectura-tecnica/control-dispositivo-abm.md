@@ -55,3 +55,42 @@ Para el nicho ampliado de adolescentes (12 a 20 años) que utilizan iPhones, el 
     *   **Single App Mode**: Configura el iPhone para ejecutar exclusivamente la aplicación ZentryOS sin posibilidad de salir a la pantalla de inicio (equivalente a LockTaskMode).
     *   **Content Filtering**: Fuerza el tráfico DNS/HTTP del dispositivo a pasar por los túneles seguros de ZentryOS alojados en GCP.
     *   **Bloqueo de Restablecimiento**: Impide que el menor formatee el iPhone de fábrica desde los ajustes del sistema.
+
+---
+
+## 🛠️ Detalles de Implementación en Android (Julio 2026)
+
+Se han integrado y validado en hardware real (Redmi 9, Android 10/11) los siguientes controles de sistema avanzados mediante `ZentryPolicyManager` y privilegios de **Device Owner**:
+
+### 1. Sincronización de Navegación por Gestos
+Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, se habilitaron selectivamente los controles nativos de Android en Kiosco:
+- **Banderas de LockTask:**
+  ```kotlin
+  val flags = DevicePolicyManager.LOCK_TASK_FEATURE_HOME or
+              DevicePolicyManager.LOCK_TASK_FEATURE_OVERVIEW
+  dpm.setLockTaskFeatures(adminComponent, flags)
+  ```
+- **Configuración rápida de Gestos:** Se añadió un atajo directo a `"android.settings.GESTURE_SETTINGS"` para que el usuario pueda cambiar a navegación gestual rápidamente.
+- **Lista Blanca de Sistema:** Se autorizaron los paquetes `"com.android.settings"`, `"android"` (ResolverActivity) y `"com.android.systemui"` en `setLockTaskPackages` para evitar pantallas negras durante las solicitudes de diálogos del sistema.
+
+### 2. Vinculación Persistente de ZentryOS (Launcher por Defecto)
+Para evitar que el botón Home lance la pantalla de selección o cause excepciones de seguridad en LockTask, el gestor de políticas vincula a ZentryOS automáticamente en la inicialización:
+```kotlin
+val filter = IntentFilter(Intent.ACTION_MAIN).apply {
+    addCategory(Intent.CATEGORY_HOME)
+    addCategory(Intent.CATEGORY_DEFAULT)
+}
+val component = ComponentName(activity, MainActivity::class.java)
+dpm.addPersistentPreferredActivity(adminComponent, filter, component)
+```
+Al desactivar el Kiosco, la preferencia se limpia mediante `clearPackagePersistentPreferredActivities`.
+
+### 3. Congelación Masiva de Bloatware ("Matrix Mode")
+- **Ocultamiento de Sistema:** A través del comando `setApplicationHidden(adminComponent, packageName, true)`, ZentryOS oculta y suspende por completo toda aplicación de terceros, juegos MIUI preinstalados y utilidades no esenciales del operador.
+- **Protección de Componentes:** La limpieza excluye automáticamente:
+  - ZentryOS (`com.example.zentryvisuals`)
+  - Google Play Store (`com.android.vending`)
+  - Servicios Core de Google (`com.google.android.gms`, `com.google.android.gsf`)
+  - Interfaz de Sistema (`com.android.systemui`)
+  - Motores de Teclado Activos (para que el usuario siempre pueda ingresar el PIN parental).
+- **Restauración:** Se implementó una función reversa `restoreAllHiddenApps` para reactivar y visibilizar todas las apps previamente congeladas.
