@@ -828,7 +828,7 @@ const renderers = {
     container.innerHTML = `
       <div class="demobook-minimal-container">
         <div class="demobook-grid">
-          <a href="https://script.google.com/macros/s/AKfycbxcL87WoSNKkbFl7WyWi6UqvDHjsCRbz1gBdB9XCDLn7MWNUX1mPFEoHgxRVIE5RHPB/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+          <a href="https://zentry-bienestar.vercel.app" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
             <div class="demobook-card-minimal">
               <div class="demobook-card-content">
                 <span class="demobook-card-icon">📋</span>
@@ -837,7 +837,7 @@ const renderers = {
               <span class="demobook-card-arrow">➔</span>
             </div>
           </a>
-          <a href="https://script.google.com/macros/s/AKfycbxsTrvsAbg_CVLNpDZA5gWlrtR_VLc_nsRGgkFeFsAfF-R3-hH2l0LbJNCwU-PaK_M1jQ/exec" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
+          <a href="https://zentry-demobook.vercel.app" target="_blank" rel="noopener noreferrer" class="demobook-card-link">
             <div class="demobook-card-minimal">
               <div class="demobook-card-content">
                 <span class="demobook-card-icon">📊</span>
