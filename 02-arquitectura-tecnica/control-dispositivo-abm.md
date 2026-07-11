@@ -62,12 +62,14 @@ Para el nicho ampliado de adolescentes (12 a 20 años) que utilizan iPhones, el 
 
 Se han integrado y validado en hardware real (Redmi 9, Android 10/11) los siguientes controles de sistema avanzados mediante `ZentryPolicyManager` y privilegios de **Device Owner**:
 
-### 1. Sincronización de Navegación por Gestos
-Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, se habilitaron selectivamente los controles nativos de Android en Kiosco:
+### 1. Sincronización de Navegación y Notificaciones
+Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, y permitir al usuario configurar el sistema, se habilitaron los controles nativos de navegación y el panel de notificaciones en Kiosco:
 - **Banderas de LockTask:**
   ```kotlin
   val flags = DevicePolicyManager.LOCK_TASK_FEATURE_HOME or
-              DevicePolicyManager.LOCK_TASK_FEATURE_OVERVIEW
+              DevicePolicyManager.LOCK_TASK_FEATURE_OVERVIEW or
+              DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
+              DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS
   dpm.setLockTaskFeatures(adminComponent, flags)
   ```
 - **Configuración rápida de Gestos:** Se añadió un atajo directo a `"android.settings.GESTURE_SETTINGS"` para que el usuario pueda cambiar a navegación gestual rápidamente.
@@ -92,5 +94,6 @@ Al desactivar el Kiosco, la preferencia se limpia mediante `clearPackagePersiste
   - Google Play Store (`com.android.vending`)
   - Servicios Core de Google (`com.google.android.gms`, `com.google.android.gsf`)
   - Interfaz de Sistema (`com.android.systemui`)
+  - Ajustes de Android (`com.android.settings`, `com.android.settings.intelligence`, `com.xiaomi.misettings`) para no bloquear el acceso al menú de configuración física.
   - Motores de Teclado Activos (para que el usuario siempre pueda ingresar el PIN parental).
 - **Restauración:** Se implementó una función reversa `restoreAllHiddenApps` para reactivar y visibilizar todas las apps previamente congeladas.

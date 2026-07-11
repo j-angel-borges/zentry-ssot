@@ -25,11 +25,11 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 * **Único Canal:** Se utiliza **Android Enterprise Device Owner** vía ADB (desarrollo) o aprovisionamiento QR en punto de venta como único mecanismo de control y bloqueo del dispositivo.
 * **AccessibilityService RECHAZADO:** No se utiliza para monitoreo o control parental para evitar infracciones de políticas de Google Play y bloqueos automáticos en Android 17+.
 * **Asignación del Launcher:** Se fuerza programáticamente a ZentryOS como el Launcher preferido por defecto del sistema mediante `addPersistentPreferredActivity` al arrancar el Kiosco, eliminando bucles y fallos de pantalla negra (`ResolverActivity`).
-* **Navegación del Kiosco:** Se habilitan los gestos de pantalla nativos de Android en Kiosco mediante `LOCK_TASK_FEATURE_HOME` y `LOCK_TASK_FEATURE_OVERVIEW` para permitir la fluidez dentro de aplicaciones como Google Play Store.
+* **Navegación y Notificaciones del Kiosco:** Se habilitan los gestos de pantalla, la barra de estado y la barra de notificaciones/ajustes rápidos de Android en Kiosco mediante `LOCK_TASK_FEATURE_HOME`, `LOCK_TASK_FEATURE_OVERVIEW`, `LOCK_TASK_FEATURE_SYSTEM_INFO` y `LOCK_TASK_FEATURE_NOTIFICATIONS`. Esto permite al usuario deslizar hacia abajo para ver las notificaciones e ingresar a los Ajustes del dispositivo.
 
 ### B. Integración con Google Workspace
 * **No reinventar la rueda:** En lugar de crear clones de suites de oficina (Slides, Docs), ZentryOS **instala y controla las aplicaciones oficiales de Google Workspace** (Google Docs, Google Slides, Google Sheets) en el dispositivo.
-* **Control de visualización y Bloatware:** ZentryOS (como Device Owner) oculta/congela de forma masiva y dinámica todo el bloatware y juegos de MIUI mediante `setApplicationHidden(..., true)`, excepto las aplicaciones autorizadas (Google Play Store, Teclados del sistema, Configuración de Android y componentes core).
+* **Control de visualización y Bloatware:** ZentryOS (como Device Owner) oculta/congela de forma masiva y dinámica todo el bloatware y juegos de MIUI mediante `setApplicationHidden(..., true)`, excluyendo y protegiendo explícitamente las aplicaciones autorizadas (Google Play Store, Ajustes de Android `com.android.settings`, `com.android.settings.intelligence`, `com.xiaomi.misettings`, teclados activos y componentes core).
 * **Whitelisting del Sistema:** Se autorizan explícitamente los paquetes `"com.android.settings"`, `"android"` (ResolverActivity) y `"com.android.systemui"` para garantizar que los diálogos de sistema y la configuración de gestos funcionen sin crashes.
 
 ### C. Cerebro Agéntico Central
