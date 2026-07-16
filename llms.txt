@@ -1,15 +1,26 @@
 # ZentryOS
 
-> Ecosistema Kiosco y Launcher educativo controlado por IA para dispositivos móviles de niños y adolescentes.
+> Ecosistema Kiosco y Launcher educativo controlado por IA para dispositivos móviles de niños y adolescentes (2-20 años). Propósito: Gobernanza Activa de la Atención — redirigir la dopamina rápida hacia productividad, estudio e interacción física mediante un tutor de IA integrado.
 
-Este archivo sirve como índice y mapa de navegación para agentes de Inteligencia Artificial (como Antigravity) que trabajan en el proyecto. 
+Este archivo es el índice y mapa de navegación para agentes de IA (Antigravity, AGY CLI, Claude, Gemini, Codex, etc.) que trabajan en el proyecto. **Antes de cualquier tarea, carga `CANON.md`: es la verdad del proyecto.**
 
-## Gobernanza y Reglas de Decisión
-- [CANON.md](CANON.md): El pilar de gobernanza del proyecto. Contiene el estado real honesto, las decisiones técnicas inmutables y la lista de control anti-regresión. **Cargar siempre antes de cualquier tarea de código.**
+## Gobernanza y entrada (cargar primero)
+- [CANON.md](CANON.md): El pilar de gobernanza. Estado real honesto, decisiones técnicas inmutables y checklist anti-regresión. **Cargar SIEMPRE antes de cualquier tarea de código.**
+- [AGENTS.md](AGENTS.md): Punto de entrada para Antigravity 2.0 / AGY CLI. Rol, mapa del codebase y ciclo de trabajo.
+- [CLAUDE.md](CLAUDE.md): Punto de entrada para Claude (terminal, desktop, Code). Mismo contrato que AGENTS.md.
+- [CHANGELOG-SSOT.md](CHANGELOG-SSOT.md): Registro append-only de actualizaciones del SSOT (qué cambió, cuándo, en qué vertical).
 
 ## Módulos del Proyecto (Capítulos)
-- [01-vision-y-producto/README.md](01-vision-y-producto/README.md): Visión general del producto y segmentación etaria.
-- [02-arquitectura-tecnica/README.md](02-arquitectura-tecnica/README.md): Arquitectura de software, especificación del Kiosk Mode y SDKs.
-- [03-marketing-y-ventas/README.md](03-marketing-y-ventas/README.md): Guion de demostración y objeciones de venta.
-- [04-operaciones-y-roadmap/README.md](04-operaciones-y-roadmap/README.md): Backlog de tareas del sprint actual e historial de actividades.
-- [05-mesa-de-trabajo/README.md](05-mesa-de-trabajo/README.md): Tokens de diseño visual, colores y directrices de branding.
+- [01-vision-y-producto/README.md](01-vision-y-producto/README.md): Visión, problema algorítmico, ludopatía, solución bilateral, segmentación etaria.
+- [02-arquitectura-tecnica/README.md](02-arquitectura-tecnica/README.md): Kiosk/Device Owner, interfaz Liquid Glass, modelo de datos Firestore, seguridad/privacidad, calidad, análisis de brechas.
+- [03-marketing-y-ventas/README.md](03-marketing-y-ventas/README.md): Guion de demostración, DemoBook, manejo de objeciones, factor WOW.
+- [04-operaciones-y-roadmap/README.md](04-operaciones-y-roadmap/README.md): Roadmap, plan maestro por capas, backlog, métricas, bitácora.
+- [05-mesa-de-trabajo/README.md](05-mesa-de-trabajo/README.md): Tokens de diseño, colorimetría, tipografía, branding.
+- [06-arquitectura-agentica/README.md](06-arquitectura-agentica/README.md): Gobierno del ejecutor de código (guardrails, skills, MCP, loop engineering, roadmap SDD).
+- [07-plataforma-microapps/README.md](07-plataforma-microapps/README.md): Paradigma híbrido web-first (cáscara nativa + microapps PWA, JS Bridge, hosting).
+
+## Cómo actualizar el SSOT
+- Skill [actualizar-ssot](.agents/skills/actualizar-ssot/SKILL.md): al cerrar una sesión de trabajo, edita quirúrgicamente el campo pertinente de CANON + el satélite afectado, añade una línea al CHANGELOG, hace commit/push a GitHub y re-espeja el documento vivo de Drive (`SSOT-VIVO.md`). Regla: **solo CANON declara el estado; los demás enlazan.**
+
+## Optional (contexto profundo, cargar solo si la tarea lo pide)
+- [ssot-actual.md](ssot-actual.md): Monolito agregado de la era pre-Karpathy (histórico; no es la fuente de verdad — usar CANON + la vertical relevante).

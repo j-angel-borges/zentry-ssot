@@ -2,6 +2,8 @@
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
+> **Última consolidación:** 2026-07-14 (incorpora la sesión de ingeniería Liquid Glass + Navegación de Sistema, 12-14 jul; ver `04-operaciones-y-roadmap/bitacora-actividades.md` y el `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante la skill `actualizar-ssot` (ver `.agents/skills/`), nunca a mano de forma dispersa.
+
 ---
 
 ## 1. Misión del Proyecto
@@ -10,12 +12,14 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~8-12%.
-* **UI/UX:** ~15% (Ajustes de Kiosco premium, integración de atajos nativos, diseño de barra inmersiva).
-* **Lógica Core:** ~25% (Políticas MDM totalmente integradas, asignación automática de Launcher, limpieza masiva de bloatware y gestos de sistema activos).
-* **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas).
-* **Backend:** ~5% (Firebase Vertex AI inicializado con fallos de configuración de APIs).
+* **Completitud Comercial:** ~12-15%.
+* **UI/UX:** ~40% (Sistema Liquid Glass real vía Haze — `zentryGlass`/`zentryVeil`, lienzo vivo mesh-gradient, refracción AGSL —; física de movimiento calibrada a iOS con los tres regímenes del oscilador; barra de navegación de sistema global; lienzo único coherente. Todo verificado en Redmi 9 físico, 12-14 jul).
+* **Lógica Core:** ~35% (Políticas MDM integradas, asignación automática de Launcher, limpieza masiva de bloatware, gestos de sistema, Escudo de Notificaciones, Terminal agéntica local Modo Escudo/Monje, supresión de la barra de MIUI).
+* **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas; `WRITE_SECURE_SETTINGS` aprovisionado; supresión de barra nativa vía `policy_control` immersive).
+* **Backend:** ~5% (Firebase AI Logic / Vertex AI conectado con `gemini-2.5-flash`; calculadora-chat con memoria y telemetría en Firestore aún PLANIFICADAS, no implementadas).
 * **Tests:** 0% (Ningún test unitario o de integración).
+
+> Nota de honestidad: "demo-readiness" (alta) ≠ "completitud de producto comercial" (~12-15%). El salto visual/navegación es real y verificado en dispositivo; el backend/telemetría y los tests siguen siendo la brecha principal.
 
 ---
 
@@ -23,7 +27,7 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 
 ### A. Device Owner & Kiosk Mode
 * **Único Canal:** Se utiliza **Android Enterprise Device Owner** vía ADB (desarrollo) o aprovisionamiento QR en punto de venta como único mecanismo de control y bloqueo del dispositivo.
-* **AccessibilityService RECHAZADO:** No se utiliza para monitoreo o control parental para evitar infracciones de políticas de Google Play y bloqueos automáticos en Android 17+.
+* **AccessibilityService — uso acotado (reconciliado 2026-07-14):** RECHAZADO como mecanismo de **monitoreo o control parental** (evita infracciones de políticas de Google Play y bloqueos de Android 17+ Advanced Protection). SÍ se utiliza, en cambio, como recurso de **interfaz de sistema**: la barra de navegación propia de ZentryOS (`ZentryNavAccessibilityService` — dibuja la barra glass, ejecuta `performGlobalAction(BACK/HOME/RECENTS)` sobre apps de terceros y hospeda el watchdog que reafirma la supresión de MIUI). La distinción es la clave de compliance: no observamos ni restringimos comportamiento del menor por accesibilidad; solo proveemos navegación.
 * **Asignación del Launcher:** Se fuerza programáticamente a ZentryOS como el Launcher preferido por defecto del sistema mediante `addPersistentPreferredActivity` al arrancar el Kiosco, eliminando bucles y fallos de pantalla negra (`ResolverActivity`).
 * **Navegación del Kiosco:** Se habilitan los gestos de pantalla nativos de Android en Kiosco mediante `LOCK_TASK_FEATURE_HOME` y `LOCK_TASK_FEATURE_OVERVIEW` para permitir la fluidez dentro de aplicaciones como Google Play Store. La barra de estado superior y el panel de notificaciones permanecen restringidos para la seguridad del modo de bloqueo. El acceso a los Ajustes se canaliza directamente a través del cajón de aplicaciones del Launcher.
 
@@ -34,6 +38,7 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 
 ### C. Cerebro Agéntico Central
 * **Vertex AI + Firebase:** El tutor socrático interactúa con el niño y es capaz de ejecutar operaciones en el ecosistema (ej. crear un Google Docs con su tarea, agendar una alarma) utilizando **Function Calling** de Gemini.
+* **Modelo como configuración, nunca literal:** el identificador del modelo se lee de `BuildConfig.ZENTRY_MODEL_ID` (hoy `gemini-2.5-flash`, vía Firebase AI Logic / Vertex AI). PROHIBIDO hardcodear un id de modelo en el código de las microapps o citar una versión como decisión permanente en la documentación.
 * **No PDF generation on-device:** La generación de reportes o resúmenes primero crea un documento en Google Docs y luego lo exporta, en lugar de intentar renderizar PDFs complejos por código local.
 
 ### D. Hardware de Desarrollo
@@ -53,9 +58,11 @@ Antes de finalizar cualquier tarea de desarrollo, se debe comprobar manualmente 
 7. Reloj / Alarmas (Guardado en SQLite local)
 8. Calendario Escolar (Gestión básica de eventos)
 9. Explorador de archivos (Acceso seguro a fotos)
-10. Z-Slides (Render de diapositivas en JSON)
+10. Google Workspace (Slides/Docs/Sheets instalados y lanzables desde el launcher — se controlan las apps oficiales, no se clonan; ver §3B)
 11. Study Assistant (Chat socrático MINEDU)
-12. Navegación fluida con `AnimatedContent`
+12. Navegación fluida con `AnimatedContent` + barra de navegación de sistema global
+
+> **Nota (reconciliado 2026-07-14):** Z-Slides queda ELIMINADO del producto (antes ítem 10). Se usan Google Slides/NotebookLM reales, mostrados desde el launcher. Cualquier código, contrato JSON (`z_slides`) o navegación a `ZentrySlidesScreen` se retira.
 
 ---
 
