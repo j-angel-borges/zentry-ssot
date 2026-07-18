@@ -58,7 +58,7 @@ Cada ola web: la microapp propia nace **junto** a la nativa; se conmuta el tile 
 
 *   **Conmutación por tile**: el launcher decide, por microapp propia, si el tile abre la versión web (`ZentryWebHost`) o la nativa (fallback). Un flag por microapp en config remota gobierna la conmutación — reversible al instante.
 *   **Paridad antes de conmutar**: una microapp web reemplaza a la nativa solo cuando pasa sus criterios Given/When/Then de paridad.
-*   **Anti-regresión**: el checklist de 12 features ([CANON](../CANON.md) §4; [02/calidad-y-despliegue.md](../02-arquitectura-tecnica/calidad-y-despliegue.md)) sigue vigente. Su ítem 10 es **"Google Workspace instalado y lanzable"** (no "Z-Slides" — eliminado, [CANON](../CANON.md) §4). Una microapp migrada debe cumplir su casilla igual que la nativa; si la web regresiona, se conmuta de vuelta a nativo sin drama.
+*   **Anti-regresión**: el checklist de 12 features ([CANON](../CANON.md) §4; [02/calidad-y-despliegue.md](../02-arquitectura-tecnica/calidad-y-despliegue.md)) sigue vigente. Su ítem 10 es **"Google Workspace instalado y lanzable"**. Una microapp migrada debe cumplir su casilla igual que la nativa; si la web regresiona, se conmuta de vuelta a nativo sin drama.
 
 ---
 
@@ -66,7 +66,7 @@ Cada ola web: la microapp propia nace **junto** a la nativa; se conmuta el tile 
 
 Plantilla que cada microapp propia migrada debe satisfacer para conmutar:
 
-*   **Funcional** — *Given* la microapp web en `ZentryWebHost` / *When* el usuario ejecuta el flujo principal / *Then* produce el mismo resultado que la nativa, con su contrato JSON validado (`calc_chat`, `study_assistant`, `chat` — nunca `z_slides`).
+*   **Funcional** — *Given* la microapp web en `ZentryWebHost` / *When* el usuario ejecuta el flujo principal / *Then* produce el mismo resultado que la nativa, con su contrato JSON validado (`calc_chat`, `study_assistant`, `chat`).
 *   **Offline** — *Given* el dispositivo sin red / *When* se abre la microapp / *Then* arranca desde caché del Service Worker y degrada la IA con gracia (`onConnectivity`), fiel al fail-safe canónico.
 *   **Rendimiento** — *Given* el Redmi 9 (Helio G80, 3-4 GB) / *When* se abre y opera la microapp / *Then* el primer frame útil llega desde caché y el jank se mantiene dentro del protocolo ([02/calidad-y-despliegue.md](../02-arquitectura-tecnica/calidad-y-despliegue.md); cifras solo en [04](../04-operaciones-y-roadmap/progreso-y-metricas.md)).
 *   **Seguridad** — *Given* la microapp cargada / *When* intenta una acción fuera de la allowlist del bridge (o que roce la config Device Owner ya activa) / *Then* es rechazada y registrada (extensión EVA-07). La config DO se protege por ausencia de superficie, no por permiso.
@@ -82,7 +82,7 @@ Plantilla que cada microapp propia migrada debe satisfacer para conmutar:
 | Patrón de la microapp propia que reemplaza a la nativa | [plantilla-microapp-pwa.md](./plantilla-microapp-pwa.md) |
 | Conmutación por config remota y hosting | [motor-hosting-y-despliegue.md](./motor-hosting-y-despliegue.md) |
 | Superficie del bridge y protección de la config DO | [contrato-js-bridge.md](./contrato-js-bridge.md) |
-| Checklist anti-regresión (12 features, sin Z-Slides) y EVA | [02/calidad-y-despliegue.md](../02-arquitectura-tecnica/calidad-y-despliegue.md) · [CANON §4](../CANON.md) |
+| Checklist anti-regresión de 12 features y EVA | [02/calidad-y-despliegue.md](../02-arquitectura-tecnica/calidad-y-despliegue.md) · [CANON §4](../CANON.md) |
 | Estado real del prototipo y Device Owner ~95% | [02/analisis-de-brechas.md](../02-arquitectura-tecnica/analisis-de-brechas.md) · [CANON §2](../CANON.md) |
 | Gobierno de Workspace (instalar/controlar, no clonar) | [02/control-dispositivo-abm.md](../02-arquitectura-tecnica/control-dispositivo-abm.md) · [CANON §3.B](../CANON.md) |
 | Reubicación de la capa de contenido propio en web | [04/plan-maestro-por-capas.md](../04-operaciones-y-roadmap/plan-maestro-por-capas.md) |

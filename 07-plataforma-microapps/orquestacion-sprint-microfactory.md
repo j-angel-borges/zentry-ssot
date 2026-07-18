@@ -98,7 +98,7 @@ FASE 4 — AUTO-EVALUACIÓN ADVERSARIAL (sub-agente crítico). Por cada pieza, i
   crítica, se corrige.
 
 FASE 5 — AUTO-CORRECCIÓN + TESTS. Unit del bridge y del parser JSON; smoke de la microapp;
-checklist anti-regresión de 12 features (ítem 10 = Google Workspace instalado, NO Z-Slides).
+checklist anti-regresión de 12 features (ítem 10 = Google Workspace instalado).
 Si 10 builds fallan consecutivos o 3 tests fallan sobre el mismo criterio → HARD STOP y
 reporte estructurado (NO "una vez más").
 

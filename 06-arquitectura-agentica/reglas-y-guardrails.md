@@ -68,7 +68,6 @@ Fuente única: `CANON §4`. Antes de dar por terminada cualquier tarea, verifica
 11. Study Assistant (chat socrático MINEDU)
 12. Navegación fluida con `AnimatedContent` + barra de navegación de sistema global
 
-> Z-Slides queda ELIMINADO del producto. Se usan Google Slides/NotebookLM reales; cualquier resto de `ZentrySlidesScreen`, contrato JSON `z_slides` o navegación asociada se retira, no se verifica.
 
 Si una tarea rompe cualquiera de las 12: revertir el cambio y reportar. La regresión nunca se "arregla después".
 

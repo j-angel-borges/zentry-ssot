@@ -76,7 +76,6 @@ Toda build que el ejecutor entregue debe pasar este checklist completo — es la
 | 11 | Study Assistant | `ZentryStudyAssistantScreen` + ViewModel | Flujo socrático por grado MINEDU completo |
 | 12 | Navegación fluida + barra de sistema global | `MainActivity` (AnimatedContent) + `ZentryNavAccessibilityService` | Transiciones sin jank visible; barra de navegación glass global operativa (BACK/HOME/RECENTS) |
 
-> **Z-Slides eliminado (canon, reconciliado 2026-07-14)**: el antiguo ítem "Z-Slides / `ZentrySlidesScreen`" queda **retirado del checklist y del producto**. Se usan Google Slides/NotebookLM reales, presentados desde el launcher. Cualquier código, contrato `z_slides` o navegación a `ZentrySlidesScreen` se elimina.
 
 ---
 

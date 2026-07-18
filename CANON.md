@@ -62,8 +62,6 @@ Antes de finalizar cualquier tarea de desarrollo, se debe comprobar manualmente 
 11. Study Assistant (Chat socrático MINEDU)
 12. Navegación fluida con `AnimatedContent` + barra de navegación de sistema global
 
-> **Nota (reconciliado 2026-07-14):** Z-Slides queda ELIMINADO del producto (antes ítem 10). Se usan Google Slides/NotebookLM reales, mostrados desde el launcher. Cualquier código, contrato JSON (`z_slides`) o navegación a `ZentrySlidesScreen` se retira.
-
 ---
 
 ## 5. Reglas Duras de Desarrollo

@@ -28,7 +28,6 @@ ZentryOS no compite con apps de control parental: compite con la sensación de u
 Principio arquitectónico que precede a cualquier microapp de contenido: **el shell híbrido y las microapps INSTALAN, EMBEBEN y CONTROLAN las apps oficiales de Google Workspace** (Documentos, Presentaciones, Hojas de cálculo) y **NotebookLM** — no reimplementan las suites. La Device Owner-allowlist decide qué se ve; la interfaz Zentry las viste y orquesta.
 
 *   **Microapps propias solo donde aportan valor único**: tutor IA, calculadora-chat, Lente Zentry (phygital), WorldGenerator, NeuroArt, Redactor con Writing Tools. Todo lo que Google ya hace mejor se gobierna, no se copia.
-*   **Consecuencia directa**: no existe una "Z-Slides" ni un verbo `crear_slide`/`z_slides`. Crear una presentación significa abrir/controlar **Google Slides real** (o generarla vía NotebookLM), embebida y confinada dentro del shell.
 
 ---
 
