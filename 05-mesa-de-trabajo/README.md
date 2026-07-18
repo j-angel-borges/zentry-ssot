@@ -1,6 +1,6 @@
 ---
 title: "Mesa de Trabajo: Identidad de Marca y Branding"
-date: 2026-06-04
+date: 2026-07-14
 status: "approved"
 progress: 100%
 deadline: 2026-08-30

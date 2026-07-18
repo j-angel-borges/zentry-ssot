@@ -1,6 +1,6 @@
 ---
 title: "Marketing y Ventas: Índice y Estrategia Comercial"
-date: 2026-06-04
+date: 2026-07-14
 status: "approved"
 progress: 30%
 deadline: 2026-08-30

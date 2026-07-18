@@ -1,8 +1,8 @@
 ---
 title: "Control del Dispositivo: Device Owner y Apple Business Manager (ABM)"
-date: 2026-06-04
+date: 2026-07-14
 status: "approved"
-progress: 25%
+progress: 95%
 deadline: 2026-08-30
 tags: ["arquitectura", "seguridad", "mdm", "android-enterprise"]
 ---
@@ -60,7 +60,7 @@ Para el nicho ampliado de adolescentes (12 a 20 años) que utilizan iPhones, el 
 
 ## 🛠️ Detalles de Implementación en Android (Julio 2026)
 
-Se han integrado y validado en hardware real (Redmi 9, Android 10/11) los siguientes controles de sistema avanzados mediante `ZentryPolicyManager` y privilegios de **Device Owner**:
+Se han integrado y validado en hardware real (Redmi 9, Android 10/11) los siguientes controles de sistema avanzados mediante `ZentryPolicyManager` y privilegios de **Device Owner (Estado: 95% funcional)**:
 
 ### 1. Sincronización de Navegación y Acceso a Ajustes
 Para permitir el uso de aplicaciones permitidas (como la Google Play Store) sin comprometer la seguridad del launcher, se habilitaron los controles nativos de navegación en Kiosco:

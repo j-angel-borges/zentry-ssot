@@ -1,6 +1,6 @@
 ---
 title: "Visión y Producto: Índice y Estrategia"
-date: 2026-06-04
+date: 2026-07-14
 status: "approved"
 progress: 40%
 deadline: 2026-08-30

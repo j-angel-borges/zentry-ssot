@@ -1,6 +1,6 @@
 ---
 title: "Operaciones y Roadmap: Índice y Metodología"
-date: 2026-06-04
+date: 2026-07-14
 status: "approved"
 progress: 20%
 deadline: 2026-08-30
