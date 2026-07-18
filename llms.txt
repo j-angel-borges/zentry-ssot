@@ -19,8 +19,6 @@ Este archivo es el índice y mapa de navegación para agentes de IA (Antigravity
 - [06-arquitectura-agentica/README.md](06-arquitectura-agentica/README.md): Gobierno del ejecutor de código (guardrails, skills, MCP, loop engineering, roadmap SDD).
 - [07-plataforma-microapps/README.md](07-plataforma-microapps/README.md): Paradigma híbrido web-first (cáscara nativa + microapps PWA, JS Bridge, hosting).
 
-## Cómo actualizar el SSOT
-- Skill [actualizar-ssot](.agents/skills/actualizar-ssot/SKILL.md): al cerrar una sesión de trabajo, edita quirúrgicamente el campo pertinente de CANON + el satélite afectado, añade una línea al CHANGELOG, hace commit/push a GitHub y re-espeja el documento vivo de Drive (`SSOT-VIVO.md`). Regla: **solo CANON declara el estado; los demás enlazan.**
-
-## Optional (contexto profundo, cargar solo si la tarea lo pide)
-- [ssot-actual.md](ssot-actual.md): Monolito agregado de la era pre-Karpathy (histórico; no es la fuente de verdad — usar CANON + la vertical relevante).
+## Cómo actualizar el SSOT (Flujo de 2 Etapas)
+- **Fase 1 (Obrero):** Skill [agent-execute-wt](.agents/skills/agent-execute-wt/SKILL.md). Al cerrar tu sesión de código/trabajo, vuelca tu memoria en un archivo `Walkthrough` limpio. ¡PROHIBIDO editar el SSOT directamente!
+- **Fase 2 (Auditor):** Skill [agent-auditor-ss](.agents/skills/agent-auditor-ss/SKILL.md). En una sesión nueva y limpia, el auditor lee el Walkthrough, cruza datos con el CANON, audita conflictos y edita quirúrgicamente GitHub y Drive.

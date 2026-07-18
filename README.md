@@ -19,7 +19,7 @@ Para facilitar la integración de agentes de Inteligencia Artificial (IA) en el 
 *   **[llms.txt](./llms.txt):** El mapa e índice de navegación optimizado para consumo de LLMs y agentes.
 *   **[CANON.md](./CANON.md):** El pilar de gobernanza técnica, que establece el estado real del proyecto, las decisiones inmutables y la lista anti-regresión.
 *   **[AGENTS.md](./AGENTS.md) / [CLAUDE.md](./CLAUDE.md):** Puntos de entrada por plataforma (Antigravity/AGY CLI y Claude, respectivamente). Ambos ordenan lo mismo: **cargar `CANON.md` antes de cualquier tarea**.
-*   **[CHANGELOG-SSOT.md](./CHANGELOG-SSOT.md):** Registro append-only de cada actualización del SSOT (fecha · agente · vertical · delta). Lo escribe la skill `actualizar-ssot`.
+*   **[CHANGELOG-SSOT.md](./CHANGELOG-SSOT.md):** Registro append-only de cada actualización del SSOT (fecha · agente · vertical · delta). Lo escribe la skill `agent-auditor-ss`.
 
 Adicionalmente, el repositorio está estructurado en siete (7) verticales de información clave para los equipos humanos de ingeniería, diseño, marketing, operaciones y para el ecosistema agéntico:
 
@@ -73,9 +73,10 @@ El paradigma web-first: cáscara nativa + microapps de contenido como PWAs, cont
 
 ## 🛠️ Contribución y Gobernanza del SSOT
 
-Este repositorio se rige por políticas estrictas de control de cambios. La actualización operativa del día a día se hace con la **skill `actualizar-ssot`** (edición quirúrgica del campo pertinente + entrada en `CHANGELOG-SSOT.md` + commit + espejo a Drive). Los cambios de arquitectura/visión de fondo se realizan mediante Pull Request con aprobación.
+Este repositorio se rige por políticas estrictas de control de cambios. La actualización operativa del día a día se hace con la **arquitectura de 2 etapas (Obrero/Auditor)**.
 
-1.  Para actualizar el estado tras una sesión de trabajo: invoca la skill `actualizar-ssot` (ver `.agents/skills/actualizar-ssot/`).
+1.  Al terminar de programar, el obrero invoca `agent-execute-wt` para dejar un Walkthrough.
+2.  Luego, en una sesión limpia, se invoca `agent-auditor-ss` para consolidar el SSOT quirúrgicamente.
 2.  Actualiza el Frontmatter YAML de los archivos editados (`status`, `date`, `progress`).
 3.  Para cambios estructurales: rama descriptiva + plantilla de PR justificando el impacto en las 7 verticales + aprobación de pares.
 4.  Regla de oro: **solo `CANON.md` declara el estado real; los demás documentos enlazan, nunca lo duplican.**

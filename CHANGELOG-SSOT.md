@@ -1,6 +1,6 @@
 # CHANGELOG-SSOT
 
-Registro append-only de las actualizaciones del SSOT de ZentryOS. Lo mantiene la skill `actualizar-ssot`. Entrada más reciente arriba. Formato:
+Registro append-only de las actualizaciones del SSOT de ZentryOS. Lo mantiene la skill `agent-auditor-ss`. Entrada más reciente arriba. Formato:
 `- **YYYY-MM-DD** · <agente/plataforma> · <vertical> — <delta en una frase>.`
 
 ---

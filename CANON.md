@@ -2,7 +2,7 @@
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
-> **Última consolidación:** 2026-07-14 (incorpora la sesión de ingeniería Liquid Glass + Navegación de Sistema, 12-14 jul; ver `04-operaciones-y-roadmap/bitacora-actividades.md` y el `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante la skill `actualizar-ssot` (ver `.agents/skills/`), nunca a mano de forma dispersa.
+> **Última consolidación:** 2026-07-14 (incorpora la sesión de ingeniería Liquid Glass + Navegación de Sistema, 12-14 jul; ver `04-operaciones-y-roadmap/bitacora-actividades.md` y el `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
 
 ---
 

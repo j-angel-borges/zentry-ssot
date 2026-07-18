@@ -62,7 +62,7 @@ Jerarquía efectiva de gobernanza (mayor a menor prioridad): **`CANON.md` del SS
 
 `zentrybyantig` **no tiene control de versiones propio**. Para evitar deriva entre el SSOT y los archivos operativos locales:
 
-1. **El SSOT es el master**: los archivos físicos son copias de los bloques delimitados publicados en esta vertical. Nunca se editan directamente en el workspace; se edita el satélite (y, cuando cambia el estado del proyecto, CANON.md vía la skill `actualizar-ssot`) y se re-copia.
+1. **El SSOT es el master**: los archivos físicos son copias de los bloques delimitados publicados en esta vertical. Nunca se editan directamente en el workspace; se edita el satélite (y, cuando cambia el estado del proyecto, CANON.md vía la skill `agent-auditor-ss`) y se re-copia.
 2. **Acuse de sincronización**: tras cada copia, el ejecutor confirma en su siguiente Walkthrough la versión (fecha del frontmatter del satélite fuente) de los archivos operativos con los que trabajó.
 3. **Verificación por diff**: el operador puede validar en cualquier momento que la copia física es idéntica al bloque fuente (comparación textual directa).
 4. **Fuente viva única**: prohibido tomar como verdad cualquier copia obsoleta del SSOT que haya quedado suelta en el workspace (p. ej. `*.bak` heredados). La verdad viva es `CANON.md` + la vertical relevante del repo `zentry-ssot`.
