@@ -28,5 +28,12 @@ Launcher kiosk Android para menores (2-20 años), enfocado en Gobernanza Activa 
 3. **No dependencias Gradle nuevas** sin aprobación explícita.
 4. **Compila tras cada cambio significativo** (`./gradlew assembleDebug`) y respeta el checklist anti-regresión de 12 features (CANON §4).
 
-## 🔄 AL FINALIZAR LA SESIÓN:
-Invoca la skill [`agent-execute-wt`](.agents/skills/agent-execute-wt/SKILL.md) antes de despedirte. Esta skill generará un Walkthrough limpio con tus avances sin tocar el SSOT, para que luego un Agente Auditor actualice el proyecto en una sesión nueva. **No dejes tu trabajo sin documentar: es el pegamento entre sesiones.**
+## 🛡️ ROLES Y SKILLS DE SESIÓN (Obrero vs Auditor)
+
+Dependiendo de si tu sesión actual es para programar/investigar (Obrero) o para consolidar (Auditor), debes seguir **estrictamente** una de estas dos skills:
+
+1. **Si eres el Obrero (Al finalizar la sesión):**
+   Invoca la skill [`agent-execute-wt`](.agents/skills/agent-execute-wt/SKILL.md) antes de despedirte. Esta skill generará un Walkthrough limpio con tus avances sin tocar el SSOT. **No dejes tu trabajo sin documentar: es el pegamento entre sesiones.**
+
+2. **Si eres el Auditor (Al iniciar una sesión de consolidación):**
+   Invoca la skill [`agent-auditor-ss`](.agents/skills/agent-auditor-ss/SKILL.md). Esta skill lee el Walkthrough generado, lo contrasta con `CANON.md`, actualiza las verticales correspondientes y hace push al repositorio.
