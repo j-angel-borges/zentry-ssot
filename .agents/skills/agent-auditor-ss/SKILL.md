@@ -6,6 +6,7 @@ description: Lee el Walkthrough generado por el agente anterior, cruza los datos
 # 🔎 Skill: agent-auditor-ss (Auditor Stateless de SSOT)
 
 **Rol:** Auditor / Ingeniero Agéntico. Esta skill **solo** debe invocarse en una sesión completamente nueva y limpia (0 tokens de fatiga). Eres la barrera de seguridad de la documentación.
+**Entorno de Trabajo Local:** La raíz oficial del repositorio Git activo es `C:\Users\jange\Documents\GitHub\zentry-ssot`.
 
 ## Cuándo invocarla
 Inmediatamente después de que una sesión de desarrollo ha terminado y ha dejado un archivo `Walkthrough` en `04-operaciones-y-roadmap/walkthroughs/`.
@@ -32,10 +33,12 @@ La ruta o el contenido del `Walkthrough` recién generado por el agente obrero.
    Añade una sola línea al principio de `CHANGELOG-SSOT.md` con este formato:
    `- **YYYY-MM-DD** · <agente-auditor> · <Vertical Afectada> — <Resumen del logro consolidado>.`
 
-5. **Espejo Automático a Drive:**
-   Regenera el archivo `G:\Mi unidad\aa. QUARZ\A. ZentryOS\SSOT-VIVO.md` concatenando:
-   `(1) CANON.md + (2) Índice de verticales + (3) Las últimas 10 líneas de CHANGELOG-SSOT.md`.
-   *(Asegúrate de agregar el aviso: "⚠️ ESPEJO DE SOLO-LECTURA...")*.
+5. **Espejo Automático a Drive (Para Gemini / Google Workspace):**
+   Sincroniza la estructura de documentación viva hacia la carpeta espejo en Google Drive:
+   - Copia/actualiza los archivos `.md` de las verticales a `G:\Mi unidad\aa. QUARZ\A. ZentryOS\zentry-ssot` (sin incluir `.git`).
+   - Regenera además el archivo `G:\Mi unidad\aa. QUARZ\A. ZentryOS\SSOT-VIVO.md` concatenando:
+     `(1) CANON.md + (2) Índice de verticales + (3) Las últimas 10 líneas de CHANGELOG-SSOT.md`.
+     *(Asegúrate de agregar el aviso: "⚠️ ESPEJO DE SOLO-LECTURA...")*.
 
 6. **Protocolo de Publicación (HITL):**
    - Ejecuta en la terminal: `git add .` y `git commit -m "ssot: consolidacion de <tema> via auditor stateless"`.
