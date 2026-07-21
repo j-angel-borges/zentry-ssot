@@ -2,7 +2,7 @@
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
-> **Última consolidación:** 2026-07-14 (incorpora la sesión de ingeniería Liquid Glass + Navegación de Sistema, 12-14 jul; ver `04-operaciones-y-roadmap/bitacora-actividades.md` y el `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
+> **Última consolidación:** 2026-07-21 (incorpora consolidación de barra de navegación glass compacta asa+contenido, tutor IA en calculadora con memoria SQLite 24h, retirada de Z-Slides y menú superior desplegable; ver `04-operaciones-y-roadmap/walkthroughs/` y `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
 
 ---
 
@@ -12,11 +12,11 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~12-15%.
-* **UI/UX:** ~40% (Sistema Liquid Glass real vía Haze — `zentryGlass`/`zentryVeil`, lienzo vivo mesh-gradient, refracción AGSL —; física de movimiento calibrada a iOS con los tres regímenes del oscilador; barra de navegación de sistema global; lienzo único coherente. Todo verificado en Redmi 9 físico, 12-14 jul).
-* **Lógica Core:** ~35% (Políticas MDM integradas, asignación automática de Launcher, limpieza masiva de bloatware, gestos de sistema, Escudo de Notificaciones, Terminal agéntica local Modo Escudo/Monje, supresión de la barra de MIUI).
+* **Completitud Comercial:** ~15%.
+* **UI/UX:** ~45% (Sistema Liquid Glass real vía Haze — `zentryGlass`/`zentryVeil`, lienzo vivo mesh-gradient, refracción AGSL —; física de movimiento calibrada a iOS con los tres regímenes del oscilador; barra de navegación glass compacta asa+contenido persistente sin conflicto de IME/teclado; menú superior desplegable con panel rápido y notificaciones; lienzo único coherente. Todo verificado en Redmi 9 físico).
+* **Lógica Core:** ~40% (Políticas MDM integradas, asignación automática de Launcher, limpieza masiva de bloatware, gestos de sistema, Escudo de Notificaciones, Terminal agéntica local Modo Escudo/Monje, supresión de la barra de MIUI, grabación de pantalla vía MediaProjection).
 * **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas; `WRITE_SECURE_SETTINGS` aprovisionado; supresión de barra nativa vía `policy_control` immersive).
-* **Backend:** ~5% (Firebase AI Logic / Vertex AI conectado con `gemini-2.5-flash`; calculadora-chat con memoria y telemetría en Firestore aún PLANIFICADAS, no implementadas).
+* **Backend / IA Local:** ~15% (Firebase AI Logic / Vertex AI conectado con `gemini-2.5-flash`; Calculadora-chat con tutor IA socrático real y memoria persistente 24h + historial SQLite local de 20 cálculos totalmente implementada y operativa).
 * **Tests:** 0% (Ningún test unitario o de integración).
 
 > Nota de honestidad: "demo-readiness" (alta) ≠ "completitud de producto comercial" (~12-15%). El salto visual/navegación es real y verificado en dispositivo; el backend/telemetría y los tests siguen siendo la brecha principal.
