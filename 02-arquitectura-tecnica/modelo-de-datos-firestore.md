@@ -1,8 +1,8 @@
 ---
 title: "Modelo de Datos Firestore: Esquema Físico, Reglas y Contratos JSON"
-date: 2026-07-14
+date: 2026-07-25
 status: "under-review"
-progress: 5%
+progress: 35%
 tags: ["zentryos", "ssot", "modelo-datos"]
 ---
 
@@ -10,7 +10,7 @@ tags: ["zentryos", "ssot", "modelo-datos"]
 
 Este documento es el **propietario único** de los nombres de colecciones, esquemas de campos, reglas de seguridad, claves de Remote Config y contratos JSON del puente de inteligencia. Ningún otro satélite redefine estas estructuras: las cita.
 
-> **Estado honesto (2026-07-14)**: el backend Firestore está al **~5%**. Hoy solo está conectado **Firebase AI Logic / Vertex AI** (tutor). Las colecciones, reglas, listener C&C, cola `commands` y telemetría de este documento son **diseño normativo aún no implementado** — la brecha viva es [GAP-05](./analisis-de-brechas.md). No confundir "esquema diseñado" con "backend operativo": la capa de confinamiento local (Device Owner) sí está viva y verificada, pero **no depende de Firestore**.
+> **Estado verificado (2026-07-25)**: el backend Firestore está al **~35%**. Se ha implementado y verificado en hardware la **conexión real end-to-end con GCP Firestore (`zentryos`)**: la PWA Vercel (`zentry-parent-dashboard`) escribe comandos C&C (`LOCK_NOW`/`UNLOCK`) en `devices/dev_redmi9_mateo/commands` y el APK nativo en el Redmi 9 físico procesa la orden en tiempo real mediante `ZentryFirestoreSync.kt`, enviando además el latido de batería (63%) y `lastSeenAt` (**GAP-05 CERRADA**). Queda pendiente el blindaje de producción (App Check y reglas de producción endurecidas).
 
 ---
 

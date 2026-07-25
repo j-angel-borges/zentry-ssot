@@ -1,6 +1,6 @@
 ---
 title: "Arquitectura Técnica MVP: Índice y Stack"
-date: 2026-07-14
+date: 2026-07-25
 status: "approved"
 progress: 100%
 deadline: 2026-08-30

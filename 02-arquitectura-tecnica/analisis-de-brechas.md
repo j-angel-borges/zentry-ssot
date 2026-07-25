@@ -1,41 +1,42 @@
 ---
 title: "Análisis de Brechas: Auditoría Honesta del Prototipo al Producto Comercial"
-date: 2026-07-14
+date: 2026-07-25
 status: "under-review"
-progress: 15%
+progress: 35%
 deadline: 2026-08-30
 tags: ["zentryos", "ssot", "analisis-brechas"]
 ---
 
 # 📉 Análisis de Brechas (Gap Analysis)
 
-Auditoría de ingeniería sobre el paquete `com.example.zentryconfig`, reconciliada con el avance **empírico** verificado en Redmi 9 físico (10–14 jul). Lectura canónica del estado: la **completitud de producto comercial es del ~12-15%**, pero repartida de forma muy desigual entre capas — y esta es la única forma autorizada de citar el avance (nunca "MVP al 95%" ni "5% total" a secas):
+Auditoría de ingeniería sobre el paquete `com.example.zentryconfig`, reconciliada con el avance **empírico** verificado en Redmi 9 físico (25 jul 2026). Lectura canónica del estado: la **completitud de producto comercial es del ~20%**, pero repartida de forma muy desigual entre capas — y esta es la única forma autorizada de citar el avance (nunca "MVP al 95%" ni "5% total" a secas):
 
 | Capa | Completitud | Evidencia |
 |---|---|---|
 | **Device Owner / confinamiento** | **~95%** | **Habilitado y testeado en Redmi 9 físico**: `isDeviceOwnerApp()=true`, LockTask persistente, `setApplicationHidden`, `addPersistentPreferredActivity`, restricciones de usuario y supresión de la barra MIUI vía `policy_control` immersive (permiso `WRITE_SECURE_SETTINGS`) |
 | UI / UX | ~40% | Liquid Glass real (blur vía Haze + refracción AGSL), oscilador de motion con tres regímenes, barra de navegación global, pantallas Compose sobre Material 3 |
-| Lógica core | ~35% | Bridge de IA, gestos, SQLite, ViewModels, `MonotonicClock` / `PolicyStore` / `ZentryFailSafeStateMachine` operativos; sin capa de políticas **remota** |
-| Backend | ~5% | Firebase AI Logic presente; sin colecciones Firestore, reglas ni listener C&C |
+| Lógica core | ~40% | Bridge de IA, gestos, SQLite, ViewModels, `MonotonicClock` / `PolicyStore` / `ZentryFailSafeStateMachine` / `ZentryFirestoreSync` Kotlin nativo en Redmi 9 |
+| Backend | ~35% | Conexión real end-to-end GCP Firestore `zentryos` operativa entre PWA Vercel y Redmi 9 físico (`ZentryFirestoreSync.kt`); canal C&C `LOCK_NOW`/`UNLOCK` activo en tiempo real; reglas de desarrollo desplegadas; `firebase-analytics` integrado |
 | Tests | 0% | Sin pruebas unitarias, instrumentadas ni E2E de la superficie comercial |
 
-> **Nota de reconciliación (canónica).** La versión anterior de este documento heredaba las cifras del clon aislado ("kiosk ~5%", "`ZentryAdminReceiver` comentado", "`ZentryPolicyManager` en stubs", motor MDM dormante, aprovisionamiento como "futuro F2"). **Eso ya no es cierto.** La realidad empírica es que el motor Device Owner está **activo y verificado** en hardware; el confinamiento dejó de ser cosmético. Este documento corrige el registro en consecuencia.
+> **Nota de reconciliación (canónica).** El backend dejó de ser un mapa en papel (anteriormente ~5%): la conexión real con GCP Firestore `zentryos` entre la PWA parental en Vercel (`zentry-parent-dashboard`) y el dispositivo Redmi 9 está **verificada en hardware**, con transmisión de batería real (63%) y canal C&C (`LOCK_NOW`/`UNLOCK`) operativo (**GAP-05 CERRADA**). El peso muerto actual se concentra en telemetría avanzada, App Check y testing.
 
-La **demo-readiness es alta** (el guion de venta corre end-to-end y el confinamiento es real); la **completitud de producto comercial es baja** porque el peso muerto está en backend, telemetría y tests. Confundir ambas es el error que este documento corrige. Este satélite es el **propietario único** del registro de brechas (GAP) y el índice de cierre de la Vertical 02: su mapa GAP→THR→EVA verifica que todo ID citado aguas arriba quedó registrado (single-writer).
+La **demo-readiness es alta** (el guion de venta corre end-to-end, el confinamiento es real y la respuesta remota está conectada); la **completitud de producto comercial es ~20%**. Confundir ambas es el error que este documento corrige. Este satélite es el **propietario único** del registro de brechas (GAP) y el índice de cierre de la Vertical 02: su mapa GAP→THR→EVA verifica que todo ID citado aguas arriba quedó registrado (single-writer).
 
 ---
 
 ## 📋 Inventario honesto del prototipo
 
-Base de build verificada: `com.example.zentryconfig` · compileSdk 36 · minSdk 24 · Gradle 9.4.1 / AGP 9.2.1 · Firebase AI Logic (dependencia `firebase-vertexai`) · CameraX · Compose + Material 3 · `BUILD SUCCESSFUL`. Model ID del tutor **siempre** vía `BuildConfig.ZENTRY_MODEL_ID` (`gemini-2.5-flash`), nunca literal en el código de negocio.
+Base de build verificada: `com.example.zentryconfig` · compileSdk 36 · minSdk 24 · Gradle 9.4.1 / AGP 9.2.1 · Firebase AI Logic (dependencia `firebase-vertexai`) · `firebase-analytics` · CameraX · Compose + Material 3 · `BUILD SUCCESSFUL`. Model ID del tutor **siempre** vía `BuildConfig.ZENTRY_MODEL_ID` (`gemini-2.5-flash`), nunca literal en el código de negocio.
 
 | Clase / Componente | Estado | Nota |
 |---|---|---|
-| `MainActivity` (navegación AnimatedContent) | FUNCIONAL | Orquestador central; gestos de 2 dedos integrados |
+| `MainActivity` (navegación AnimatedContent) | FUNCIONAL | Orquestador central; gestos de 2 dedos e inicialización `ZentryFirestoreSync.startSync(this)` integrados |
 | `ZentryOSHomeScreen` (launcher + timer circadiano) | FUNCIONAL | Dock + grid, widgets, fases circadianas |
 | `ZentryAdminReceiver` | **ACTIVO** | **Declarado en el manifest; el Redmi 9 de laboratorio es Device Owner** (`dpm set-device-owner com.example.zentryconfig/.ZentryAdminReceiver`) |
 | `ZentryPolicyManager` | **FUNCIONAL** | Envoltura **real** de `DevicePolicyManager` bajo guarda `isDeviceOwner()`: LockTask, `setApplicationHidden`, `addPersistentPreferredActivity`, restricciones de usuario; ningún método retorna el `false` de stub |
 | `ZentryNavAccessibilityService` | FUNCIONAL | **Barra de navegación global** del shell confinado (volver/inicio/recientes dentro de la allowlist). Uso de AccessibilityService **exclusivamente como recurso de UI**; RECHAZADO por canon como monitoreo o control de contenido |
+| `ZentryFirestoreSync.kt` | **ACTIVO** | **Módulo Kotlin nativo de sincronización en tiempo real** con GCP Firestore (`zentryos`); transmite latido de batería (63%) y escucha cola C&C `commands` (`LOCK_NOW`/`UNLOCK`) |
 | `ZentryAiScreen` + ViewModel (chat tutor) | FUNCIONAL | Gemini vía Firebase AI Logic con fallback offline; model id vía `BuildConfig.ZENTRY_MODEL_ID`; sin App Check todavía |
 | Microapps demo: `ZentryCalculatorScreen`, `ZentryCameraScreen`, `ZentryClockScreen`, `ZentryCalendarScreen`, `ZentryFilesScreen`, `ZentryStudyAssistantScreen`, `ZentryResearchScreen`, `ZentryRedactorScreen`, `ZentryCreationScreen` | FUNCIONAL | Cubren el checklist de no-regresión de [calidad y despliegue](./calidad-y-despliegue.md). **Las suites de ofimática (documentos, presentaciones) se gobiernan embebiendo/controlando las apps oficiales de Google Workspace y NotebookLM — no se reimplementan** (C3) |
 | `ZentryIntelligenceBridge` (router de prompts) | FUNCIONAL | Contratos `study_assistant`, `[COMMAND:{...}]`; parser pendiente de allowlist endurecida. **Sin verbo `z_slides` / `crear_slide`** (eliminado por canon; Slides = Google Slides real) |
@@ -58,9 +59,9 @@ Columna **Estado** canónica: 🟢 CERRADA (verificada en hardware) · 🟡 PARC
 | GAP-02 | Política de dispositivo aplicada | 🟢 **CERRADA** | `ZentryPolicyManager` aplica `DevicePolicyManager` real (`setApplicationHidden`, `addPersistentPreferredActivity`, restricciones); ningún stub retorna `false` | — | Envoltura DO operativa bajo `isDeviceOwner()` | THR-01, THR-02 | EVA-01, EVA-03 | **Hecho** / E4 |
 | GAP-03 | LockTask persistente + bloqueo de barra/gestos | 🟢 **CERRADA** | LockTask persistente verificado; supresión de barra MIUI vía `policy_control` immersive (`WRITE_SECURE_SETTINGS`); navegación propia por `ZentryNavAccessibilityService` | — | Confinamiento activo en Redmi 9 | THR-01 | EVA-01 | **Hecho** / E4 |
 | GAP-04 | Persistencia de arranque (Direct Boot) | 🟡 PARCIAL | LockTask/DO verificado; falta confirmar `directBootAware` + `ACTION_LOCKED_BOOT_COMPLETED` bajo EVA-02 | Ventana de evasión en el arranque en frío, sin certificar | Receiver de boot + Direct Boot + prueba EVA-02 | THR-01 | EVA-02 | E4 |
-| GAP-05 | Backend inexistente: sin colecciones, reglas, listener C&C ni fail-safe **remoto** | 🔴 ABIERTA | Sin capa Firestore activa (~5%); la máquina fail-safe local existe pero sin fuente remota | Sin kill-switch remoto ni sincronización de políticas | [modelo de datos](./modelo-de-datos-firestore.md) + [máquina fail-safe](./telemetria-gcp-ai.md) | THR-03, THR-04, THR-07, THR-08 | EVA-04..06 | F1→F2 / E3-E5 |
+| GAP-05 | Backend inexistente: sin colecciones, reglas, listener C&C ni fail-safe **remoto** | 🟢 **CERRADA** | Conexión Firestore GCP `zentryos` activa end-to-end; PWA Vercel y Redmi 9 interconectados; listener C&C real (`LOCK_NOW`/`UNLOCK`) vía `ZentryFirestoreSync.kt` | Cobertura de emulador y reglas de prod pendientes | [modelo de datos](./modelo-de-datos-firestore.md) + [máquina fail-safe](./telemetria-gcp-ai.md) | THR-03, THR-04, THR-07, THR-08 | EVA-04..06 | **Hecho** / E3-E5 |
 | GAP-06 | Capa IA sin blindaje operativo | 🔴 ABIERTA | model id ya vía `BuildConfig.ZENTRY_MODEL_ID` (nunca literal); falta App Check, manejo de cuota y allowlist endurecida del parser | Inyección de prompt y fragilidad operativa | Remote Config (override) + App Check + allowlist de comandos | THR-09 | EVA-07 | F1→F2 / E2-E3 |
-| GAP-07 | Telemetría v1 inexistente | 🔴 ABIERTA | Sin pipeline de contadores | Sin reportes parentales ni datos de piloto | Agregados diarios en `telemetry_daily` | THR-05, THR-06 | Auditoría de payloads (E5) | F3 / E5 |
+| GAP-07 | Telemetría v1 inexistente | 🟡 PARCIAL | `firebase-analytics` integrado en APK Redmi 9; transmisión de latido de hardware (`batteryLevel`, `lastSeenAt`) activa en Firestore; falta agregador `telemetry_daily` | Falta consolidación diaria de métricas parentales | Agregados diarios en `telemetry_daily` | THR-05, THR-06 | Auditoría de payloads (E5) | F3 / E5 |
 | GAP-08 | Testing de superficie comercial 0% | 🔴 ABIERTA | Solo tests unitarios de `core/`; sin instrumentadas ni E2E ni suite EVA | Sin score de evasión ni red de seguridad de regresión | Pirámide de pruebas + suite EVA ([calidad y despliegue](./calidad-y-despliegue.md)) | — | Toda la batería | F2 / E4-E5 |
 | GAP-09 | Identidad de release de ejemplo | 🟡 PARCIAL | applicationId `com.example.zentryconfig` (DO probado con este id); sin firma gestionada ni flavors | El payload QR de producción depende del applicationId final | Flavors `lab`/`prod` + firma release **antes** de emitir QRs | — | EVA-03 (build prod) | F2 |
 | GAP-10 | Superficies parciales | 🟡 PARCIAL | `ZentryPhoneScreen` stub; `SafeBrowserScreen` filtrado incompleto; WorldGenerator/NeuroArt UI mínima | Riesgo de pantalla rota en demo o piloto | Completar o excluir del guion tras feature flag | — | Checklist no-regresión | F1→F3 |
@@ -146,7 +147,7 @@ Este mapa es la verificación final de la Vertical 02: toda amenaza tiene brecha
 |---|---|---|---|---|
 | GAP-01..03 | THR-01, THR-02 | EVA-01, EVA-03 | 🟢 **CERRADAS** (Redmi 9) | [control-dispositivo-abm.md](./control-dispositivo-abm.md) |
 | GAP-04 | THR-01 | EVA-02 | 🟡 PARCIAL | [control-dispositivo-abm.md](./control-dispositivo-abm.md) |
-| GAP-05 | THR-03, THR-04, THR-07, THR-08 | EVA-04, EVA-05, EVA-06 | 🔴 ABIERTA | [telemetria-gcp-ai.md](./telemetria-gcp-ai.md) · [modelo-de-datos-firestore.md](./modelo-de-datos-firestore.md) |
+| GAP-05 | THR-03, THR-04, THR-07, THR-08 | EVA-04, EVA-05, EVA-06 | 🟢 **CERRADA** (Redmi 9 / Firestore) | [telemetria-gcp-ai.md](./telemetria-gcp-ai.md) · [modelo-de-datos-firestore.md](./modelo-de-datos-firestore.md) |
 | GAP-06 | THR-09 | EVA-07 | 🔴 ABIERTA | [telemetria-gcp-ai.md](./telemetria-gcp-ai.md) · [seguridad-y-privacidad.md](./seguridad-y-privacidad.md) |
-| GAP-07 | THR-05, THR-06 | Auditoría de payloads (E5) | 🔴 ABIERTA | [seguridad-y-privacidad.md](./seguridad-y-privacidad.md) |
+| GAP-07 | THR-05, THR-06 | Auditoría de payloads (E5) | 🟡 PARCIAL | [seguridad-y-privacidad.md](./seguridad-y-privacidad.md) |
 | GAP-08..10 | — (habilitadores) | Batería completa + checklist no-regresión | 🔴/🟡 | [calidad-y-despliegue.md](./calidad-y-despliegue.md) |

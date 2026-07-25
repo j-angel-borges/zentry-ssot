@@ -2,7 +2,7 @@
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
-> **Última consolidación:** 2026-07-21 (incorpora evolución interactiva del menú superior desplegable con toggles directos/long-press de Wi-Fi/Bluetooth, linterna, deslizadores analógicos Glass de brillo y volumen, feedback háptico y respuesta táctil en launcher; ver `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
+> **Última consolidación:** 2026-07-25 (incorpora conexión real end-to-end GCP Firestore `zentryos` entre PWA Dashboard en Vercel y APK nativo Android en Redmi 9 físico con latido de batería real 63%, escucha reactiva C&C `LOCK_NOW`/`UNLOCK` vía `ZentryFirestoreSync.kt`, depuración anti-mock y `firebase-analytics`; Cierre de GAP-05 y avance de GAP-07; ver `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
 
 ---
 
@@ -12,14 +12,14 @@ ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) en
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~15%.
+* **Completitud Comercial:** ~20%.
 * **UI/UX:** ~50% (Sistema Liquid Glass real vía Haze — `zentryGlass`/`zentryVeil`, lienzo vivo mesh-gradient, refracción AGSL —; menú superior desplegable evolucionado con toggles directos y long-press para Wi-Fi, Bluetooth y Datos, control directo de Linterna, deslizadores táctiles Glass de brillo y volumen, y respuesta háptica nativa; barra de navegación glass compacta asa+contenido persistente; verificado en Redmi 9 físico).
 * **Lógica Core:** ~40% (Políticas MDM integradas, asignación automática de Launcher, limpieza masiva de bloatware, gestos de sistema, Escudo de Notificaciones, Terminal agéntica local Modo Escudo/Monje, supresión de la barra de MIUI, grabación de pantalla vía MediaProjection).
 * **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas; `WRITE_SECURE_SETTINGS` aprovisionado; supresión de barra nativa vía `policy_control` immersive).
-* **Backend / IA Local:** ~15% (Firebase AI Logic / Vertex AI conectado con `gemini-2.5-flash`; Calculadora-chat con tutor IA socrático real y memoria persistente 24h + historial SQLite local de 20 cálculos totalmente implementada y operativa).
+* **Backend / IA Local:** ~35% (Conexión real end-to-end con GCP Firestore `zentryos` verificada en hardware; SDK v9 en PWA Vercel `zentry-parent-dashboard` + módulo Kotlin `ZentryFirestoreSync.kt` en Redmi 9; transmisión de latido de batería real (63%) y canal C&C en tiempo real `LOCK_NOW`/`UNLOCK` en subcolección `commands`; depuración anti-mock completa; `firebase-analytics` integrado; Firebase AI Logic / Vertex AI con `gemini-2.5-flash` y tutor IA socrático).
 * **Tests:** 0% (Ningún test unitario o de integración).
 
-> Nota de honestidad: "demo-readiness" (alta) ≠ "completitud de producto comercial" (~12-15%). El salto visual/navegación es real y verificado en dispositivo; el backend/telemetría y los tests siguen siendo la brecha principal.
+> Nota de honestidad: "demo-readiness" (alta) ≠ "completitud de producto comercial" (~20%). El canal remoto C&C y el latido de hardware son reales y verificados en Redmi 9 físico (GAP-05 CERRADA); la telemetría masiva (GAP-07), App Check / seguridad prod y los tests siguen siendo la brecha principal.
 
 ---
 
