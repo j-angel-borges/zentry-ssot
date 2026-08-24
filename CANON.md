@@ -1,4 +1,4 @@
-﻿# CANON.md — Reglas de Gobernanza y Decisiones Técnicas
+# CANON.md — Reglas de Gobernanza y Decisiones Técnicas
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
@@ -12,14 +12,14 @@ ZentryOS es un entorno y launcher (diseñado primariamente como PWA Web-First de
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~30%.
+* **Completitud Comercial:** ~45%.
 * **Paradigma Primario Actual:** **Web-First PWA (`zentryos-launcher-pwa`)**. React 19 + Tailwind CSS v4 + SingleFile Vite.
 * **Hito Estratégico Innegociable:** **MVP presentable, fluido y demostrable al 100% para el martes 25 de agosto de 2026.**
-* **UI/UX:** ~65% (Sistema Liquid Glass, segmentación adaptativa 2-5 años vs 5-10+ años, depuración visual sin textos ni badges carcelarios, micro-hápticos en barras de volumen/brillo, Dynamic Island reactiva y Zentry Media Engine curado).
-* **Backend / IA Local:** ~50% (GCP Firestore `zentryos` conectado en tiempo real; PWA Vercel `zentry-parent-dashboard` con escáner de documentos por cámara, subida real de archivos y C&C `LOCK_NOW`/`UNLOCK`; Vertex AI / Firebase AI Logic con tutor socrático).
+* **UI/UX:** ~75% (Home Toddler con cajones bento simétricos, Home Explorer, Dynamic Island con telemetría viva, 4 portales de medios Liquid Glass y barra de navegación unificada).
+* **Lógica Core & Microapps:** ~70% (Suite completa de 6 microapps de creación sensorial con física Apple Watch fisheye en cuadrícula de 160px, lienzos Art-Attack y enrutador de vistas).
+* **Backend / IA & Voz:** ~65% (GCP Neural TTS con caché IndexedDB 0ms, perfiles por cohorte de edad, escáner de documentos con cámara en Parent Dashboard, persistencia Firestore GCP y C&C `LOCK_NOW`/`UNLOCK`).
 * **Device Owner & Android Nativo:** ~95% (Completado y verificado en Redmi 9 físico en `zentryos-launcher-android`; **congelado en segundo plano** como puente MDM para la fase posterior al MVP de la PWA).
-* **Lógica Core PWA:** ~60% (Simulación completa de OS, gestión de ventanas/pantallas, temporizador circadiano, motor de medios embebidos y persistencia de estado).
-* **Tests:** 0% (Validación manual y verificación estricta de compilación `npm run build` SingleFile).
+* **Tests:** 0% (Validación manual y verificación estricta de compilación `npm run build` SingleFile ~1.31 MB con Código 0).
 
 > Nota de honestidad: El foco total y prioritario de desarrollo es la PWA (`zentryos-launcher-pwa`). El trabajo en Kotlin nativo y políticas de Device Owner queda en pausa estratégica hasta consolidar la entrega del MVP del 25/08.
 
