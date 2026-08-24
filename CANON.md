@@ -1,71 +1,91 @@
-# CANON.md — Reglas de Gobernanza y Decisiones Técnicas
+﻿# CANON.md — Reglas de Gobernanza y Decisiones Técnicas
 
 Este documento contiene la verdad inmutable y el estado del proyecto ZentryOS. Ningún agente o plan de desarrollo puede contradecir lo establecido aquí.
 
-> **Última consolidación:** 2026-07-25 (incorpora conexión real end-to-end GCP Firestore `zentryos` entre PWA Dashboard en Vercel y APK nativo Android en Redmi 9 físico con latido de batería real 63%, escucha reactiva C&C `LOCK_NOW`/`UNLOCK` vía `ZentryFirestoreSync.kt`, depuración anti-mock y `firebase-analytics`; Cierre de GAP-05 y avance de GAP-07; ver `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
+> **Última consolidación:** 2026-08-23 (Consolidación del Gran Pivote **Web-First PWA** `zentryos-launcher-pwa` como núcleo primario del MVP para el **25/08/2026**, relegando el Android Device Owner nativo a segundo plano; formalización de la segmentación por edades 2-5 vs 5-10+ años, inmersión antropológica estilo iOS con micro-hápticos y Dynamic Island, depuración anti-ruido de interfaz, Zentry Media Engine curado con 4 plataformas, escáner y persistencia documental en Firestore del Parent Dashboard, y arquitectura multi-agente de 4 Git Worktrees con skills `pwa-operator-wt` y `pwa-merger-auditor`; ver `CHANGELOG-SSOT.md`). Este archivo se actualiza mediante las skills `agent-execute-wt` y `agent-auditor-ss` (ver `.agents/skills/`), nunca a mano de forma dispersa.
 
 ---
 
 ## 1. Misión del Proyecto
-ZentryOS es un launcher kiosk Android para niños y adolescentes (2-20 años) enfocado en la **Gobernanza Activa de la Atención**. Su propósito no es el bloqueo punitivo, sino redirigir los impulsos de dopamina rápida (redes sociales, scroll infinito) hacia flujos de productividad, estudio e interacciones físicas mediante un tutor de Inteligencia Artificial integrado.
+ZentryOS es un entorno y launcher (diseñado primariamente como PWA Web-First de alta fidelidad, con integración futura como Kiosk K-12) enfocado en la **Gobernanza Activa de la Atención**. Su propósito no es el bloqueo punitivo, sino redirigir los impulsos de dopamina rápida (redes sociales, scroll infinito) hacia flujos de aprendizaje, creatividad, estudio socrático e interacciones sensoriales vivas.
 
 ---
 
 ## 2. Estado Real del Proyecto (Honesto)
-* **Completitud Comercial:** ~20%.
-* **UI/UX:** ~50% (Sistema Liquid Glass real vía Haze — `zentryGlass`/`zentryVeil`, lienzo vivo mesh-gradient, refracción AGSL —; menú superior desplegable evolucionado con toggles directos y long-press para Wi-Fi, Bluetooth y Datos, control directo de Linterna, deslizadores táctiles Glass de brillo y volumen, y respuesta háptica nativa; barra de navegación glass compacta asa+contenido persistente; verificado en Redmi 9 físico).
-* **Lógica Core:** ~40% (Políticas MDM integradas, asignación automática de Launcher, limpieza masiva de bloatware, gestos de sistema, Escudo de Notificaciones, Terminal agéntica local Modo Escudo/Monje, supresión de la barra de MIUI, grabación de pantalla vía MediaProjection).
-* **Device Owner:** ~95% (Habilitado y testeado exitosamente en Redmi 9 físico; políticas de bloqueo y personalización 100% operativas; `WRITE_SECURE_SETTINGS` aprovisionado; supresión de barra nativa vía `policy_control` immersive).
-* **Backend / IA Local:** ~35% (Conexión real end-to-end con GCP Firestore `zentryos` verificada en hardware; SDK v9 en PWA Vercel `zentry-parent-dashboard` + módulo Kotlin `ZentryFirestoreSync.kt` en Redmi 9; transmisión de latido de batería real (63%) y canal C&C en tiempo real `LOCK_NOW`/`UNLOCK` en subcolección `commands`; depuración anti-mock completa; `firebase-analytics` integrado; Firebase AI Logic / Vertex AI con `gemini-2.5-flash` y tutor IA socrático).
-* **Tests:** 0% (Ningún test unitario o de integración).
+* **Completitud Comercial:** ~30%.
+* **Paradigma Primario Actual:** **Web-First PWA (`zentryos-launcher-pwa`)**. React 19 + Tailwind CSS v4 + SingleFile Vite.
+* **Hito Estratégico Innegociable:** **MVP presentable, fluido y demostrable al 100% para el martes 25 de agosto de 2026.**
+* **UI/UX:** ~65% (Sistema Liquid Glass, segmentación adaptativa 2-5 años vs 5-10+ años, depuración visual sin textos ni badges carcelarios, micro-hápticos en barras de volumen/brillo, Dynamic Island reactiva y Zentry Media Engine curado).
+* **Backend / IA Local:** ~50% (GCP Firestore `zentryos` conectado en tiempo real; PWA Vercel `zentry-parent-dashboard` con escáner de documentos por cámara, subida real de archivos y C&C `LOCK_NOW`/`UNLOCK`; Vertex AI / Firebase AI Logic con tutor socrático).
+* **Device Owner & Android Nativo:** ~95% (Completado y verificado en Redmi 9 físico en `zentryos-launcher-android`; **congelado en segundo plano** como puente MDM para la fase posterior al MVP de la PWA).
+* **Lógica Core PWA:** ~60% (Simulación completa de OS, gestión de ventanas/pantallas, temporizador circadiano, motor de medios embebidos y persistencia de estado).
+* **Tests:** 0% (Validación manual y verificación estricta de compilación `npm run build` SingleFile).
 
-> Nota de honestidad: "demo-readiness" (alta) ≠ "completitud de producto comercial" (~20%). El canal remoto C&C y el latido de hardware son reales y verificados en Redmi 9 físico (GAP-05 CERRADA); la telemetría masiva (GAP-07), App Check / seguridad prod y los tests siguen siendo la brecha principal.
+> Nota de honestidad: El foco total y prioritario de desarrollo es la PWA (`zentryos-launcher-pwa`). El trabajo en Kotlin nativo y políticas de Device Owner queda en pausa estratégica hasta consolidar la entrega del MVP del 25/08.
 
 ---
 
 ## 3. Decisiones Técnicas Irrevocables (Pilares de Gobernanza)
 
-### A. Device Owner & Kiosk Mode
-* **Único Canal:** Se utiliza **Android Enterprise Device Owner** vía ADB (desarrollo) o aprovisionamiento QR en punto de venta como único mecanismo de control y bloqueo del dispositivo.
-* **AccessibilityService — uso acotado (reconciliado 2026-07-14):** RECHAZADO como mecanismo de **monitoreo o control parental** (evita infracciones de políticas de Google Play y bloqueos de Android 17+ Advanced Protection). SÍ se utiliza, en cambio, como recurso de **interfaz de sistema**: la barra de navegación propia de ZentryOS (`ZentryNavAccessibilityService` — dibuja la barra glass, ejecuta `performGlobalAction(BACK/HOME/RECENTS)` sobre apps de terceros y hospeda el watchdog que reafirma la supresión de MIUI). La distinción es la clave de compliance: no observamos ni restringimos comportamiento del menor por accesibilidad; solo proveemos navegación.
-* **Asignación del Launcher:** Se fuerza programáticamente a ZentryOS como el Launcher preferido por defecto del sistema mediante `addPersistentPreferredActivity` al arrancar el Kiosco, eliminando bucles y fallos de pantalla negra (`ResolverActivity`).
-* **Navegación del Kiosco:** Se habilitan los gestos de pantalla nativos de Android en Kiosco mediante `LOCK_TASK_FEATURE_HOME` y `LOCK_TASK_FEATURE_OVERVIEW` para permitir la fluidez dentro de aplicaciones como Google Play Store. La barra de estado superior y el panel de notificaciones permanecen restringidos para la seguridad del modo de bloqueo. El acceso a los Ajustes se canaliza directamente a través del cajón de aplicaciones del Launcher.
+### A. Paradigma Web-First PWA (Prioridad Absoluta)
+* **Repositorio Central Activo:** `D:\1_jose_angel\1_GitHub\Zentry\zentryos-launcher-pwa`.
+* **Empaquetado:** SingleFile HTML bundle mediante `vite-plugin-singlefile` para portabilidad y distribución inmediata.
+* **Android Kiosk como Fase Posterior:** El APK nativo (`zentryos-launcher-android`) actuará como contenedor WebView/MDM cuando se requiera bloqueo físico a nivel de hardware.
 
-### B. Integración con Google Workspace
-* **No reinventar la rueda:** En lugar de crear clones de suites de oficina (Slides, Docs), ZentryOS **instala y controla las aplicaciones oficiales de Google Workspace** (Google Docs, Google Slides, Google Sheets) en el dispositivo.
-* **Control de visualización y Bloatware:** ZentryOS (como Device Owner) oculta/congela de forma masiva y dinámica todo el bloatware y juegos de MIUI mediante `setApplicationHidden(..., true)`, excluyendo y protegiendo explícitamente las aplicaciones autorizadas (Google Play Store, Ajustes de Android `com.android.settings`, `com.android.settings.intelligence`, `com.xiaomi.misettings`, teclados activos y componentes core).
-* **Whitelisting del Sistema:** Se autorizan explícitamente los paquetes `"com.android.settings"`, `"android"` (ResolverActivity) y `"com.android.systemui"` para garantizar que los diálogos de sistema y la configuración de gestos funcionen sin crashes.
+### B. Segmentación Cognitiva por Edades
+* **Vertiente 2 a 5 años (Toddler / Guiado):**
+  * El sistema **habla, guía y enseña**: retroalimentación constante por voz, asistencia interactiva para aprender a tocar y deslizar.
+  * Supresión total de herramientas complejas (Google Workspace, editores avanzados).
+  * Microapps de co-creación y exploración sensorial lúdica.
+* **Vertiente 5 a 10+ años (Explorer / Studio):**
+  * Interfaz de sistema operativo completa, cajón de microapps (Study Assistant, redactor, investigación, calculadora, utilitarios) y widgets de productividad.
 
-### C. Cerebro Agéntico Central
-* **Vertex AI + Firebase:** El tutor socrático interactúa con el niño y es capaz de ejecutar operaciones en el ecosistema (ej. crear un Google Docs con su tarea, agendar una alarma) utilizando **Function Calling** de Gemini.
-* **Modelo como configuración, nunca literal:** el identificador del modelo se lee de `BuildConfig.ZENTRY_MODEL_ID` (hoy `gemini-2.5-flash`, vía Firebase AI Logic / Vertex AI). PROHIBIDO hardcodear un id de modelo en el código de las microapps o citar una versión como decisión permanente en la documentación.
-* **No PDF generation on-device:** La generación de reportes o resúmenes primero crea un documento en Google Docs y luego lo exporta, en lugar de intentar renderizar PDFs complejos por código local.
+### C. Experiencia Sensorial Antropológica & Reducción de Ruido Visual
+* **Supresión de Badges Punitivos:** Eliminación definitiva de textos como *"Fase Vespertina"* o *"Protegido por tus padres"* que generen fricción o sensación carcelaria. La protección debe sentirse transparente y natural.
+* **Física y Micro-hápticos estilo iOS:** Respuesta háptica táctil (`navigator.vibrate`) en los deslizadores analógicos de brillo y volumen, gestos elásticos y animaciones fluidas en la Dynamic Island.
 
-### D. Hardware de Desarrollo
-* **Xiaomi Redmi 9** (Helio G80, 3-4GB RAM). Todo desarrollo debe optimizarse para no exceder los límites de RAM de este dispositivo (ej. no LLMs locales, renderizado de Compose ligero para evitar Battery Overhead).
+### D. Zentry Media Engine (Gobernanza de Dopamina)
+* En lugar de bloquear el entretenimiento, ZentryOS integra 4 plataformas de consumo curado (**ZentryTube**, **ZentryTok**, **ZentryGram**, **ZentryStream**) con 50 piezas de contenido verificado cada una (STEM, ciencia, arte y habilidades) con reproductores oficiales embebidos, eliminando algoritmos de recomendación adictivos.
+
+### E. Cerebro Agéntico Central & Tutor Socrático
+* **Vertex AI + Firebase:** Tutor socrático guiado por System Instructions parametrizadas según la edad del usuario.
+* **Modelo como Configuración:** Prohibido hardcodear identificadores de modelos en el código; se leen desde variables de entorno / configuración.
+
+### F. Sincronización en Tiempo Real con Parent Dashboard
+* Canal Firestore `zentryos` bidireccional entre `zentryos-launcher-pwa` y `zentry-parent-dashboard`:
+  * Telemetría de batería, estado de conexión y tiempos de uso.
+  * Canal C&C instantáneo para bloqueo (`LOCK_NOW`) y desbloqueo (`UNLOCK`).
+
+### G. Arquitectura de Desarrollo Multi-Agente (Worktrees)
+* 4 Git Worktrees paralelos bajo `zentryos-worktrees/`:
+  1. `ui-shell` (Rama: `feat/ui-shell-age-tiering`, Puerto: `5175`)
+  2. `microapps-ai` (Rama: `feat/microapps-ai-core`, Puerto: `5176`)
+  3. `entertainment` (Rama: `feat/entertainment-hub`, Puerto: `5177`)
+  4. `parental-sync` (Rama: `feat/parental-sync-bridge`, Puerto: `5178`)
+* **Pipeline de Integración:** Todo operador emite su Walkthrough vía `pwa-operator-wt`; el Agente Mezclador valida `npm run build` en `master` vía `pwa-merger-auditor`.
 
 ---
 
-## 4. Checklist Anti-Regresión (Features Demo)
-Antes de finalizar cualquier tarea de desarrollo, se debe comprobar manualmente en el dispositivo físico que estas 12 características fundamentales siguen funcionando sin crashes:
+## 4. Checklist Anti-Regresión (Features Demo MVP PWA)
+Antes de dar por cerrado cualquier cambio en la PWA, se debe verificar que estas 12 capacidades funcionan limpiamente sin errores de consola ni TypeScript:
 
-1. Launcher Home (Fondo iridiscente + widgets de reloj)
-2. Gesto de dos dedos (Pinch para entrar a personalización)
-3. Temporizador Circadiano (Colores adaptivos según hora)
-4. Chat del Tutor IA (Con fallback de respuestas locales offline)
-5. Calculadora (Operaciones básicas)
-6. Cámara (Captura de foto/video con CameraX)
-7. Reloj / Alarmas (Guardado en SQLite local)
-8. Calendario Escolar (Gestión básica de eventos)
-9. Explorador de archivos (Acceso seguro a fotos)
-10. Google Workspace (Slides/Docs/Sheets instalados y lanzables desde el launcher — se controlan las apps oficiales, no se clonan; ver §3B)
-11. Study Assistant (Chat socrático MINEDU)
-12. Navegación fluida con `AnimatedContent` + barra de navegación de sistema global
+1. **Launcher Home:** Lienzo Liquid Glass, fondo dinámico y widgets interactivos.
+2. **Selector de Edades:** Transición fluida entre modo 2-5 años (guiado/vocal) y 5-10+ años.
+3. **Dynamic Island & Hápticos:** Despliegue de estado y vibración táctil en sliders de brillo/volumen.
+4. **Zentry Media Engine:** Reproducción funcional en ZentryTube, ZentryTok, ZentryGram y Stream.
+5. **Tutor IA Socrático:** Chat adaptado con respuestas contextuales y fallback local.
+6. **Calculadora:** Operaciones matemáticas con panel táctil glass.
+7. **Cámara:** Captura de fotos con visor en vivo.
+8. **Reloj y Alarmas:** Cronómetro y temporizador funcional.
+9. **Calendario:** Visualización de días y eventos.
+10. **Explorador de Archivos:** Visualización de medios y documentos.
+11. **Study Assistant:** Microapp de apoyo académico y preguntas guiadas.
+12. **Firestore Sync:** Recepción de comandos remotos de bloqueo y actualización de estado.
 
 ---
 
 ## 5. Reglas Duras de Desarrollo
-1. **No Secretos en Git:** Está terminantemente prohibido guardar API keys, keystores, o `local.properties` en el repositorio.
-2. **Ciclo de Compilación:** Compilar el proyecto con `./gradlew assembleDebug` después de cada cambio significativo.
-3. **No Dependencias de Terceros:** No agregar librerías de Gradle sin aprobación explícita.
-4. **Validación HITL (Human-In-The-Loop):** Toda alteración al AndroidManifest referente a permisos de Device Owner requiere validación del usuario antes de ser compilada.
+1. **No Secretos en Git:** Prohibido subir API keys, credenciales o `.env.local` al repositorio.
+2. **Ciclo de Compilación:** Ejecutar `npm run build` tras cada tanda de cambios y verificar que genera el bundle `dist/index.html` con código 0.
+3. **No Colisiones de Dependencias:** No agregar dependencias pesadas en `package.json` sin justificación técnica.
+4. **Gobernanza SSOT:** Todo cambio arquitectónico se consolida mediante `pwa-operator-wt` / `agent-execute-wt` y se audita con `agent-auditor-ss`.
